@@ -28,4 +28,6 @@ def resize_images_in_folder(folder):
         if filename.endswith('.jpg') or filename.endswith('.png'):
             resize_image(folder + '/' + filename, folder + '/resized/' + filename, 32)
 
-resize_images_in_folder('./')
+
+if __name__ == '__main__':
+    resize_images_in_folder(os.getcwd())

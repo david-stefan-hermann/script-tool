@@ -10,7 +10,9 @@
 # Klammern entfernt werden.
 import os
 
+# Automatically organize files in the current directory when the script is run
 def organize_files(directory):
+
     # Define video file extensions
     video_extensions = ('.mp4', '.avi', '.mov', '.mkv', '.flv', '.wmv')
 
@@ -40,8 +42,6 @@ def organize_files(directory):
 
     print("Files organized successfully.")
 
-# Set the current working directory as the target directory
-current_directory = os.getcwd()
 
-# Automatically organize files in the current directory when the script is run
-organize_files(current_directory)
+if __name__ == '__main__':
+    organize_files(os.getcwd())

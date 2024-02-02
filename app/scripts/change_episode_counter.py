@@ -5,7 +5,9 @@ import re
 # i.e. E001, E002, E003 -> E006, E007, E008
 
 
-def rename_files(directory, amount):
+def rename_files(directory):
+    amount_to_be_added = input("Amount to be added or substracted to episode title (can be negative): ") # can be negative
+
     # Regex to match the pattern 'EXXX' where XXX is a number
     pattern = re.compile(r'(E\d{3})')
 
@@ -31,5 +33,4 @@ def rename_files(directory, amount):
 
 
 if __name__ == '__main__':
-    amount_to_be_added = input("Amount to be added or substracted to episode title (can be negative): ") # can be negative
-    rename_files('.', amount_to_be_added)
+    rename_files(os.getcwd())
