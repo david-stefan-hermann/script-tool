@@ -1,15 +1,9 @@
 import os
-import tkinter
+import sys
 import scripts
-from ui.script_tab import ScriptTab
-from ui.script_button import ScriptButton
 from utils.get_scripts import scan_directory_for_scripts
 from ui.main_window import MainWindow
-from ttkthemes import ThemedTk
-from PyQt6.QtWidgets import QApplication, QTabWidget, QVBoxLayout, QWidget, QLabel
-import sys
-from PyQt6.QtGui import QPalette, QColor
-from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QApplication
 
 
 def main():

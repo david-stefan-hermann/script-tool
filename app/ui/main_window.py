@@ -1,9 +1,6 @@
-from PyQt6.QtWidgets import QApplication, QPushButton, QStackedWidget, QVBoxLayout, QWidget, QHBoxLayout, QLabel
-import sys
 from ui.script_tab import ScriptTab
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QFont
-from PyQt6.QtWidgets import QApplication, QPushButton, QStackedWidget, QVBoxLayout, QWidget, QHBoxLayout, QLabel
+from PyQt6.QtWidgets import QPushButton, QStackedWidget, QVBoxLayout, QWidget, QHBoxLayout, QLabel
 
 class MainWindow(QWidget):
     def __init__(self, scripts_info, parent=None):
