@@ -2,7 +2,9 @@
 Title: Rename or Remove String in Title
 Description: Rename or remove a specific string in the title of files in a directory.
 """
+
 import os
+from tkinter import filedialog
 
 def rename_or_remove_string_in_title(directory):
 
@@ -23,4 +25,4 @@ def rename_or_remove_string_in_title(directory):
 
 
 if __name__ == '__main__':
-    rename_or_remove_string_in_title(os.getcwd())
+    rename_or_remove_string_in_title(filedialog.askdirectory())

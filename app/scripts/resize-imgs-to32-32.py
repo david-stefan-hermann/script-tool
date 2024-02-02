@@ -2,8 +2,10 @@
 Title: Resize Images to 32x32
 Description: Resize all images in a directory to 32x32 pixels.
 """
+
 import os
 from PIL import Image
+from tkinter import filedialog
 
 def resize_image(input_image_path, output_image_path, size):
     original_image = Image.open(input_image_path)
@@ -34,4 +36,4 @@ def resize_images_in_folder(folder):
 
 
 if __name__ == '__main__':
-    resize_images_in_folder(os.getcwd())
+    resize_images_in_folder(filedialog.askdirectory())

@@ -1,8 +1,10 @@
-import os
 """
 Title: Episode Counter Renamer
 Description: Increment or decrement the episode counter in the file names of a directory.
 """
+
+import os
+from tkinter import filedialog
 import re
 
 # Function to rename files in a directory, more specifically to change the episode counter
@@ -37,4 +39,4 @@ def rename_files(directory):
 
 
 if __name__ == '__main__':
-    rename_files(os.getcwd())
+    rename_files(filedialog.askdirectory())

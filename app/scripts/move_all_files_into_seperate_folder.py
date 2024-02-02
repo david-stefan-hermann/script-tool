@@ -12,7 +12,9 @@ Description: Automatically organize video files in the current directory, placin
 # indem es jede in einen neu erstellten Ordner verschiebt, der nach der Datei 
 # benannt ist, wobei Unterstriche durch Leerzeichen ersetzt und Inhalte in 
 # Klammern entfernt werden.
+
 import os
+from tkinter import filedialog
 
 # Automatically organize files in the current directory when the script is run
 def organize_files(directory):
@@ -48,4 +50,4 @@ def organize_files(directory):
 
 
 if __name__ == '__main__':
-    organize_files(os.getcwd())
+    organize_files(filedialog.askdirectory())
