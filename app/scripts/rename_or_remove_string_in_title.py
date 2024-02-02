@@ -1,3 +1,7 @@
+"""
+Title: Rename or Remove String in Title
+Description: Rename or remove a specific string in the title of files in a directory.
+"""
 import os
 
 def rename_or_remove_string_in_title(directory):

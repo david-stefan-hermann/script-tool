@@ -1,3 +1,7 @@
+"""
+Title: Move All Files into Separate Folders
+Description: Automatically organize video files in the current directory, placing each into a newly created folder named after the file but with underscores replaced by spaces and content in parentheses removed.
+"""
 # Description
 # The program automatically organizes video files in the current directory, 
 # placing each into a newly created folder named after the file but with 

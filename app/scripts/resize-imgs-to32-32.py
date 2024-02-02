@@ -1,3 +1,7 @@
+"""
+Title: Resize Images to 32x32
+Description: Resize all images in a directory to 32x32 pixels.
+"""
 import os
 from PIL import Image
 

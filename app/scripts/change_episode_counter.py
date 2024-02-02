@@ -1,4 +1,8 @@
 import os
+"""
+Title: Episode Counter Renamer
+Description: Increment or decrement the episode counter in the file names of a directory.
+"""
 import re
 
 # Function to rename files in a directory, more specifically to change the episode counter
