@@ -7,8 +7,8 @@ import os
 from tkinter import filedialog
 
 def rename_or_remove_string_in_title(directory):
-
     string_to_replace = input("String to replace (example: 'S05'):")
+    print("Replace the string with another string or leave it empty to remove it.")
     replace_by = input("String to replace by (example: 'S06'):")
 
     # Loop through each file in the directory

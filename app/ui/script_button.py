@@ -11,8 +11,8 @@ class ScriptButton:
         """
         self.master = master
         self.script_info = script_info
-        self.button = tk.Button(master, text=script_info['script_title'], command=self.on_click)
-        self.button.pack(pady=5)
+        # self.button = tk.Button(master, text=script_info['script_title'], command=self.on_click)
+        # self.button.pack(pady=5)
 
     def on_click(self):
         """
