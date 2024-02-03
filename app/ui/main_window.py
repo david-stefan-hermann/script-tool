@@ -12,7 +12,6 @@ class MainWindow(QWidget):
         # Set the window title
         self.setWindowTitle("Script Kiddie")
 
-
         print(os.path.dirname(os.path.abspath(sys.argv[0])))
         # Set the window icon
         self.setWindowIcon(QIcon(os.path.dirname(os.path.abspath(sys.argv[0])) + "/media/icon.png"))
