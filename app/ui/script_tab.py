@@ -35,6 +35,7 @@ class ScriptTab(QWidget):
 
         # Add a label for the description
         self.description = QLabel(self.script_info["script_description"], self)
+        self.description.setWordWrap(True)
         self.description.setStyleSheet("color: white; font-size: 14px; padding: 10px;")
         self.layout.addWidget(self.description)
 
