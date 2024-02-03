@@ -1,6 +1,9 @@
+import os
+import sys
 from ui.script_tab import ScriptTab
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QPushButton, QStackedWidget, QVBoxLayout, QWidget, QHBoxLayout, QLabel
+from PyQt6.QtWidgets import QFrame, QPushButton, QStackedWidget, QVBoxLayout, QWidget, QHBoxLayout, QLabel
+from PyQt6.QtGui import QIcon, QPixmap
 
 class MainWindow(QWidget):
     def __init__(self, scripts_info, parent=None):
@@ -8,6 +11,11 @@ class MainWindow(QWidget):
 
         # Set the window title
         self.setWindowTitle("Script Kiddie")
+
+
+        print(os.path.dirname(os.path.abspath(sys.argv[0])))
+        # Set the window icon
+        self.setWindowIcon(QIcon(os.path.dirname(os.path.abspath(sys.argv[0])) + "/media/icon.png"))
 
         # Set the background color
         self.setStyleSheet("""
@@ -17,11 +25,33 @@ class MainWindow(QWidget):
 
         self.main_layout = QVBoxLayout(self)
 
+        self.headline_layout = QHBoxLayout()
+
+        # Create a label for the icon
+        self.icon_label = QLabel(self)
+        self.icon_pixmap = QPixmap(os.path.dirname(os.path.abspath(sys.argv[0])) + "/media/icon.png")
+        self.icon_pixmap = self.icon_pixmap.scaled(48, 48, Qt.AspectRatioMode.KeepAspectRatio)  # Resize the pixmap
+        self.icon_label.setPixmap(self.icon_pixmap)
+        self.headline_layout.addWidget(self.icon_label)
+
         # Add a headline
         self.headline = QLabel("Script Kiddie", self)
-        self.headline.setStyleSheet("color: 'white'; font-size: 24px; padding: 10px; border-bottom: 1px solid #FFF;")
-        self.headline.setAlignment(Qt.AlignmentFlag.AlignCenter)  # Center the headline
-        self.main_layout.addWidget(self.headline)
+        self.headline.setStyleSheet("color: 'white'; font-size: 24px; padding: 10px;")
+        
+        self.headline_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)  # Center the headline
+        self.headline_layout.addWidget(self.headline)
+
+        self.main_layout.addLayout(self.headline_layout)
+
+        # Create a horizontal line
+        self.line = QFrame(self)
+        self.line.setFrameShape(QFrame.Shape.HLine)
+        self.line.setFrameShadow(QFrame.Shadow.Sunken)
+        self.line.setFixedHeight(2)
+        self.line.setStyleSheet("background-color: 'white';")
+
+        # Add the line to the main layout
+        self.main_layout.addWidget(self.line)
 
         self.content_layout = QHBoxLayout()
         self.main_layout.addLayout(self.content_layout)
