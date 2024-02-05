@@ -37,3 +37,4 @@ def resize_images_in_folder(folder):
 
 if __name__ == '__main__':
     resize_images_in_folder(filedialog.askdirectory())
+    exit()

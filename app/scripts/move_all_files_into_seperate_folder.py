@@ -51,3 +51,4 @@ def organize_files(directory):
 
 if __name__ == '__main__':
     organize_files(filedialog.askdirectory())
+    exit()
