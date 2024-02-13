@@ -15,6 +15,7 @@ Description: Automatically organize video files in the current directory, placin
 
 import os
 from tkinter import filedialog
+import re
 
 # Automatically organize files in the current directory when the script is run
 def organize_files(directory):
@@ -33,7 +34,8 @@ def organize_files(directory):
         # Modify the folder name
         folder_name = filename.split('.')[0]  # Remove file extension
         folder_name = folder_name.replace("_", " ")  # Replace '_' with ' '
-        folder_name = ''.join(folder_name.split('(')[0]).strip()  # Remove parentheses and their content
+        # Remove parentheses and their content from folder_name
+        folder_name = re.sub(r'\([^()]*\)', '', folder_name).strip()
 
         # Create a new folder path
         new_folder_path = os.path.join(directory, folder_name)
