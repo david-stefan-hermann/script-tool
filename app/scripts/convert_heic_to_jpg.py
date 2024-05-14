@@ -1,3 +1,10 @@
+"""
+Title: convert HEIC to JPG
+Description: This Python script uses Pillow and pillow_heif to 
+convert all .heic images in a user-selected directory to .jpg format, 
+saving the converted images in a subfolder named converted_images.
+"""
+
 import os
 from PIL import Image
 import pillow_heif
@@ -29,6 +36,17 @@ def convert_heic_to_jpg(source_folder):
                 print(f"Converted {filename} to {jpg_path}")
             except Exception as e:
                 print(f"Failed to convert {filename}: {e}")
+
+    # Open the output folder in the file explorer
+    try:
+        if sys.platform == 'win32':
+            os.startfile(output_folder)
+        elif sys.platform == 'darwin':
+            subprocess.call(['open', output_folder])
+        else:
+            subprocess.call(['xdg-open', output_folder])
+    except Exception as e:
+        print(f"Failed to open the folder: {e}")
 
 def choose_directory():
     root = tk.Tk()
