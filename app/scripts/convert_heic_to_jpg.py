@@ -1,8 +1,6 @@
 """
 Title: convert HEIC to JPG
-Description: This Python script uses Pillow and pillow_heif to 
-convert all .heic images in a user-selected directory to .jpg format, 
-saving the converted images in a subfolder named converted_images.
+Description: This Python script uses Pillow and pillow_heif to convert all .heic images in a user-selected directory to .jpg format, saving the converted images in a subfolder named converted_images.
 """
 
 import os
