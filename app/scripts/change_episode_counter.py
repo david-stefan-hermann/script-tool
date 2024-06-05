@@ -12,6 +12,8 @@ import re
 
 
 def rename_files(directory):
+    print(f"Renaming files in directory: {directory} \n")
+    print("The pattern to be matched is 'EXXX' where XXX is a number. \n")
     amount_to_be_added = input("Amount to be added or substracted to episode title (can be negative): ") # can be negative
 
     # Regex to match the pattern 'EXXX' where XXX is a number
