@@ -1,6 +1,7 @@
 """
 Title: QR Code Generator
 Description: This Python script enables users to input a URL and select a save location to generate and save a QR code linking to the specified URL."""
+import os
 import qrcode
 from tkinter import filedialog
 from tkinter import Tk
@@ -43,4 +44,4 @@ def generate_qr_code():
 
 if __name__ == "__main__":
     generate_qr_code()
-    exit()
+    os.system('exit')
