@@ -1,6 +1,6 @@
 """
-title: Episode Name Appender
-description: Rename media files in a directory with episode names from a .txt file in the same directory.
+Title: Episode Name Appender
+Description: Rename media files in a directory with episode names from a .txt file in the same directory.
 """
 
 import os
