@@ -1,3 +1,8 @@
+"""
+title: Episode Name Appender
+description: Rename media files in a directory with episode names from a .txt file in the same directory.
+"""
+
 import os
 import sys
 from tkinter import filedialog
