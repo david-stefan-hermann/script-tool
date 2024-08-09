@@ -18,7 +18,8 @@ export default function File({ index, file, onClickFunction }: FileProps) {
     return (
         <li
             key={index}
-            className={`py-1 px-4 flex cursor-pointer ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'
+            className={`py-1 pl-4 flex cursor-pointer break-all
+                ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'
                 } hover:bg-gray-200 transition-colors duration-200`}
             onClick={() => { file.is_dir && onClickFunction(file.path) }}
         >
