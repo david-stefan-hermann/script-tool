@@ -59,6 +59,7 @@ export default function Controls({ setPath, path }: ControlsProps) {
                     </h1>
                     {drives.map((drive, index) => (
                         <button
+                            key={index}
                             className={`py-1 pl-4 flex cursor-pointer break-all
                                 ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'
                                 } hover:bg-gray-200 transition-colors duration-200`}

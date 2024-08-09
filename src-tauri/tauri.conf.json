@@ -3,7 +3,7 @@
     "beforeBuildCommand": "npm run build",
     "beforeDevCommand": "npm run dev",
     "devPath": "http://localhost:3000",
-    "distDir": "../out"
+    "distDir": "./frontend/out"
   },
   "package": {
     "productName": "script-kiddie",
@@ -36,7 +36,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "script-kiddie.pfuev.org",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
