@@ -45,3 +45,8 @@ export type DriveInfo = {
     letter: string;
     name: string;
 };
+
+export const renameFilesInDirectory = async (targetStr: string, replacementStr: string): Promise<void> => {
+    console.log("Renaming filesss:", targetStr, replacementStr);
+    return invoke('rename_files_in_directory', { target_str: targetStr, replacement_str: replacementStr });
+};

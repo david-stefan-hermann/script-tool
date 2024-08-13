@@ -1,5 +1,6 @@
 use dirs;
 use serde::Serialize;
+use tauri::AppHandle;
 use std::ffi::OsString;
 use std::fs;
 use std::os::windows::ffi::OsStrExt;
@@ -7,6 +8,7 @@ use std::os::windows::ffi::OsStringExt;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
 use tauri::command;
+use tauri::Manager;
 use winapi::um::fileapi::GetDriveTypeW;
 use winapi::um::fileapi::{GetLogicalDrives, GetVolumeInformationW};
 use winapi::um::winbase::{DRIVE_FIXED, DRIVE_REMOTE};
@@ -22,12 +24,14 @@ pub struct FileInfo {
 #[derive(Debug)]
 pub struct FileExplorer {
     current_path: PathBuf,
+    app_handle: tauri::AppHandle,
 }
 
 impl FileExplorer {
-    pub fn new() -> Self {
+    pub fn new(app_handle: AppHandle) -> Self {
         Self {
             current_path: dirs::home_dir().unwrap_or_else(|| PathBuf::from("/")),
+            app_handle,
         }
     }
 
@@ -59,6 +63,13 @@ impl FileExplorer {
     pub fn change_directory(&mut self, path: PathBuf) -> Result<(), String> {
         if path.is_dir() {
             self.current_path = path;
+
+            // Emit event
+            self.app_handle.emit_all(
+                "directory-changed",
+                Some(self.current_path.to_string_lossy().to_string()),
+            ).map_err(|e| e.to_string())?;
+
             Ok(())
         } else {
             Err("Path is not a directory".to_string())
@@ -68,6 +79,13 @@ impl FileExplorer {
     pub fn go_to_parent_directory(&mut self) -> Result<(), String> {
         if let Some(parent) = self.current_path.parent() {
             self.current_path = parent.to_path_buf();
+
+            // Emit event
+            self.app_handle.emit_all(
+                "directory-changed",
+                Some(self.current_path.to_string_lossy().to_string()),
+            ).map_err(|e| e.to_string())?;
+
             Ok(())
         } else {
             Err("No parent directory found".to_string())
@@ -105,7 +123,14 @@ impl FileExplorer {
 
     pub fn list_files_in_home_directory(&mut self) -> Result<Vec<FileInfo>, String> {
         let home_dir = dirs::home_dir().ok_or("Failed to get home directory")?;
-        self.current_path = home_dir.clone();  // Update the current path to home directory
+        self.current_path = home_dir.clone(); // Update the current path to home directory
+
+        // Emit event
+        self.app_handle.emit_all(
+            "directory-changed",
+            Some(self.current_path.to_string_lossy().to_string()),
+        ).map_err(|e| e.to_string())?;
+
         let entries = fs::read_dir(&home_dir).map_err(|e| e.to_string())?;
         let mut files = Vec::new();
         for entry in entries {
@@ -132,7 +157,7 @@ impl FileExplorer {
     }
 }
 
-fn is_video_file(path: &Path) -> bool {
+pub fn is_video_file(path: &Path) -> bool {
     if let Some(extension) = path.extension() {
         match extension.to_str().unwrap_or("").to_lowercase().as_str() {
             "mp4" | "mkv" | "avi" | "mov" | "wmv" | "flv" | "webm" | "m4v" => true,
