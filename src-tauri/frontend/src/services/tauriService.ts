@@ -48,5 +48,10 @@ export type DriveInfo = {
 
 export const renameFilesInDirectory = async (targetStr: string, replacementStr: string): Promise<void> => {
     console.log("Renaming filesss:", targetStr, replacementStr);
-    return invoke('rename_files_in_directory', { target_str: targetStr, replacement_str: replacementStr });
+    return invoke('rename_files_in_directory', { targetStr: targetStr, replacementStr: replacementStr });
+};
+
+export const adjustEpisodeNumbersInDirectory = async (adjustmentValue: number): Promise<void> => {
+    console.log("Adjusting episode numbers by:", adjustmentValue);
+    return invoke('adjust_episode_numbers_in_directory', { adjustmentValue });
 };

@@ -11,11 +11,24 @@ import {
 import Controls from './Controls';
 import File from './File';
 import BreadCrumbs from './BreadCrumbs';
+import { listen } from '@tauri-apps/api/event';
 
 
 export default function FileExplorer() {
     const [files, setFiles] = useState<FileInfo[]>([]);
     const [hierarchy, setHierarchy] = useState<DirectoryHierarchy[]>([]);
+
+    useEffect(() => {
+        const unlisten = listen<string>('trigger-reload', async (event) => {
+            const newFiles = await listFilesInCurrentDirectory();
+
+            setFiles(newFiles);
+        });
+
+        return () => {
+            unlisten.then((fn) => fn()); // Unsubscribe from the event when the component unmounts
+        };
+    }, []);
 
     useEffect(() => {
         async function loadInitialData() {

@@ -69,7 +69,7 @@ impl FileExplorer {
                 "directory-changed",
                 Some(self.current_path.to_string_lossy().to_string()),
             ).map_err(|e| e.to_string())?;
-
+            
             Ok(())
         } else {
             Err("Path is not a directory".to_string())

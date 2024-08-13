@@ -34,8 +34,15 @@ export default function FilePreview() {
             setPath(newPath);
         });
 
+        const unlistenTriggerReload = listen<string>('trigger-reload', async (event) => {
+            const files = await listFilesInCurrentDirectory();
+
+            setFiles(files);
+        });
+
         return () => {
             unlisten.then((fn) => fn()); // Unsubscribe from the event when the component unmounts
+            unlistenTriggerReload.then((fn) => fn());
         };
     }, []);
 

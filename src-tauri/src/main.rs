@@ -10,7 +10,7 @@ use file_explorer::{
     change_directory, get_current_path, get_directory_hierarchy, go_to_parent_directory,
     list_drives, list_files_in_current_directory, FileExplorer, list_files_in_home_directory,
 };
-use file_operations::rename_files_in_directory; // Import the rename command
+use file_operations::{rename_files_in_directory, adjust_episode_numbers_in_directory};
 
 use std::sync::{Arc, Mutex};
 use tauri::{generate_handler, Builder, Manager};
@@ -33,7 +33,8 @@ fn main() {
             get_directory_hierarchy,
             list_drives,
             list_files_in_home_directory,
-            rename_files_in_directory
+            rename_files_in_directory,
+            adjust_episode_numbers_in_directory,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
