@@ -14,8 +14,8 @@ pub fn rename_files_in_directory(
     replacement_str: String,
     window: Window, // Add the window parameter to emit events
 ) -> Result<(), String> {
-    if target_str.is_empty() || replacement_str.is_empty() {
-        return Err("Target or replacement string cannot be empty.".to_string());
+    if target_str.is_empty() {
+        return Err("Target string cannot be empty.".to_string());
     }
 
     let explorer = state.lock().unwrap();
@@ -81,64 +81,6 @@ pub fn rename_media_files_in_directory(
 
     Ok(())
 }
-
-// #[command]
-// pub fn adjust_episode_numbers_in_directory(
-//     state: State<'_, Arc<Mutex<FileExplorer>>>,
-//     adjustment_value: i32,
-//     window: Window, // To emit events
-// ) -> Result<(), String> {
-//     let explorer = state.lock().unwrap();
-//     let current_path = PathBuf::from(explorer.get_current_path());
-
-//     adjust_episode_numbers(&current_path, adjustment_value)
-//         .map_err(|e| format!("Failed to adjust episode numbers: {:?}", e))?;
-
-//     // Emit an event when adjustment is successful
-//     window.emit("trigger-reload", "Episode numbers adjusted successfully").unwrap();
-
-//     Ok(())
-// }
-
-// pub fn adjust_episode_numbers(
-//     directory: &Path,
-//     adjustment_value: i32,
-// ) -> Result<(), io::Error> {
-//     let entries = fs::read_dir(directory)?;
-
-//     let pattern = Regex::new(r"(S\d{2,3})E(\d{2,3})").unwrap();
-
-//     for entry in entries {
-//         let entry = entry?;
-//         let path = entry.path();
-
-//         if path.is_file() && is_video_file(&path) {
-//             if let Some(file_name) = path.file_name().and_then(OsStr::to_str) {
-//                 if let Some(new_file_name) = adjust_episode_number_in_filename(file_name, &pattern, adjustment_value) {
-//                     let new_path = path.with_file_name(new_file_name);
-//                     fs::rename(&path, new_path)?;
-//                 }
-//             }
-//         }
-//     }
-
-//     Ok(())
-// }
-
-// fn adjust_episode_number_in_filename(file_name: &str, pattern: &Regex, adjustment_value: i32) -> Option<String> {
-//     if let Some(caps) = pattern.captures(file_name) {
-//         let season_part = &caps[1]; // e.g., "S01" or "S010"
-//         let episode_number_str = &caps[2]; // e.g., "01" or "001"
-
-//         if let Ok(episode_number) = episode_number_str.parse::<i32>() {
-//             let new_episode_number = episode_number + adjustment_value;
-//             let new_episode_str = format!("{:0width$}", new_episode_number, width = episode_number_str.len());
-//             let new_file_name = pattern.replace(file_name, format!("{}E{}", season_part, new_episode_str)).to_string();
-//             return Some(new_file_name);
-//         }
-//     }
-//     None
-// }
 
 #[command]
 pub fn adjust_episode_numbers_in_directory(
