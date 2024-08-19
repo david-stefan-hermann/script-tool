@@ -61,7 +61,7 @@ export default function FileExplorer() {
 
             <ul className="flex-col w-full max-h-full overflow-x-hidden flex-grow bg-gray-50 text-md">
                 {files.map((file, index) => (
-                    <File index={index} file={file} onClickFunction={handleDirectoryClick} />
+                    <File key={index} index={index} file={file} onClickFunction={handleDirectoryClick} />
                 ))}
             </ul >
             <Controls setFiles={setFiles} setHierarchy={setHierarchy} />
