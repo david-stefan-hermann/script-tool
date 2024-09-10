@@ -14,7 +14,7 @@ export default function FileOperations() {
         setOptions([
             {
                 id: 'fileRenamer',
-                title: 'Titel umbenennen',
+                title: 'Suchen und Ersetzen',
                 description: 'Benenne Video Dateien in einem Verzeichnis um.',
                 option: <FileRenamer />
             },
@@ -38,7 +38,7 @@ export default function FileOperations() {
             <div className="w-full flex flex-col bg-white mb-4">
                 <h1 className="flex text-xl font-bold bg-gray-300 pl-2 py-2">Aktion</h1>
                 <div className="p-2 flex flex-col gap-2">
-                    <span className="mr-2 flex flex-row"><BsTools className='align-text-top h-5 w-5 text-blue-500 inline mr-2' />Werkzeug</span>
+                    <span className="mr-2"><BsTools className='h-5 w-5 align-sub inline text-blue-500 mr-2' />Werkzeug</span>
                     <select
                         id="operation-select"
                         value={selectedOperation}
@@ -51,7 +51,7 @@ export default function FileOperations() {
                             </option>
                         ))}
                     </select>
-                    <span className="mr-2 flex flex-row"><BsInfoCircle className='align-text-top h-5 w-5 text-blue-500 inline mr-2' />Beschreibung</span>
+                    <span className="mr-2"><BsInfoCircle className='h-5 w-5 align-sub inline text-blue-500 mr-2' />Beschreibung</span>
                     <span>{options?.find((option) => option.id === selectedOperation)?.description}</span>
                 </div>
             </div>

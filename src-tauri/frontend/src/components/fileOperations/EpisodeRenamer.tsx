@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { renameEpisodesWithTitles, getCurrentEpisodeNames } from '../../services/tauriService'; // Adjust the import path as necessary
 import { listen } from '@tauri-apps/api/event'; // Import the event listener
+import { BsInfoCircle } from 'react-icons/bs';
 
 export default function EpisodeRenamer() {
     const [episodeTitles, setEpisodeTitles] = useState<string>('');
@@ -56,6 +57,7 @@ export default function EpisodeRenamer() {
         <div className="w-full flex flex-col bg-white h-full">
             <h1 className="text-lg font-bold bg-gray-200 pl-2 py-1">Episoden Umbenennen</h1>
             <div className="flex flex-col gap-2 p-2 h-full">
+            <span className="mr-2"><BsInfoCircle className='h-5 w-5 align-sub inline text-blue-500 mr-2' />Episodentitel (jede Zeile ist eine Episode)</span>
                 <div className="flex flex-row flex-grow">
                     <textarea
                         style={{ whiteSpace: 'pre', overflowY: 'auto', }}
