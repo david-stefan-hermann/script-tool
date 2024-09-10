@@ -10,6 +10,7 @@ export default function EpisodeRenamer() {
 
     // Function to fetch and set current episode titles
     async function fetchCurrentEpisodes() {
+        setError(null);
         try {
             const currentTitles = await getCurrentEpisodeNames();
             setEpisodeTitles(currentTitles.join('\n')); // Pre-fill text area with the episode titles
@@ -57,7 +58,7 @@ export default function EpisodeRenamer() {
             <div className="flex flex-col gap-2 p-2 h-full">
                 <div className="flex flex-row flex-grow">
                     <textarea
-                        style={{ whiteSpace: 'pre', overflowY: 'auto',}}
+                        style={{ whiteSpace: 'pre', overflowY: 'auto', }}
                         value={episodeTitles}
                         onChange={(e) => setEpisodeTitles(e.target.value)}
                         placeholder="Episodentitel (jede Zeile ist eine Episode)"
