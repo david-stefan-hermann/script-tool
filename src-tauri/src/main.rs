@@ -7,7 +7,7 @@ mod anime_episodes;
 mod file_explorer;
 mod file_operations;
 
-use anime_episodes::fetch_anime_episode_titles;
+use anime_episodes::fetch_anime_episode_titles_grouped_by_season;
 use file_explorer::{
     change_directory, get_current_path, get_directory_hierarchy, go_to_parent_directory,
     list_drives, list_files_in_current_directory, list_files_in_home_directory, FileExplorer,
@@ -41,7 +41,7 @@ fn main() {
             adjust_episode_numbers_in_directory,
             rename_episodes_with_titles,
             get_current_episode_names,
-            fetch_anime_episode_titles,
+            fetch_anime_episode_titles_grouped_by_season,
             open_episode_title_window,
         ])
         .run(tauri::generate_context!())
