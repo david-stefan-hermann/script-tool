@@ -52,17 +52,16 @@ export default function EpisodeRenamer() {
     }
 
     return (
-        <div className="w-full flex flex-col bg-white">
+        <div className="w-full flex flex-col bg-white h-full">
             <h1 className="text-lg font-bold bg-gray-200 pl-2 py-1">Episoden Umbenennen</h1>
-            <div className="flex flex-col gap-2 p-2">
-                <div className="flex flex-row">
-
+            <div className="flex flex-col gap-2 p-2 h-full">
+                <div className="flex flex-row flex-grow">
                     <textarea
-                        style={{ whiteSpace: 'pre', overflowY: 'auto' }}
+                        style={{ whiteSpace: 'pre', overflowY: 'auto',}}
                         value={episodeTitles}
                         onChange={(e) => setEpisodeTitles(e.target.value)}
                         placeholder="Episodentitel (jede Zeile ist eine Episode)"
-                        className="border rounded px-2 py-1 h-48 font-mono w-full"
+                        className="border rounded px-2 py-1 font-mono w-full"
                     />
                 </div>
                 {error && <div className="text-red-500">{error}</div>}

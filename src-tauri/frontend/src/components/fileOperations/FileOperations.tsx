@@ -34,7 +34,7 @@ export default function FileOperations() {
     });
 
     return (
-        <>
+        <div className='flex flex-col h-full'>
             <div className="w-full flex flex-col bg-white mb-4">
                 <h1 className="flex text-xl font-bold bg-gray-300 pl-2 py-2">Aktion</h1>
                 <div className="p-2 flex flex-col gap-2">
@@ -56,7 +56,7 @@ export default function FileOperations() {
                 </div>
             </div>
             {selectedOperation && options?.find((option) => option.id === selectedOperation)?.option}
-        </>
+        </div>
     );
 }
 
