@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { renameEpisodesWithTitles, getCurrentEpisodeNames } from '../../services/tauriService'; // Adjust the import path as necessary
+import { renameEpisodesWithTitles, getCurrentEpisodeNames, openEpisodeTitleWindow } from '../../services/tauriService'; // Adjust the import path as necessary
 import { listen } from '@tauri-apps/api/event'; // Import the event listener
+import { invoke } from '@tauri-apps/api/tauri';
 import { BsInfoCircle } from 'react-icons/bs';
 
 export default function EpisodeRenamer() {
@@ -57,7 +58,7 @@ export default function EpisodeRenamer() {
         <div className="w-full flex flex-col bg-white h-full">
             <h1 className="text-lg font-bold bg-gray-200 pl-2 py-1">Episoden Umbenennen</h1>
             <div className="flex flex-col gap-2 p-2 h-full">
-            <span className="mr-2"><BsInfoCircle className='h-5 w-5 align-sub inline text-blue-500 mr-2' />Episodentitel (jede Zeile ist eine Episode)</span>
+                <span className="mr-2"><BsInfoCircle className='h-5 w-5 align-sub inline text-blue-500 mr-2' />Episodentitel (jede Zeile ist eine Episode)</span>
                 <div className="flex flex-row flex-grow">
                     <textarea
                         style={{ whiteSpace: 'pre', overflowY: 'auto', }}
@@ -68,9 +69,14 @@ export default function EpisodeRenamer() {
                     />
                 </div>
                 {error && <div className="text-red-500">{error}</div>}
-                <button onClick={handleRename} className="bg-blue-500 text-white px-4 py-2 rounded">
-                    Episoden umbenennen
-                </button>
+                <div className='flex flex-row gap-2'>
+                    <button onClick={openEpisodeTitleWindow} className="bg-gray-500 text-white px-4 py-2 rounded flex-grow">
+                        Titel laden
+                    </button>
+                    <button onClick={handleRename} className="bg-blue-500 text-white px-4 py-2 rounded flex-grow">
+                        Umbenennen
+                    </button>
+                </div>
             </div>
         </div>
     );

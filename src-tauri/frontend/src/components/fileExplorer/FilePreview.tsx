@@ -8,6 +8,7 @@ import {
 } from '../../services/tauriService';
 import File from './File';
 import { listen } from '@tauri-apps/api/event';
+import React from 'react';
 
 export default function FilePreview() {
     const [files, setFiles] = useState<FileInfo[]>([]);
@@ -54,9 +55,9 @@ export default function FilePreview() {
             </span>
             <ul className="flex-col w-full max-h-full overflow-x-hidden flex-grow bg-gray-50 text-md">
                 {files.map((file, index) => (
-                    <>{file.is_video &&
+                    <React.Fragment key={index}>{file.is_video &&
                         <File index={index} file={file} onClickFunction={() => { }} />
-                    }</>
+                    }</React.Fragment>
                 ))}
             </ul >
         </div>

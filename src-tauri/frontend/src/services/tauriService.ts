@@ -56,7 +56,7 @@ export const adjustEpisodeNumbersInDirectory = async (adjustmentValue: number): 
     return invoke('adjust_episode_numbers_in_directory', { adjustmentValue });
 };
 
-export const getCurrentEpisodeNames = async(): Promise<string[]> => {
+export const getCurrentEpisodeNames = async (): Promise<string[]> => {
     console.log("Getting current episode names");
     return invoke('get_current_episode_names');
 };
@@ -64,4 +64,13 @@ export const getCurrentEpisodeNames = async(): Promise<string[]> => {
 export const renameEpisodesWithTitles = async (episodeTitles: string[]): Promise<void> => {
     console.log("Renaming episodes with titles:", episodeTitles);
     return invoke('rename_episodes_with_titles', { episodeTitles });
+};
+
+export const openEpisodeTitleWindow = async (): Promise<void> => {
+    console.log("Opening episode title window");
+    try {
+        await invoke('open_episode_title_window'); // Call the Tauri command
+    } catch (error) {
+        console.error('Failed to open new window:', error);
+    }
 };

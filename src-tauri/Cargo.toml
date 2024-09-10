@@ -24,6 +24,8 @@ dirs = "5.0.1"
 winapi = { version = "0.3.9", features = ["fileapi"] }
 regex = "1.10.6"
 sanitize-filename = "0.5"
+reqwest = { version = "0.12.7", features = ["json"] }
+tokio = { version = "1.40.0", features = ["full"] }
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem and the built-in dev server is disabled.
