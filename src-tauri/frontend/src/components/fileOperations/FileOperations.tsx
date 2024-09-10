@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import FileRenamer from './FileRenamer';
 import EpisodeNumberAdjuster from './EpisodeNumberAdjuster';
 import { BsInfo, BsInfoCircle, BsTools, BsWrench } from 'react-icons/bs';
+import EpisodeRenamer from './EpisodeRenamer';
 
 export default function FileOperations() {
     const [selectedOperation, setSelectedOperation] = useState<string>('fileRenamer');
@@ -22,6 +23,12 @@ export default function FileOperations() {
                 title: 'Episodennummer anpassen',
                 description: 'Passe die Episodennummern in den Dateinamen an.',
                 option: <EpisodeNumberAdjuster />
+            },
+            {
+                id: 'episodeRenamer',
+                title: 'Episoden umbenennen',
+                description: 'Benenne Episoden in einem Verzeichnis um.',
+                option: <EpisodeRenamer />
             }
         ]);
     });

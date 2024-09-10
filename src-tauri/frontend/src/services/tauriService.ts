@@ -55,3 +55,13 @@ export const adjustEpisodeNumbersInDirectory = async (adjustmentValue: number): 
     console.log("Adjusting episode numbers by:", adjustmentValue);
     return invoke('adjust_episode_numbers_in_directory', { adjustmentValue });
 };
+
+export const getCurrentEpisodeNames = async(): Promise<string[]> => {
+    console.log("Getting current episode names");
+    return invoke('get_current_episode_names');
+};
+
+export const renameEpisodesWithTitles = async (episodeTitles: string[]): Promise<void> => {
+    console.log("Renaming episodes with titles:", episodeTitles);
+    return invoke('rename_episodes_with_titles', { episodeTitles });
+};
