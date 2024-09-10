@@ -64,7 +64,7 @@ export default function Controls({ setFiles, setHierarchy }: ControlsProps) {
     return (
         <>
             {showDrives && <ControlsDriveList handleDirectoryClick={handleDirectoryClick} handleListDrives={handleListDrives} drives={drives} />}
-            <div className="flex text-2xl font-bold bg-gray-300 pl-2 py-2 text-blue-500">
+            <div className="flex text-2xl font-bold bg-gray-300 pl-2 py-3 text-blue-500">
                 <ControlsButtonBack handleGoUp={handleGoUp} />
                 <ControlsButtonHome handleGoHome={handleGoHome} />
                 <ControlsButtonDrives handleListDrives={handleListDrives} showDrives={showDrives} />
@@ -79,7 +79,7 @@ interface ControlsButtonBackProps {
 
 function ControlsButtonBack({ handleGoUp }: ControlsButtonBackProps) {
     return (
-        <Tooltip content="Back" placement="top" className='bg-white px-2 rounded border border-gray-100'>
+        <Tooltip content="Zurück" placement="top" className='bg-white px-2 rounded border border-gray-100'>
             <div
                 className="h-6 w-6 text-red-500 inline mr-2 cursor-pointer hover:text-red-600 active:text-green-500"
                 onClick={handleGoUp}
@@ -96,7 +96,7 @@ interface ControlsButtonHomeProps {
 
 function ControlsButtonHome({ handleGoHome }: ControlsButtonHomeProps) {
     return (
-        <Tooltip content="Home" placement="top" className='bg-white px-2 rounded border border-gray-100'>
+        <Tooltip content="Zum Home Verzeichnis" placement="top" className='bg-white px-2 rounded border border-gray-100'>
             <div
                 className="h-6 w-6 text-red-500 inline mr-2 cursor-pointer hover:text-red-600 active:text-green-500"
                 onClick={handleGoHome}
@@ -115,7 +115,7 @@ interface ControlsButtonDrivesProps {
 function ControlsButtonDrives({ handleListDrives, showDrives }: ControlsButtonDrivesProps) {
 
     return (
-        <Tooltip content="Show Drives" placement="top" className='bg-white px-2 rounded border border-gray-100'>
+        <Tooltip content="Laufwerke anzeigen" placement="top" className='bg-white px-2 rounded border border-gray-100'>
             <div
                 className={`inline mr-2 cursor-pointer ${showDrives ? 'text-green-500 hover:text-green-600' : 'text-red-500 hover:text-red-600'}`}
                 onClick={handleListDrives}
