@@ -1,14 +1,8 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { invoke } from '@tauri-apps/api/tauri';
-
-interface SeasonedEpisodes {
-  season: number;
-  start_episode: number;
-  end_episode: number;
-  titles: string[];
-}
+import { useState } from 'react';
+import { SeasonedEpisodes, fetchAnimeEpisodeTitlesGroupedBySeason, fetchTVDBAnimeEpisodeTitles, fetchTVMAZEAnimeEpisodeTitlesBySeason } from '@/services/tauriService';
+import { Tooltip } from '@nextui-org/tooltip';
 
 export default function EpisodeTitleFetcher() {
   const [animeId, setAnimeId] = useState<number | null>(null);
@@ -17,6 +11,17 @@ export default function EpisodeTitleFetcher() {
   const [seasons, setSeasons] = useState<SeasonedEpisodes[]>([]);
   const [selectedSeason, setSelectedSeason] = useState<number>(1);
   const [error, setError] = useState<string | null>(null);
+  const apiSourceUrl = {
+    "TVDB": { href: "https://www.thetvdb.com/", name: "TheTVDB" },
+    "JIKA": { href: "https://jikan.moe/", name: "Jikan" },
+    "TVMZ": { href: "https://www.tvmaze.com/", name: "TVMaze" },
+  }
+  const [copySuccess, setCopySuccess] = useState('');  // For displaying the copy success message
+
+  // For handling the TVDB API key and the switch between Jikan and TheTVDB
+  type ApiOption = 'TVDB' | 'JIKA' | 'TVMZ';  // Define the three possible options
+  const [apiOption, setApiOption] = useState<ApiOption>('TVMZ');  // Initialize with one of the options
+  const [tvdbApiKey, setTvdbApiKey] = useState<string | null>(null); // Store API key for TVDB
 
   const fetchEpisodeTitles = async () => {
     setError(null);
@@ -24,11 +29,19 @@ export default function EpisodeTitleFetcher() {
     setSelectedSeason(1);
 
     try {
-      const fetchedSeasons: SeasonedEpisodes[] = await invoke('fetch_anime_episode_titles_grouped_by_season', {
-        animeId,
-        animeName,
-        year,
-      });
+      let fetchedSeasons: SeasonedEpisodes[] = [];
+
+      if (apiOption == "TVDB") {
+        if (!tvdbApiKey) {
+          setError('TVDB API key is required.');
+          return;
+        }
+        // Fetch from TheTVDB
+        fetchedSeasons = await fetchTVDBAnimeEpisodeTitles(tvdbApiKey, animeId, animeName, year);
+      } else {
+        // Fetch from Jikan
+        fetchedSeasons = await fetchAnimeEpisodeTitlesGroupedBySeason(animeId, animeName, year);
+      }
 
       setSeasons(fetchedSeasons);
       if (fetchedSeasons.length > 0) {
@@ -44,7 +57,10 @@ export default function EpisodeTitleFetcher() {
     const selectedTitles = seasons.find((season) => season.season === selectedSeason)?.titles.join('\n');
     if (selectedTitles) {
       navigator.clipboard.writeText(selectedTitles).then(() => {
-        alert('Copied to clipboard!');
+        setCopySuccess('Werte kopiert!');
+        setTimeout(() => {
+          setCopySuccess('');
+        }, 2000);
       });
     }
   };
@@ -54,12 +70,64 @@ export default function EpisodeTitleFetcher() {
   };
 
   return (
-    <div className="w-full h-full flex flex-col bg-white">
-      <h1 className="flex text-xl font-bold bg-gray-300 pl-2 py-2">Episode Title Fetcher</h1>
-      <div className="flex-col w-full max-h-full overflow-x-hidden flex-grow bg-gray-50 text-md p-4">
+    <div className="flex flex-col gap-4 w-full h-full overflow-x-hidden bg-gray-100 text-md p-4 font-medium">
+      <div className="flex flex-row gap-4">
+        {/* API Selection Images */}
+        <div>
+          <label className="block mb-2">API Quelle <a className="text-blue-500 hover:text-blue-600" href={apiSourceUrl[apiOption].href} target="_blank" rel="noopener noreferrer">{apiSourceUrl[apiOption].href}</a>
+          </label>
+          <div className="flex gap-2">
+            {/* Jikan Button */}
+            <Tooltip content="Jikan" placement="top" className='bg-white px-2 rounded border border-gray-100'>
+              <img
+                src={"/logos/jikan_logo.png"}
+                alt="Jikan API"
+                className={`cursor-pointer h-16 w-16 ${apiOption == "JIKA" ? 'border-4 border-orange-500' : ''}`}
+                onClick={() => setApiOption("JIKA")}
+              />
+            </Tooltip>
+            {/* TVDB Button */}
+            <Tooltip content="TheTVDB" placement="top" className='bg-white px-2 rounded border border-gray-100'>
+              <img
+                src={"/logos/thetvdb_logo.jpg"}
+                alt="TheTVDB API"
+                className={`cursor-pointer h-16 w-16 ${apiOption == "TVDB" ? 'border-4 border-orange-500' : ''}`}
+                onClick={() => setApiOption("TVDB")}
+              />
+            </Tooltip>
+            {/* TVMaze Button */}
+            <Tooltip content="TVMaze" placement="top" className='bg-white px-2 rounded border border-gray-100'>
+              <img
+                src={"/logos/tvmaze_logo.png"}
+                alt="TVmaze API"
+                className={`cursor-pointer h-16 w-16 ${apiOption == "TVMZ" ? 'border-4 border-orange-500' : ''}`}
+                onClick={() => setApiOption("TVMZ")}
+              />
+            </Tooltip>
+          </div>
+        </div>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-2">Anime ID</label>
+        {/* TVDB API Key Input (shown if TheTVDB is selected) */}
+        <div className='flex flex-col'>
+          {apiOption == "TVDB" && (
+            <div className='flex-grow'>
+              <label className="block mb-2">TVDB API Key</label>
+              <input
+                type="text"
+                value={tvdbApiKey || ''}
+                onChange={(e) => setTvdbApiKey(e.target.value)}
+                className="border rounded px-2 py-1 w-full"
+                placeholder="Enter TVDB API Key"
+              />
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="flex flex-row gap-4">
+        {/* Anime ID Input */}
+        <div className='flex-grow'>
+          <label className="block mb-2">Anime ID</label>
           <input
             type="number"
             value={animeId || ''}
@@ -69,8 +137,9 @@ export default function EpisodeTitleFetcher() {
           />
         </div>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-2">Anime Name</label>
+        {/* Anime Name Input */}
+        <div className='flex-grow'>
+          <label className="block mb-2">Anime Name</label>
           <input
             type="text"
             value={animeName || ''}
@@ -79,59 +148,51 @@ export default function EpisodeTitleFetcher() {
             placeholder="Enter Anime Name"
           />
         </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-2">Year (Optional)</label>
-          <input
-            type="number"
-            value={year || ''}
-            onChange={(e) => setYear(e.target.value ? parseInt(e.target.value) : null)}
-            className="border rounded px-2 py-1 w-full"
-            placeholder="Enter Year (Optional)"
-          />
-        </div>
-
-        {error && <div className="text-red-500 mb-4">{error}</div>}
-
-        <button
-          onClick={fetchEpisodeTitles}
-          className="bg-blue-500 text-white px-4 py-2 rounded w-full mb-4"
-        >
-          Fetch Episode Titles
-        </button>
-
-        {seasons.length > 0 && (
-          <>
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">Season</label>
-              <select
-                value={selectedSeason}
-                onChange={handleSeasonChange}
-                className="border rounded px-2 py-1 w-full"
-              >
-                {seasons.map((season) => (
-                  <option key={season.season} value={season.season}>
-                    {`Season ${season.season} (EP ${season.start_episode}-${season.end_episode})`}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <textarea
-              className="border rounded px-2 py-1 w-full h-48"
-              value={seasons.find((season) => season.season === selectedSeason)?.titles.join('\n') || ''}
-              readOnly
-            />
-
-            <button
-              onClick={handleCopy}
-              className="bg-green-500 text-white px-4 py-2 rounded w-full mt-4"
-            >
-              Copy to Clipboard
-            </button>
-          </>
-        )}
       </div>
+
+      {/* Error Display */}
+      {error && <div className="text-red-500">{error}</div>}
+
+      {/* Fetch Episode Titles Button */}
+      <button
+        onClick={fetchEpisodeTitles}
+        className="bg-blue-500 text-white px-4 py-2 rounded w-full mb-4"
+      >
+        Episodentitel laden
+      </button>
+
+      {/* Season Dropdown and Text Area */}
+      {seasons.length > 0 && (
+        <>
+          <div className="mb-4">
+            <label className="block mb-2">Season</label>
+            <select
+              value={selectedSeason}
+              onChange={handleSeasonChange}
+              className="border rounded px-2 py-1 w-full"
+            >
+              {seasons.map((season) => (
+                <option key={season.season} value={season.season}>
+                  {`Season ${season.season}`}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <textarea
+            className="border rounded px-2 py-1 w-full flex flex-grow"
+            value={seasons.find((season) => season.season === selectedSeason)?.titles.join('\n') || ''}
+            readOnly
+          />
+
+          <button
+            onClick={handleCopy}
+            className="bg-green-500 text-white px-4 py-2 rounded w-full mt-4"
+          >
+            {copySuccess ? copySuccess : 'Episodentitel kopieren'}
+          </button>
+        </>
+      )}
     </div>
   );
 }
