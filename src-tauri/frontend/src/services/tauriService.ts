@@ -86,9 +86,9 @@ export const fetchTVDBAnimeEpisodeTitles = async (tvdbApiKey: string, animeId: n
     return invoke('fetch_tvdb_episode_titles_grouped_by_season', { tvdbApiKey, animeId, animeName, year });
 };
 
-export const fetchTVMAZEAnimeEpisodeTitlesBySeason = async (animeId: number | null, animeName: string | null, year: number | null, season: number): Promise<string[]> => {
-    console.log("Fetching TVMaze anime episode titles by season:", animeId, animeName, year, season);
-    return invoke('fetch_tvmaze_episode_titles_grouped_by_season', { animeId, animeName, year, season });
+export const fetchTVMAZEAnimeEpisodeTitlesBySeason = async (animeId: number | null, animeName: string | null, year: number | null): Promise<SeasonedEpisodes[]> => {
+    console.log("Fetching TVMaze anime episode titles by season:", animeId, animeName, year);
+    return invoke('fetch_tvmaze_episode_titles_grouped_by_season', { animeId, animeName, year });
 }
 
 export interface SeasonedEpisodes {
