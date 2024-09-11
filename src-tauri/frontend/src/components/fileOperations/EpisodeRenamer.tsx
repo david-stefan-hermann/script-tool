@@ -5,10 +5,34 @@ import { renameEpisodesWithTitles, getCurrentEpisodeNames, openEpisodeTitleWindo
 import { listen } from '@tauri-apps/api/event'; // Import the event listener
 import { invoke } from '@tauri-apps/api/tauri';
 import { BsInfoCircle } from 'react-icons/bs';
+import { appWindow } from '@tauri-apps/api/window';
 
 export default function EpisodeRenamer() {
     const [episodeTitles, setEpisodeTitles] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        // Listen for the 'fetched_episodes' event emitted from the backend
+        const unlisten = listen<{ episodeTitles: string[] }>('send_episodes', async (event) => {
+            const episodeTitles = event.payload.episodeTitles
+
+            // Check if episodeTitles is an array before joining
+            if (Array.isArray(episodeTitles)) {
+                const joinedTitles = episodeTitles.join('\n');
+                setEpisodeTitles(joinedTitles);  // Set the state with the joined titles
+                console.log("Received episode titles:", joinedTitles);
+            } else {
+                console.error('Expected an array, but got:', typeof episodeTitles, episodeTitles);
+            }
+
+            await appWindow.setFocus(); // Focus the current window
+        });
+
+        // Cleanup the event listener on component unmount
+        return () => {
+            unlisten.then((dispose) => dispose());
+        };
+    }, []);
 
     // Function to fetch and set current episode titles
     async function fetchCurrentEpisodes() {

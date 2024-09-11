@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { SeasonedEpisodes, fetchAnimeEpisodeTitlesGroupedBySeason, fetchTVDBAnimeEpisodeTitles, fetchTVMAZEAnimeEpisodeTitlesBySeason } from '@/services/tauriService';
 import { Tooltip } from '@nextui-org/tooltip';
+import { emit, listen } from '@tauri-apps/api/event'
 
 export default function EpisodeTitleFetcher() {
   const [animeId, setAnimeId] = useState<number | null>(null);
@@ -17,6 +18,7 @@ export default function EpisodeTitleFetcher() {
     "TVMZ": { href: "https://www.tvmaze.com/", name: "TVMaze" },
   }
   const [copySuccess, setCopySuccess] = useState('');  // For displaying the copy success message
+  const [sendSuccess, setsendSuccess] = useState('');
 
   // For handling the TVDB API key and the switch between Jikan and TheTVDB
   type ApiOption = 'TVDB' | 'JIKA' | 'TVMZ';  // Define the three possible options
@@ -71,6 +73,21 @@ export default function EpisodeTitleFetcher() {
   const handleSeasonChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedSeason(parseInt(e.target.value, 10));
   };
+
+  const handleSendFetchedEpisodeTitles = async () => {
+    try {
+      const selectedTitles = seasons.find((season) => season.season === selectedSeason)?.titles;
+      await emit('send_episodes', { episodeTitles: selectedTitles });
+
+      setsendSuccess('Titel gesendet!');
+      setTimeout(() => {
+        setsendSuccess('');
+      }, 2000);
+    } catch (err) {
+      console.error(err);
+      setError(String(err));
+    }
+  }
 
   return (
     <div className="flex flex-col gap-4 w-full h-full overflow-x-hidden bg-gray-100 text-md p-4 font-medium">
@@ -173,7 +190,7 @@ export default function EpisodeTitleFetcher() {
       {/* Fetch Episode Titles Button */}
       <button
         onClick={fetchEpisodeTitles}
-        className="bg-blue-500 text-white px-4 py-2 rounded w-full mb-4"
+        className="bg-blue-500 text-white px-4 py-2 rounded w-full"
       >
         Episodentitel laden
       </button>
@@ -181,8 +198,8 @@ export default function EpisodeTitleFetcher() {
       {/* Season Dropdown and Text Area */}
       {seasons.length > 0 && (
         <>
-          <div className="mb-4">
-            <label className="block mb-2">Season</label>
+          <div className="">
+            <label className="block mb-2">Staffel</label>
             <select
               value={selectedSeason}
               onChange={handleSeasonChange}
@@ -197,17 +214,30 @@ export default function EpisodeTitleFetcher() {
           </div>
 
           <textarea
-            className="border rounded px-2 py-1 w-full flex flex-grow overflow-scroll"
+            className="border rounded px-2 py-1 w-full flex flex-grow overflowy-scroll"
             value={seasons.find((season) => season.season === selectedSeason)?.titles.join('\n') || ''}
             readOnly
           />
-
-          <button
-            onClick={handleCopy}
-            className="bg-green-500 text-white px-4 py-2 rounded w-full mt-4"
-          >
-            {copySuccess ? copySuccess : 'Episodentitel kopieren'}
-          </button>
+          <div className="flex flex-row gap-4">
+            {/* Send Episodes Button */}
+            <div className='flex-grow'>
+              <button
+                onClick={handleSendFetchedEpisodeTitles}
+                className="bg-gray-500 text-white px-4 py-2 rounded w-full"
+              >
+                {sendSuccess ? sendSuccess : 'Übernehmen?'}
+              </button>
+            </div>
+            {/* Copy Episodes Button */}
+            <div className='flex-grow'>
+              <button
+                onClick={handleCopy}
+                className="bg-green-500 text-white px-4 py-2 rounded w-full"
+              >
+                {copySuccess ? copySuccess : 'Episodentitel kopieren'}
+              </button>
+            </div>
+          </div>
         </>
       )}
     </div>
