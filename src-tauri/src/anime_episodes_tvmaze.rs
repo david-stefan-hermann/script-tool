@@ -3,26 +3,33 @@ use serde::{Deserialize, Serialize};
 use std::fmt;
 use tauri::command;
 
-// Struct to hold episode information from TVmaze
+// Struct to hold episode information from TVMaze API
 #[derive(Debug, Serialize, Deserialize)]
-struct TVmazeEpisode {
-    id: i32,
-    name: String,
+struct TVMazeEpisode {
     season: i32,
     number: i32,
+    name: Option<String>,
+    airdate: Option<String>,
 }
 
-// Struct to hold the response for episodes
+// Struct to hold the search result response for finding anime by name
 #[derive(Debug, Serialize, Deserialize)]
-struct TVmazeShow {
+struct TVMazeShow {
     id: i32,
     name: String,
+    premiered: Option<String>,
+}
+
+// Struct for the search response from TVMaze
+#[derive(Debug, Serialize, Deserialize)]
+struct TVMazeSearchResponse {
+    show: TVMazeShow,
 }
 
 // Struct to hold episodes grouped by season
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct SeasonedEpisodes {
-    season: i32, // Season number
+    season: i32,   // Season number
     start_episode: i32,
     end_episode: i32,
     titles: Vec<String>,
@@ -60,75 +67,95 @@ impl From<serde_json::Error> for FetchError {
 
 #[command]
 pub async fn fetch_tvmaze_episode_titles_grouped_by_season(
-    anime_name: String,
+    anime_id: Option<i32>,
+    anime_name: Option<String>,
+    year: Option<i32>,
 ) -> Result<Vec<SeasonedEpisodes>, String> {
     let client = Client::new();
+    let url: String;
 
-    // Step 1: Search for the show by name
-    let search_url = format!("https://api.tvmaze.com/search/shows?q={}", anime_name);
-    let search_response = client
-        .get(&search_url)
-        .send()
-        .await
-        .map_err(|e| format!("Failed to search show by name: {}", e))?;
+    if let Some(id) = anime_id {
+        // Fetch episodes directly using the anime ID
+        url = format!("https://api.tvmaze.com/shows/{}/episodes", id);
+    } else if let Some(name) = anime_name {
+        // Search anime by name
+        let search_url = format!("https://api.tvmaze.com/search/shows?q={}", name);
+        let search_response = client
+            .get(&search_url)
+            .send()
+            .await
+            .map_err(|e| format!("Failed to search anime by name: {}", e))?;
 
-    let search_json: Vec<TVmazeShow> = search_response
-        .json()
-        .await
-        .map_err(|e| format!("Failed to parse search response: {}", e))?;
+        let search_json: Vec<TVMazeSearchResponse> = search_response
+            .json()
+            .await
+            .map_err(|e| format!("Failed to parse search response: {}", e))?;
 
-    // Check if any show was found
-    let show_id = search_json.get(0).ok_or("No matching anime found.")?.id;
+        // Filter the search results by year if a year is provided
+        let filtered_result = if let Some(target_year) = year {
+            search_json
+                .into_iter()
+                .find(|result| result.show.premiered.as_ref().map_or(false, |p| {
+                    p.starts_with(&target_year.to_string())
+                }))
+        } else {
+            search_json.into_iter().next()
+        };
 
-    // Step 2: Fetch episodes for the found show
-    let episodes_url = format!("https://api.tvmaze.com/shows/{}/episodes", show_id);
+        let anime_id = filtered_result
+            .ok_or_else(|| "No matching anime found.".to_string())?
+            .show
+            .id;
+
+        // Fetch episodes by the found anime ID
+        url = format!("https://api.tvmaze.com/shows/{}/episodes", anime_id);
+    } else {
+        return Err("You must provide either an anime ID or an anime name.".into());
+    }
+
+    // Fetch episodes from TVMaze
     let episodes_response = client
-        .get(&episodes_url)
+        .get(&url)
         .send()
         .await
         .map_err(|e| format!("Failed to fetch episodes: {}", e))?;
 
-    let episodes_json: Vec<TVmazeEpisode> = episodes_response
+    let episodes_json: Vec<TVMazeEpisode> = episodes_response
         .json()
         .await
         .map_err(|e| format!("Failed to parse episodes response: {}", e))?;
 
+    // Group episodes by season
     let mut seasons: Vec<SeasonedEpisodes> = vec![];
-    let mut current_season_number = 0;
-    let mut current_season = SeasonedEpisodes {
-        season: 0,
-        start_episode: 1,
-        end_episode: 0,
-        titles: vec![],
-    };
+    let mut current_season: Option<SeasonedEpisodes> = None;
 
-    for episode in episodes_json {
-        // Check if it's a new season
-        if episode.season != current_season_number {
-            if current_season_number != 0 {
-                // Finalize the previous season and add it to the list
-                current_season.end_episode = current_season.titles.len() as i32;
-                seasons.push(current_season);
+    for (i, episode) in episodes_json.iter().enumerate() {
+        if let Some(season) = current_season.as_mut() {
+            if season.season != episode.season {
+                season.end_episode = (i + 1) as i32 - 1;
+                seasons.push(season.clone());
+                current_season = Some(SeasonedEpisodes {
+                    season: episode.season,
+                    start_episode: (i + 1) as i32,
+                    end_episode: 0,
+                    titles: vec![episode.name.clone().unwrap_or_else(|| "Unknown Title".to_string())],
+                });
+            } else {
+                season.titles.push(episode.name.clone().unwrap_or_else(|| "Unknown Title".to_string()));
             }
-
-            // Start a new season
-            current_season_number = episode.season;
-            current_season = SeasonedEpisodes {
+        } else {
+            current_season = Some(SeasonedEpisodes {
                 season: episode.season,
-                start_episode: episode.number,
+                start_episode: (i + 1) as i32,
                 end_episode: 0,
-                titles: vec![],
-            };
+                titles: vec![episode.name.clone().unwrap_or_else(|| "Unknown Title".to_string())],
+            });
         }
-
-        // Add episode title to the current season
-        current_season.titles.push(episode.name);
     }
 
-    // Add the last season to the list
-    if !current_season.titles.is_empty() {
-        current_season.end_episode = current_season.titles.len() as i32;
-        seasons.push(current_season);
+    if let Some(mut season) = current_season {
+        season.end_episode = episodes_json.len() as i32;
+        seasons.push(season);
     }
 
     Ok(seasons)
