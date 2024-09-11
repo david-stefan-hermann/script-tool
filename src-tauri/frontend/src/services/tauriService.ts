@@ -1,4 +1,5 @@
 import { invoke } from '@tauri-apps/api/tauri';
+import exp from 'constants';
 
 export const listFilesInCurrentDirectory = async () => {
     return await invoke<FileInfo[]>('list_files_in_current_directory');
@@ -74,3 +75,25 @@ export const openEpisodeTitleWindow = async (): Promise<void> => {
         console.error('Failed to open new window:', error);
     }
 };
+
+export const fetchAnimeEpisodeTitlesGroupedBySeason = async (animeId: number | null, animeName: string | null, year: number | null): Promise<SeasonedEpisodes[]> => {
+    console.log("Fetching anime episode titles grouped by season:", animeId, animeName, year);
+    return invoke('fetch_anime_episode_titles_grouped_by_season', { animeId, animeName, year });
+};
+
+export const fetchTVDBAnimeEpisodeTitles = async (tvdbApiKey: string, animeId: number | null, animeName: string | null, year: number | null): Promise<SeasonedEpisodes[]> => {
+    console.log("Fetching TVDB anime episode titles:", tvdbApiKey, animeId);
+    return invoke('fetch_tvdb_episode_titles_grouped_by_season', { tvdbApiKey, animeId, animeName, year });
+};
+
+export const fetchTVMAZEAnimeEpisodeTitlesBySeason = async (animeId: number | null, animeName: string | null, year: number | null, season: number): Promise<string[]> => {
+    console.log("Fetching TVMaze anime episode titles by season:", animeId, animeName, year, season);
+    return invoke('fetch_tvmaze_episode_titles_grouped_by_season', { animeId, animeName, year, season });
+}
+
+export interface SeasonedEpisodes {
+    season: number;
+    start_episode: number;
+    end_episode: number;
+    titles: string[];
+}
