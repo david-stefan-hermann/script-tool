@@ -38,9 +38,12 @@ export default function EpisodeTitleFetcher() {
         }
         // Fetch from TheTVDB
         fetchedSeasons = await fetchTVDBAnimeEpisodeTitles(tvdbApiKey, animeId, animeName, year);
-      } else {
+      } else if (apiOption == "JIKA") {
         // Fetch from Jikan
         fetchedSeasons = await fetchAnimeEpisodeTitlesGroupedBySeason(animeId, animeName, year);
+      } else {
+        // Fetch from TVmaze
+        fetchedSeasons = await fetchTVMAZEAnimeEpisodeTitlesBySeason(animeId, animeName, year);
       }
 
       setSeasons(fetchedSeasons);
@@ -137,9 +140,23 @@ export default function EpisodeTitleFetcher() {
           />
         </div>
 
+        {/* Anime Year Input */}
+        <div className='flex-grow'>
+          <label className="block mb-2">Anime Jahr</label>
+          <input
+            type="number"
+            value={year || ''}
+            onChange={(e) => setYear(e.target.value ? parseInt(e.target.value) : null)}
+            className="border rounded px-2 py-1 w-full"
+            placeholder="Enter Anime Name"
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-row gap-4">
         {/* Anime Name Input */}
         <div className='flex-grow'>
-          <label className="block mb-2">Anime Name</label>
+          <label className="block mb-2">Anime Titel</label>
           <input
             type="text"
             value={animeName || ''}
@@ -180,7 +197,7 @@ export default function EpisodeTitleFetcher() {
           </div>
 
           <textarea
-            className="border rounded px-2 py-1 w-full flex flex-grow"
+            className="border rounded px-2 py-1 w-full flex flex-grow overflow-scroll"
             value={seasons.find((season) => season.season === selectedSeason)?.titles.join('\n') || ''}
             readOnly
           />
