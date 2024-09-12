@@ -1,6 +1,5 @@
 import React from 'react';
-import { FolderIcon, DocumentIcon, VideoCameraIcon } from '@heroicons/react/24/outline';
-import { BsDeviceHdd, BsArrowLeft, BsHouse, BsHdd, BsX } from "react-icons/bs";
+import { BsDeviceHddFill, BsFolderFill } from "react-icons/bs";
 
 interface BreadCrumbsProps {
     onClickFunction: (path: string) => void;
@@ -25,10 +24,10 @@ export default function BreadCrumbs({ onClickFunction, hierarchy }: BreadCrumbsP
                         {index > 0 ?
                             <>
                                 <span className="mx-1">&gt;</span>
-                                <FolderIcon className="align-text-top h-5 w-5 text-blue-500 inline mr-1" />
+                                <BsFolderFill className="align-text-top h-5 w-5 text-blue-500 inline mr-1" />
                             </>
                             :
-                            <BsDeviceHdd className="align-text-top h-5 w-5 text-blue-500 inline mr-1" />
+                            <BsDeviceHddFill className="align-text-top h-5 w-5 text-blue-500 inline mr-1" />
                         }
                         {directory.dir_name}
                     </button>

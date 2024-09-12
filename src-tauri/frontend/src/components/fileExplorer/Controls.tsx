@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { BsDeviceHdd, BsArrowLeft, BsHouse, BsHdd, BsX } from "react-icons/bs";
+import { BsDeviceHddFill, BsArrowLeft, BsHouseFill, BsX } from "react-icons/bs";
 import { Tooltip } from '@nextui-org/tooltip';
 import {
     listFilesInCurrentDirectory,
@@ -81,7 +81,7 @@ function ControlsButtonBack({ handleGoUp }: ControlsButtonBackProps) {
     return (
         <Tooltip content="Zurück" placement="top" className='bg-white px-2 rounded border border-gray-100'>
             <div
-                className="h-6 w-6 text-red-500 inline mr-2 cursor-pointer hover:text-red-600 active:text-green-500"
+                className="h-6 w-6 text-purple-700 inline mr-2 cursor-pointer hover:text-purple-600 active:text-pink-600"
                 onClick={handleGoUp}
             >
                 <BsArrowLeft />
@@ -98,10 +98,10 @@ function ControlsButtonHome({ handleGoHome }: ControlsButtonHomeProps) {
     return (
         <Tooltip content="Zum Home Verzeichnis" placement="top" className='bg-white px-2 rounded border border-gray-100'>
             <div
-                className="h-6 w-6 text-red-500 inline mr-2 cursor-pointer hover:text-red-600 active:text-green-500"
+                className="h-6 w-6 text-purple-700 inline mr-2 cursor-pointer hover:text-purple-600 active:text-pink-600"
                 onClick={handleGoHome}
             >
-                <BsHouse />
+                <BsHouseFill />
             </div>
         </Tooltip>
     );
@@ -117,10 +117,10 @@ function ControlsButtonDrives({ handleListDrives, showDrives }: ControlsButtonDr
     return (
         <Tooltip content="Laufwerke anzeigen" placement="top" className='bg-white px-2 rounded border border-gray-100'>
             <div
-                className={`inline mr-2 cursor-pointer ${showDrives ? 'text-green-500 hover:text-green-600' : 'text-red-500 hover:text-red-600'}`}
+                className={`inline mr-2 cursor-pointer ${showDrives ? 'text-pink-600 hover:text-pink-500' : 'text-purple-700 hover:text-purple-600'}`}
                 onClick={handleListDrives}
             >
-                <BsDeviceHdd />
+                <BsDeviceHddFill />
             </div>
         </Tooltip>
     );
@@ -138,7 +138,9 @@ function ControlsDriveList({ drives, handleDirectoryClick, handleListDrives }: c
             <h2 className="flex justify-between text-lg font-bold px-2 py-1">
                 <span>Laufwerke</span>
                 <span onClick={handleListDrives}>
-                    <BsX className='h-6 w-6 text-blue-500 inline hover:cursor-pointer' />
+                    <Tooltip content="Schließen" placement="top" className='bg-white px-2 rounded border border-gray-100'>
+                        <BsX className='h-6 w-6 inline hover:cursor-pointer' />
+                    </Tooltip>
                 </span>
             </h2>
             <ul className='flex-col w-full max-h-full overflow-x-hidden flex-grow'>
@@ -151,7 +153,7 @@ function ControlsDriveList({ drives, handleDirectoryClick, handleListDrives }: c
                         onClick={() => handleDirectoryClick(drive.letter)}
                     >
                         <span>
-                            <BsHdd className='align-text-top h-5 w-5 text-blue-500 inline mr-2' />
+                            <BsDeviceHddFill className='align-text-top h-5 w-5 text-blue-500 inline mr-2' />
                             {drive.letter} {drive.name && `(${drive.name})`}
                         </span>
                     </li>

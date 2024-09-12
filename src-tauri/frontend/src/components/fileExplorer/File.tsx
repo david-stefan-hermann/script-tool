@@ -1,5 +1,4 @@
-import { Tooltip } from "@nextui-org/tooltip";
-import { FolderIcon, DocumentIcon, VideoCameraIcon } from '@heroicons/react/24/outline';
+import { BsFileEarmarkFill, BsFolderFill, BsFileEarmarkPlayFill } from "react-icons/bs";
 import { FileInfo } from '../../services/tauriService';
 
 type FileProps = {
@@ -29,15 +28,15 @@ export default function File({ index, file, onClickFunction }: FileProps) {
 function selectFolderIcon(file: FileInfo) {
     if (file.is_dir) {
         return (
-            <FolderIcon className="align-text-top h-5 w-5 text-blue-500 inline mr-2" />
+            <BsFolderFill className="align-text-top h-5 w-5 text-blue-500 inline mr-2" />
         )
     } else if (file.is_video) {
         return (
-            <VideoCameraIcon className="align-text-top h-5 w-5 text-red-500 inline mr-2" />
+            <BsFileEarmarkPlayFill className="align-text-top h-5 w-5 text-pink-800 inline mr-2" />
         )
     } else {
         return (
-            <DocumentIcon className="align-text-top h-5 w-5 text-gray-500 inline mr-2" />
+            <BsFileEarmarkFill className="align-text-top h-5 w-5 text-gray-700 inline mr-2" />
         )
     }
 }
