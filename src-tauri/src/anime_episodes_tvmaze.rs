@@ -40,7 +40,7 @@ pub struct SeasonedEpisodes {
 pub enum FetchError {
     RequestError(reqwest::Error),
     ParsingError(serde_json::Error),
-    NotFoundError(String),
+    //NotFoundError(String),
 }
 
 impl fmt::Display for FetchError {
@@ -48,7 +48,7 @@ impl fmt::Display for FetchError {
         match self {
             FetchError::RequestError(err) => write!(f, "Request Error: {}", err),
             FetchError::ParsingError(err) => write!(f, "Parsing Error: {}", err),
-            FetchError::NotFoundError(message) => write!(f, "Not Found Error: {}", message),
+            //FetchError::NotFoundError(message) => write!(f, "Not Found Error: {}", message),
         }
     }
 }
