@@ -97,3 +97,8 @@ export interface SeasonedEpisodes {
     end_episode: number;
     titles: string[];
 }
+
+export const focusMainWindow = async (): Promise<void> => {
+    console.log("Focusing main window");
+    return invoke('focus_main_window');
+};
