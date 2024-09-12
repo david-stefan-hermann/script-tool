@@ -36,7 +36,7 @@
 }
 
 .glow-on-hover:hover:before {
-    opacity: 1;
+    opacity: 0.4;
 }
 
 .glow-on-hover:after {
