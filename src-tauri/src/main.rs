@@ -22,7 +22,8 @@ use file_operations::{
 };
 
 use std::sync::{Arc, Mutex};
-use tauri::{generate_handler, Builder, Manager, WindowBuilder, WindowUrl, AppHandle};
+use tauri::{generate_handler, AppHandle, Builder, Manager, WindowBuilder, WindowUrl};
+use tauri::Window;
 
 fn main() {
     Builder::default()
@@ -49,6 +50,7 @@ fn main() {
             fetch_tvdb_episode_titles_grouped_by_season,
             fetch_tvmaze_episode_titles_grouped_by_season,
             open_episode_title_window,
+            focus_main_window
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -58,12 +60,19 @@ fn main() {
 async fn open_episode_title_window(app: AppHandle) {
     let _new_window = WindowBuilder::new(
         &app,
-        "episode_fetcher",   // Unique label for the new window
-        WindowUrl::App("/episode-fetcher".into())  // Load Next.js route
+        "episode_fetcher", // Unique label for the new window
+        WindowUrl::App("/episode-fetcher".into()), // Load Next.js route
     )
     .title("Episoden Titel laden")
     .inner_size(600.0, 800.0) // Set window size
     .resizable(true) // Make the window non-resizable if you prefer
     .build()
-    .unwrap();  // Handle possible errors here
+    .unwrap(); // Handle possible errors here
+}
+
+#[tauri::command]
+fn focus_main_window(window: Window) {
+    if let Some(main_window) = window.get_window("main") {
+        main_window.set_focus().expect("Failed to set focus");
+    }
 }
