@@ -5,6 +5,7 @@ import {
 } from '../../services/tauriService';
 import React, { useState } from 'react';
 import { AnimatedButton } from '../stylingComponents/AnimatedButton';
+import GlassCard from '../stylingComponents/GlassCard';
 
 // Placeholder for your components
 export default function FileRenamer() {
@@ -25,9 +26,7 @@ export default function FileRenamer() {
     }
 
     return (
-        <>
-            <h1 className="flex md:text-2xl text-xl bg-center"
-                style={{backgroundImage: "url('/styling/buttons/white.jpg')"}}>Titel Umbenennen</h1>
+        <GlassCard title='Titel umbenennen' image='/styling/buttons/white.jpg'>
             <div className="flex flex-col gap-2 p-2">
                 <input
                     type="text"
@@ -46,6 +45,6 @@ export default function FileRenamer() {
                 {error && <div className="text-red-500">{error}</div>}
                 <AnimatedButton text="Umbenennen" onClick={handleRename} image='/styling/buttons/button-purple.jpg' />
             </div>
-        </>
+        </GlassCard>
     );
 }
