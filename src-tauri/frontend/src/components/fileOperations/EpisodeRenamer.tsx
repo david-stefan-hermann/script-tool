@@ -1,11 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { renameEpisodesWithTitles, getCurrentEpisodeNames, openEpisodeTitleWindow } from '../../services/tauriService'; // Adjust the import path as necessary
+import { renameEpisodesWithTitles, getCurrentEpisodeNames, openEpisodeTitleWindow, focusMainWindow } from '../../services/tauriService'; // Adjust the import path as necessary
 import { listen } from '@tauri-apps/api/event'; // Import the event listener
-import { invoke } from '@tauri-apps/api/tauri';
 import { BsInfoCircle } from 'react-icons/bs';
-import { appWindow } from '@tauri-apps/api/window';
+import { AnimatedButton } from '../stylingComponents/AnimatedButton';
 
 export default function EpisodeRenamer() {
     const [episodeTitles, setEpisodeTitles] = useState<string>('');
@@ -25,7 +24,9 @@ export default function EpisodeRenamer() {
                 console.error('Expected an array, but got:', typeof episodeTitles, episodeTitles);
             }
 
-            await appWindow.setFocus(); // Focus the current window
+            // Focus the window after receiving the episode titles
+            focusMainWindow();
+
         });
 
         // Cleanup the event listener on component unmount
@@ -79,8 +80,9 @@ export default function EpisodeRenamer() {
     }
 
     return (
-        <div className="w-full flex flex-col bg-white h-full">
-            <h1 className="text-lg font-bold bg-gray-200 pl-2 py-1">Episoden Umbenennen</h1>
+        <div className="w-full flex flex-col h-full glass-card">
+            <h1 className="flex md:text-2xl text-xl bg-center"
+                style={{ backgroundImage: "url('/styling/buttons/green.jpg')" }}>Episoden Umbenennen</h1>
             <div className="flex flex-col gap-2 p-2 h-full">
                 <span className="mr-2"><BsInfoCircle className='h-5 w-5 align-sub inline text-blue-500 mr-2' />Episodentitel (jede Zeile ist eine Episode)</span>
                 <div className="flex flex-row flex-grow">
@@ -93,13 +95,9 @@ export default function EpisodeRenamer() {
                     />
                 </div>
                 {error && <div className="text-red-500">{error}</div>}
-                <div className='flex flex-row gap-2'>
-                    <button onClick={openEpisodeTitleWindow} className="bg-gray-500 text-white px-4 py-2 rounded flex-grow">
-                        Titel laden
-                    </button>
-                    <button onClick={handleRename} className="bg-blue-500 text-white px-4 py-2 rounded flex-grow">
-                        Umbenennen
-                    </button>
+                <div className='flex flex-row w-full gap-2 justify-center flex-stretch'>
+                    <AnimatedButton text="Titel laden" onClick={openEpisodeTitleWindow} image='/styling/buttons/button-blue.jpg' />
+                    <AnimatedButton text="Umbenennen" onClick={handleRename} image='/styling/buttons/button-purple.jpg' />
                 </div>
             </div>
         </div>

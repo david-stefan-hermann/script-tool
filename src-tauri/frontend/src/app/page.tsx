@@ -1,10 +1,12 @@
 import FileExplorer from "@/components/fileExplorer/FileExplorer";
 import FilePreview from "@/components/fileExplorer/FilePreview";
 import FileOperations from "@/components/fileOperations/FileOperations";
+import FallingPetalsBackground from "@/components/stylingComponents/FallingPetalsBackground";
 
 export default function Home() {
   return (
-    <main className="min-h-screen max-h-screen min-h-screen h-screen p-4 bg-sky-950 overflow-hidden grid grid-cols-3 gap-4">
+    <main className="min-h-screen max-h-screen min-h-screen h-screen p-4 overflow-hidden grid grid-cols-3 gap-4">
+      <FallingPetalsBackground animationSpeed={0.2} petalSize={0.8} petalMultiplier={1.5} />
       <div className="col-start-1 max-h-screen overflow-hidden">
         <FileExplorer />
       </div>

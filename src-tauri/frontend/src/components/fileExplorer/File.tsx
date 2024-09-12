@@ -12,10 +12,10 @@ export default function File({ index, file, onClickFunction }: FileProps) {
     return (
         <li
             key={index}
-            className={`py-1 pl-2 flex cursor-pointer break-all
-                ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}
+            className={`py-1 pl-2 flex cursor-pointer break-all glass-card-border-top
+                ${index % 2 === 0 ? 'bg-white bg-opacity-0' : 'bg-white bg-opacity-10'}
                 ${file.is_dir ? 'hover:text-blue-500' : ''}
-                hover:bg-gray-200 transition-colors duration-200`}
+                hover:bg-white hover:bg-opacity-30 transition-colors duration-200`}
             onClick={() => { file.is_dir && onClickFunction(file.path) }}
         >
             <span>

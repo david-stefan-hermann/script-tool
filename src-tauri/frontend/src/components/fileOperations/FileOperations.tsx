@@ -35,8 +35,9 @@ export default function FileOperations() {
 
     return (
         <div className='flex flex-col h-full'>
-            <div className="w-full flex flex-col bg-white mb-4">
-                <h1 className="flex text-xl font-bold bg-gray-300 pl-2 py-2">Aktion</h1>
+            <div className="w-full flex flex-col mb-4 glass-card">
+                <h1 className="flex md:text-2xl text-xl bg-bottom"
+                    style={{ backgroundImage: "url('/styling/buttons/red.jpg')" }}>Werkzeug</h1>
                 <div className="p-2 flex flex-col gap-2">
                     <span className="mr-2"><BsTools className='h-5 w-5 align-sub inline text-blue-500 mr-2' />Werkzeug</span>
                     <select

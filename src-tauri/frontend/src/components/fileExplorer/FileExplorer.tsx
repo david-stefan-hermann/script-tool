@@ -52,14 +52,15 @@ export default function FileExplorer() {
     };
 
     return (
-        <div className="w-full h-full flex flex-col bg-white">
-            <h1 className="flex text-xl font-bold bg-gray-300 pl-2 py-2">Deteiexplorer</h1>
+        <div className="w-full h-full flex flex-col glass-card">
+            <h1 className="flex md:text-2xl text-xl bg-center"
+                style={{ backgroundImage: "url('/styling/buttons/blue2.jpg')" }}>Deteiexplorer</h1>
 
-            <div className="flex items-center bg-gray-200 p-2">
+            <div className="flex items-center p-2 bg-white bg-opacity-30">
                 <BreadCrumbs onClickFunction={handleDirectoryClick} hierarchy={hierarchy} />
             </div>
 
-            <ul className="flex-col w-full max-h-full overflow-x-hidden flex-grow bg-gray-50 text-md">
+            <ul className="flex-col w-full max-h-full overflow-x-hidden flex-grow text-md">
                 {files.map((file, index) => (
                     <File key={index} index={index} file={file} onClickFunction={handleDirectoryClick} />
                 ))}

@@ -9,6 +9,7 @@ import {
 import File from './File';
 import { listen } from '@tauri-apps/api/event';
 import React from 'react';
+import { BsDeviceHdd } from 'react-icons/bs';
 
 export default function FilePreview() {
     const [files, setFiles] = useState<FileInfo[]>([]);
@@ -48,12 +49,13 @@ export default function FilePreview() {
     }, []);
 
     return (
-        <div className="w-full h-full flex flex-col bg-white">
-            <h1 className="flex text-xl font-bold bg-gray-300 pl-2 py-2">Vorschau</h1>
-            <span className='p-2 bg-gray-200'>
-                {path}
+        <div className="w-full h-full flex flex-col glass-card">
+            <h1 className="flex md:text-2xl text-xl bg-center"
+                style={{ backgroundImage: "url('/styling/buttons/orange.jpg')" }}>Vorschau</h1>
+            <span className='p-2 bg-white bg-opacity-30'>
+                <BsDeviceHdd className="align-text-top h-5 w-5 text-blue-500 inline mr-1" />{path}
             </span>
-            <ul className="flex-col w-full max-h-full overflow-x-hidden flex-grow bg-gray-50 text-md">
+            <ul className="flex-col w-full max-h-full overflow-x-hidden flex-grow text-md">
                 {files.map((file, index) => (
                     <React.Fragment key={index}>{file.is_video &&
                         <File index={index} file={file} onClickFunction={() => { }} />

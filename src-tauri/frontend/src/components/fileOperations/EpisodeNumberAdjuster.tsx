@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { adjustEpisodeNumbersInDirectory } from '../../services/tauriService'; // Adjust import paths as necessary
+import { AnimatedButton } from '../stylingComponents/AnimatedButton';
 
 export default function EpisodeNumberAdjuster() {
     const [adjustmentValue, setAdjustmentValue] = useState<number | null>(null);
@@ -26,8 +27,9 @@ export default function EpisodeNumberAdjuster() {
     }
 
     return (
-        <div className="w-full flex flex-col bg-white">
-            <h1 className="flex text-lg font-bold bg-gray-200 pl-2 py-1">Episodennummer anpassen</h1>
+        <div className="w-full flex flex-col glass-card">
+            <h1 className="flex md:text-2xl text-xl bg-center"
+                style={{backgroundImage: "url('/styling/buttons/gray.jpg')"}}>Episodennummer anpassen</h1>
             <div className="flex flex-col gap-2 p-2">
                 <input
                     type="number"
@@ -37,9 +39,7 @@ export default function EpisodeNumberAdjuster() {
                     className="border rounded px-2 py-1"
                 />
                 {error && <div className="text-red-500">{error}</div>}
-                <button onClick={handleAdjust} className="bg-blue-500 text-white px-4 py-2 rounded">
-                    Adjust Episode Numbers
-                </button>
+                <AnimatedButton text="Anpassen" onClick={handleAdjust} image='/styling/buttons/button-purple.jpg' />
             </div>
         </div>
     );
