@@ -5,15 +5,15 @@ import FallingPetalsBackground from "@/components/stylingComponents/FallingPetal
 
 export default function Home() {
   return (
-    <main className="min-h-screen max-h-screen min-h-screen h-screen p-4 overflow-hidden grid grid-cols-3 gap-4">
+    <main className="min-h-screen max-h-screen min-h-screen h-screen p-4 flex flex-row gap-4">
       <FallingPetalsBackground animationSpeed={0.2} petalSize={0.8} petalMultiplier={1.5} />
-      <div className="col-start-1 max-h-screen overflow-hidden">
+      <div className="col-start-1 max-h-screen overflow-hidden basis-1/3">
         <FileExplorer />
       </div>
-      <div className="max-h-screen overflow-hidden">
+      <div className="max-h-screen overflow-hidden basis-1/3 flex flex-col gap-4">
         <FileOperations />
       </div>
-      <div className="max-h-screen overflow-hidden">
+      <div className="max-h-screen overflow-hidden basis-1/3">
         <FilePreview />
       </div>
     </main>
