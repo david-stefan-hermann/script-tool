@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import { renameEpisodesWithTitles, getCurrentEpisodeNames, openEpisodeTitleWindow, focusMainWindow } from '../../services/tauriService'; // Adjust the import path as necessary
 import { listen } from '@tauri-apps/api/event'; // Import the event listener
-import { BsInfoCircle } from 'react-icons/bs';
 import { AnimatedButton } from '../stylingComponents/AnimatedButton';
+import GlassCard from '../stylingComponents/GlassCard';
 
 export default function EpisodeRenamer() {
     const [episodeTitles, setEpisodeTitles] = useState<string>('');
@@ -80,17 +80,14 @@ export default function EpisodeRenamer() {
     }
 
     return (
-        <>
-            <h1 className="flex md:text-2xl text-xl bg-center"
-                style={{ backgroundImage: "url('/styling/buttons/green.jpg')" }}>Episoden Umbenennen</h1>
+        <GlassCard className='h-full' title='Episoden Umbenennen' image='/styling/buttons/green.jpg'>
             <div className="flex flex-col gap-2 p-2 h-full">
-                <span className="mr-2"><BsInfoCircle className='h-5 w-5 align-sub inline text-blue-500 mr-2' />Episodentitel (jede Zeile ist eine Episode)</span>
                 <div className="flex flex-row flex-grow">
                     <textarea
                         style={{ whiteSpace: 'pre', overflowY: 'auto', }}
                         value={episodeTitles}
                         onChange={(e) => setEpisodeTitles(e.target.value)}
-                        placeholder="Episodentitel (jede Zeile ist eine Episode)"
+                        placeholder="Jede Zeile entspricht einer Episode"
                         className="border rounded px-2 py-1 font-mono w-full"
                     />
                 </div>
@@ -100,6 +97,6 @@ export default function EpisodeRenamer() {
                     <AnimatedButton text="Umbenennen" onClick={handleRename} image='/styling/buttons/button-purple.jpg' />
                 </div>
             </div>
-        </>
+        </GlassCard>
     );
 }

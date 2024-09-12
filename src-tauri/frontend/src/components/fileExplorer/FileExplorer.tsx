@@ -53,10 +53,7 @@ export default function FileExplorer() {
     };
 
     return (
-        <GlassCard>
-            <h1 className="flex md:text-2xl text-xl bg-center"
-                style={{ backgroundImage: "url('/styling/buttons/blue2.jpg')" }}>Deteiexplorer</h1>
-
+        <GlassCard className='h-full' title='Dateiexplorer' image='/styling/buttons/blue2.jpg'>
             <div className="flex items-center p-2 bg-white bg-opacity-30">
                 <BreadCrumbs onClickFunction={handleDirectoryClick} hierarchy={hierarchy} />
             </div>

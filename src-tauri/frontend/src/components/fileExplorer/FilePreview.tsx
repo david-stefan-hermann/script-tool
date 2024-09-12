@@ -9,7 +9,7 @@ import {
 import File from './File';
 import { listen } from '@tauri-apps/api/event';
 import React from 'react';
-import { BsDeviceHdd } from 'react-icons/bs';
+import { BsDeviceHddFill } from 'react-icons/bs';
 import GlassCard from '../stylingComponents/GlassCard';
 
 export default function FilePreview() {
@@ -50,11 +50,9 @@ export default function FilePreview() {
     }, []);
 
     return (
-        <GlassCard>
-            <h1 className="flex md:text-2xl text-xl bg-center"
-                style={{ backgroundImage: "url('/styling/buttons/orange.jpg')" }}>Vorschau</h1>
+        <GlassCard className='h-full' title='Vorschau' image='/styling/buttons/orange.jpg'>
             <span className='p-2 bg-white bg-opacity-30'>
-                <BsDeviceHdd className="align-text-top h-5 w-5 text-blue-500 inline mr-1" />{path}
+                <BsDeviceHddFill className="align-text-top h-5 w-5 text-blue-500 inline mr-1" />{path}
             </span>
             <ul className="flex-col w-full max-h-full overflow-x-hidden flex-grow text-md">
                 {files.map((file, index) => (
