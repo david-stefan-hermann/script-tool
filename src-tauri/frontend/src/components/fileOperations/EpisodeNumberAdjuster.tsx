@@ -27,7 +27,7 @@ export default function EpisodeNumberAdjuster() {
     }
 
     return (
-        <div className="w-full flex flex-col glass-card">
+        <>
             <h1 className="flex md:text-2xl text-xl bg-center"
                 style={{backgroundImage: "url('/styling/buttons/gray.jpg')"}}>Episodennummer anpassen</h1>
             <div className="flex flex-col gap-2 p-2">
@@ -41,6 +41,6 @@ export default function EpisodeNumberAdjuster() {
                 {error && <div className="text-red-500">{error}</div>}
                 <AnimatedButton text="Anpassen" onClick={handleAdjust} image='/styling/buttons/button-purple.jpg' />
             </div>
-        </div>
+        </>
     );
 }

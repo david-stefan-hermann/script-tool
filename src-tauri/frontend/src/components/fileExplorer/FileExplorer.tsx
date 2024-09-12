@@ -12,6 +12,7 @@ import Controls from './Controls';
 import File from './File';
 import BreadCrumbs from './BreadCrumbs';
 import { listen } from '@tauri-apps/api/event';
+import GlassCard from '../stylingComponents/GlassCard';
 
 
 export default function FileExplorer() {
@@ -52,7 +53,7 @@ export default function FileExplorer() {
     };
 
     return (
-        <div className="w-full h-full flex flex-col glass-card">
+        <GlassCard>
             <h1 className="flex md:text-2xl text-xl bg-center"
                 style={{ backgroundImage: "url('/styling/buttons/blue2.jpg')" }}>Deteiexplorer</h1>
 
@@ -66,6 +67,6 @@ export default function FileExplorer() {
                 ))}
             </ul >
             <Controls setFiles={setFiles} setHierarchy={setHierarchy} />
-        </div>
+        </GlassCard>
     );
 }

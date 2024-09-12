@@ -5,6 +5,7 @@ import FileRenamer from './FileRenamer';
 import EpisodeNumberAdjuster from './EpisodeNumberAdjuster';
 import { BsInfo, BsInfoCircle, BsTools, BsWrench } from 'react-icons/bs';
 import EpisodeRenamer from './EpisodeRenamer';
+import GlassCard from '../stylingComponents/GlassCard';
 
 export default function FileOperations() {
     const [selectedOperation, setSelectedOperation] = useState<string>('fileRenamer');
@@ -35,7 +36,7 @@ export default function FileOperations() {
 
     return (
         <div className='flex flex-col h-full'>
-            <div className="w-full flex flex-col mb-4 glass-card">
+            <GlassCard>
                 <h1 className="flex md:text-2xl text-xl bg-bottom"
                     style={{ backgroundImage: "url('/styling/buttons/red.jpg')" }}>Werkzeug</h1>
                 <div className="p-2 flex flex-col gap-2">
@@ -55,8 +56,10 @@ export default function FileOperations() {
                     <span className="mr-2"><BsInfoCircle className='h-5 w-5 align-sub inline text-blue-500 mr-2' />Beschreibung</span>
                     <span>{options?.find((option) => option.id === selectedOperation)?.description}</span>
                 </div>
-            </div>
-            {selectedOperation && options?.find((option) => option.id === selectedOperation)?.option}
+            </GlassCard>
+            <GlassCard>
+                {selectedOperation && options?.find((option) => option.id === selectedOperation)?.option}
+            </GlassCard>
         </div>
     );
 }

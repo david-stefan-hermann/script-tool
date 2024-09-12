@@ -25,7 +25,7 @@ export default function FileRenamer() {
     }
 
     return (
-        <div className="w-full flex flex-col glass-card">
+        <>
             <h1 className="flex md:text-2xl text-xl bg-center"
                 style={{backgroundImage: "url('/styling/buttons/white.jpg')"}}>Titel Umbenennen</h1>
             <div className="flex flex-col gap-2 p-2">
@@ -46,6 +46,6 @@ export default function FileRenamer() {
                 {error && <div className="text-red-500">{error}</div>}
                 <AnimatedButton text="Umbenennen" onClick={handleRename} image='/styling/buttons/button-purple.jpg' />
             </div>
-        </div>
+        </>
     );
 }

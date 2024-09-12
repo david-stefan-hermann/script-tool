@@ -5,6 +5,7 @@ import { SeasonedEpisodes, fetchAnimeEpisodeTitlesGroupedBySeason, fetchTVDBAnim
 import { Tooltip } from '@nextui-org/tooltip';
 import { emit, listen } from '@tauri-apps/api/event'
 import { AnimatedButton } from '../stylingComponents/AnimatedButton';
+import GlassCard from '../stylingComponents/GlassCard';
 
 export default function EpisodeTitleFetcher() {
   const [animeId, setAnimeId] = useState<number | null>(null);
@@ -91,7 +92,7 @@ export default function EpisodeTitleFetcher() {
   }
 
   return (
-    <div className="flex flex-col w-full h-full overflow-x-hidden text-md font-medium glass-card">
+    <GlassCard>
       <h1 className="flex md:text-2xl text-xl bg-center"
         style={{ backgroundImage: "url('/styling/buttons/green.jpg')" }}>Episoden Titel Laden</h1>
       <div className='p-4 flex flex-col w-full h-full overflow-x-hidden gap-4'>
@@ -228,6 +229,6 @@ export default function EpisodeTitleFetcher() {
           </>
         )}
       </div>
-    </div>
+    </GlassCard>
   );
 }
