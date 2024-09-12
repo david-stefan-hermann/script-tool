@@ -1,4 +1,4 @@
-import "./AnimatedButton.css";
+import "./animated-button.css";
 
 export function AnimatedButton({ text, onClick, image }: { text: string, onClick: () => void, image?: string }) {
     return (
