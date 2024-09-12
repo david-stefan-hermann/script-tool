@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SeasonedEpisodes, fetchAnimeEpisodeTitlesGroupedBySeason, fetchTVDBAnimeEpisodeTitles, fetchTVMAZEAnimeEpisodeTitlesBySeason } from '@/services/tauriService';
 import { Tooltip } from '@nextui-org/tooltip';
-import { emit, listen } from '@tauri-apps/api/event'
+import { emit } from '@tauri-apps/api/event'
 import { AnimatedButton } from '../stylingComponents/AnimatedButton';
 import GlassCard from '../stylingComponents/GlassCard';
+import ImageButtonSwitch from '../stylingComponents/ImageButtonSwitch';
 
 export default function EpisodeTitleFetcher() {
   const [animeId, setAnimeId] = useState<number | null>(null);
@@ -25,6 +26,7 @@ export default function EpisodeTitleFetcher() {
   // For handling the TVDB API key and the switch between Jikan and TheTVDB
   type ApiOption = 'TVDB' | 'JIKA' | 'TVMZ';  // Define the three possible options
   const [apiOption, setApiOption] = useState<ApiOption>('TVMZ');  // Initialize with one of the options
+  
   const [tvdbApiKey, setTvdbApiKey] = useState<string | null>(null); // Store API key for TVDB
 
   const fetchEpisodeTitles = async () => {
@@ -91,10 +93,12 @@ export default function EpisodeTitleFetcher() {
     }
   }
 
+  useEffect(() => {
+    setError(null);
+  }, [animeId, animeName, year, apiOption, tvdbApiKey]);
+
   return (
-    <GlassCard>
-      <h1 className="flex md:text-2xl text-xl bg-center"
-        style={{ backgroundImage: "url('/styling/buttons/green.jpg')" }}>Episoden Titel Laden</h1>
+    <GlassCard className='h-full' title='Episoden Laden' image='/styling/buttons/green.jpg'>
       <div className='p-4 flex flex-col w-full h-full overflow-x-hidden gap-4'>
         <div className="flex flex-row gap-4">
           {/* API Selection Images */}
@@ -103,32 +107,11 @@ export default function EpisodeTitleFetcher() {
             </label>
             <div className="flex gap-2">
               {/* Jikan Button */}
-              <Tooltip content="Jikan" placement="top" className='bg-white px-2 rounded border border-gray-100'>
-                <img
-                  src={"/logos/jikan_logo.png"}
-                  alt="Jikan API"
-                  className={`cursor-pointer h-16 w-16 ${apiOption == "JIKA" ? 'border-4 border-orange-500' : ''}`}
-                  onClick={() => setApiOption("JIKA")}
-                />
-              </Tooltip>
+              <ImageButtonSwitch title="Jikan" image='/logos/jikan_logo.png' selected={apiOption == "JIKA"} onClick={() => setApiOption("JIKA")} />
               {/* TVDB Button */}
-              <Tooltip content="TheTVDB" placement="top" className='bg-white px-2 rounded border border-gray-100'>
-                <img
-                  src={"/logos/thetvdb_logo.jpg"}
-                  alt="TheTVDB API"
-                  className={`cursor-pointer h-16 w-16 ${apiOption == "TVDB" ? 'border-4 border-orange-500' : ''}`}
-                  onClick={() => setApiOption("TVDB")}
-                />
-              </Tooltip>
+              <ImageButtonSwitch title="TheTVDB" image='/logos/thetvdb_logo.jpg' selected={apiOption == "TVDB"} onClick={() => setApiOption("TVDB")} />
               {/* TVMaze Button */}
-              <Tooltip content="TVMaze" placement="top" className='bg-white px-2 rounded border border-gray-100'>
-                <img
-                  src={"/logos/tvmaze_logo.png"}
-                  alt="TVmaze API"
-                  className={`cursor-pointer h-16 w-16 ${apiOption == "TVMZ" ? 'border-4 border-orange-500' : ''}`}
-                  onClick={() => setApiOption("TVMZ")}
-                />
-              </Tooltip>
+              <ImageButtonSwitch title="TVMaze" image='/logos/tvmaze_logo.png' selected={apiOption == "TVMZ"} onClick={() => setApiOption("TVMZ")} />
             </div>
           </div>
 
