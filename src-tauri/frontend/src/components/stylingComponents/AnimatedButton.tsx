@@ -1,4 +1,4 @@
-import "./animated-button.css";
+import "./glow-on-hover.css";
 
 export function AnimatedButton({ text, onClick, image }: { text: string, onClick: () => void, image?: string }) {
     return (
