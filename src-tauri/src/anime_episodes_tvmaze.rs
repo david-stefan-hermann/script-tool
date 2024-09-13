@@ -73,7 +73,7 @@ impl From<serde_json::Error> for FetchError {
 }
 
 #[command]
-pub async fn fetch_tvmaze_episode_titles_grouped_by_season(
+pub async fn fetch_tvmaze_show_details(
     anime_id: Option<i32>,
     anime_name: Option<String>,
     year: Option<i32>,
