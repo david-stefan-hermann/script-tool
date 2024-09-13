@@ -46,7 +46,7 @@ const FallingPetalsBackground: React.FC<FallingPetalsBackgroundProps> = ({ anima
 
         // Ensure the Image is created only on the client side
         petalImgRef.current = new Image();
-        petalImgRef.current.src = 'https://djjjk9bjm164h.cloudfront.net/petal.png';
+        petalImgRef.current.src = '/styling/petals/petal.png';
 
         petalImgRef.current.onload = () => {
             // Create petal objects
