@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { SeasonedEpisodes, SeasonedEpisodesDetails, fetchAnimeEpisodeTitlesGroupedBySeason, fetchTVDBAnimeEpisodeTitles, fetchTVMAZEAnimeEpisodeTitlesBySeason } from '@/services/tauriService';
+import { SeasonedEpisodes, SeasonedEpisodesDetails, fetchJikanShowDetails, fetchTVDBShowDetails, fetchTVMAZEShowDetails } from '@/services/tauriService';
 import { AnimatedButton } from '../stylingComponents/AnimatedButton';
 import GlassCard from '../stylingComponents/GlassCard';
 import ImageButtonSwitch from '../stylingComponents/ImageButtonSwitch';
@@ -48,13 +48,17 @@ export default function EpisodeTitleFetcher({ seasons, setSeasons, selectedSeaso
           return;
         }
         // Fetch from TheTVDB
-        fetchedSeasons = await fetchTVDBAnimeEpisodeTitles(tvdbApiKey, animeId, animeName, year);
+        fetchedSeasons = await fetchTVDBShowDetails(tvdbApiKey, animeId, animeName, year);
       } else if (apiOption == "JIKA") {
         // Fetch from Jikan
-        fetchedSeasons = await fetchAnimeEpisodeTitlesGroupedBySeason(animeId, animeName, year);
+        const fetchedSeasonsDetails = await fetchJikanShowDetails(animeId, animeName, year);
+
+        fetchedShowDetails = fetchedSeasonsDetails;
+
+        fetchedSeasons = fetchedSeasonsDetails.episodes_by_season;
       } else {
         // Fetch from TVmaze
-        const fetchedSeasonsDetails: SeasonedEpisodesDetails = await fetchTVMAZEAnimeEpisodeTitlesBySeason(animeId, animeName, year);
+        const fetchedSeasonsDetails: SeasonedEpisodesDetails = await fetchTVMAZEShowDetails(animeId, animeName, year);
         
         fetchedShowDetails = fetchedSeasonsDetails;
 

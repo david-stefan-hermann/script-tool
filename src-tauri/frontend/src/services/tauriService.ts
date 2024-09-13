@@ -83,13 +83,7 @@ export interface SeasonedEpisodes {
     titles: string[];
 }
 
-export const fetchAnimeEpisodeTitlesGroupedBySeason = async (animeId: number | null, animeName: string | null, year: number | null): Promise<SeasonedEpisodes[]> => {
-    console.log("Fetching anime episode titles grouped by season:", animeId, animeName, year);
-    return invoke('fetch_anime_episode_titles_grouped_by_season', { animeId, animeName, year });
-};
-
-export const fetchTVDBAnimeEpisodeTitles = async (tvdbApiKey: string, animeId: number | null, animeName: string | null, year: number | null): Promise<SeasonedEpisodes[]> => {
-    console.log("Fetching TVDB anime episode titles:", tvdbApiKey, animeId);
+export const fetchTVDBShowDetails = async (tvdbApiKey: string, animeId: number | null, animeName: string | null, year: number | null): Promise<SeasonedEpisodes[]> => {
     return invoke('fetch_tvdb_episode_titles_grouped_by_season', { tvdbApiKey, animeId, animeName, year });
 };
 
@@ -100,9 +94,12 @@ export interface SeasonedEpisodesDetails {
     episodes_by_season: SeasonedEpisodes[]
 };
 
-export const fetchTVMAZEAnimeEpisodeTitlesBySeason = async (animeId: number | null, animeName: string | null, year: number | null): Promise<SeasonedEpisodesDetails> => {
-    console.log("Fetching TVMaze anime episode titles by season:", animeId, animeName, year);
-    return invoke('fetch_tvmaze_episode_titles_grouped_by_season', { animeId, animeName, year });
+export const fetchJikanShowDetails = async (animeId: number | null, animeName: string | null, year: number | null): Promise<SeasonedEpisodesDetails> => {
+    return invoke('fetch_jikan_show_details', { animeId, animeName, year });
+};
+
+export const fetchTVMAZEShowDetails = async (animeId: number | null, animeName: string | null, year: number | null): Promise<SeasonedEpisodesDetails> => {
+    return invoke('fetch_tvmaze_show_details', { animeId, animeName, year });
 };
 
 export const focusMainWindow = async (): Promise<void> => {
