@@ -50,14 +50,16 @@ export default function FileOperations() {
                         {/* Episode Renamer */}
                         <ImageButtonSwitch title="Episoden benennen" image='/styling/buttons/rename2.jpg' selected={toolOption == "ER"} onClick={() => setToolOption("ER")} />
                     </div>
-                    <div className='flex flex-row bg-white bg-opacity-30 px-2 py-3 -mx-2 -mb-2'>
-                        <div className='flex items-center'>
-                            <BsInfoCircle className='h-5 w-5 align-sub inline mr-2' />
+                    <GlassCard>
+                        <div className='flex flex-row bg-white bg-opacity-30 p-2 gap-2'>
+                            <div className='flex items-center'>
+                                <BsInfoCircle className='h-5 w-5 align-sub inline' />
+                            </div>
+                            <div className='flex flex-grow'>
+                                {options?.find((option) => option.id === toolOption)?.description}
+                            </div>
                         </div>
-                        <div className='flex flex-grow'>
-                            {options?.find((option) => option.id === toolOption)?.description}
-                        </div>
-                    </div>
+                    </GlassCard>
                 </div>
             </GlassCard>
             {selectedOperation && options?.find((option) => option.id === toolOption)?.option}
