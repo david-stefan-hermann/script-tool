@@ -22,8 +22,8 @@ use file_operations::{
 };
 
 use std::sync::{Arc, Mutex};
-use tauri::{generate_handler, AppHandle, Builder, Manager, WindowBuilder, WindowUrl};
 use tauri::Window;
+use tauri::{generate_handler, AppHandle, Builder, Manager, WindowBuilder, WindowUrl};
 
 fn main() {
     Builder::default()
@@ -58,16 +58,25 @@ fn main() {
 
 #[tauri::command]
 async fn open_episode_title_window(app: AppHandle) {
-    let _new_window = WindowBuilder::new(
-        &app,
-        "episode_fetcher", // Unique label for the new window
-        WindowUrl::App("/episode-fetcher".into()), // Load Next.js route
-    )
-    .title("Episoden Titel laden")
-    .inner_size(688.0, 600.0) // Set window size
-    .resizable(true) // Make the window non-resizable if you prefer
-    .build()
-    .unwrap(); // Handle possible errors here
+    // Check if the window already exists
+    if let Some(window) = app.get_window("episode_fetcher") {
+        // Call focus_fetcher_window if the window exists
+        if let Some(fetcher_window) = window.get_window("episode_fetcher") {
+            fetcher_window.set_focus().expect("Failed to set focus");
+        }
+    } else {
+        // Create a new window if it does not exist
+        let _new_window = WindowBuilder::new(
+            &app,
+            "episode_fetcher", // Unique label for the new window
+            WindowUrl::App("/episode-fetcher".into()), // Load Next.js route
+        )
+        .title("Episoden Titel laden")
+        .inner_size(688.0, 600.0) // Set window size
+        .resizable(true) // Make the window non-resizable if you prefer
+        .build()
+        .unwrap(); // Handle possible errors here
+    }
 }
 
 #[tauri::command]
