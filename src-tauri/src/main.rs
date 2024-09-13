@@ -9,9 +9,9 @@ mod anime_episodes_tvmaze;
 mod file_explorer;
 mod file_operations;
 
-use anime_episodes_jikan::fetch_anime_episode_titles_grouped_by_season;
+use anime_episodes_jikan::fetch_jikan_show_details;
 use anime_episodes_thetvdb::fetch_tvdb_episode_titles_grouped_by_season;
-use anime_episodes_tvmaze::fetch_tvmaze_episode_titles_grouped_by_season;
+use anime_episodes_tvmaze::fetch_tvmaze_show_details;
 use file_explorer::{
     change_directory, get_current_path, get_directory_hierarchy, go_to_parent_directory,
     list_drives, list_files_in_current_directory, list_files_in_home_directory, FileExplorer,
@@ -46,9 +46,9 @@ fn main() {
             adjust_episode_numbers_in_directory,
             rename_episodes_with_titles,
             get_current_episode_names,
-            fetch_anime_episode_titles_grouped_by_season,
+            fetch_jikan_show_details,
             fetch_tvdb_episode_titles_grouped_by_season,
-            fetch_tvmaze_episode_titles_grouped_by_season,
+            fetch_tvmaze_show_details,
             open_episode_title_window,
             focus_main_window
         ])
