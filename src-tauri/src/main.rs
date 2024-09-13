@@ -64,7 +64,7 @@ async fn open_episode_title_window(app: AppHandle) {
         WindowUrl::App("/episode-fetcher".into()), // Load Next.js route
     )
     .title("Episoden Titel laden")
-    .inner_size(600.0, 800.0) // Set window size
+    .inner_size(688.0, 600.0) // Set window size
     .resizable(true) // Make the window non-resizable if you prefer
     .build()
     .unwrap(); // Handle possible errors here
