@@ -28,6 +28,12 @@
     select {
         background-color: #edd2f1;
     }
+
+    input::placeholder,
+    textarea::placeholder,
+    select::placeholder {
+        color: rgb(71, 34, 105);
+    }
 }
 
 /* Input Fields */
