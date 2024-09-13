@@ -49,12 +49,12 @@ export function EpisodeTitleFetcherList({ seasons, selectedSeason, setSelectedSe
     }
 
     return (
-        <GlassCard className='h-full' title={showDetails ? String(showDetails.name + " (" + showDetails.premiered_year + ")") : 'Episoden'} image='/styling/backsplash/orange.jpg'>
+        <GlassCard className='h-full' title={showDetails ? String(showDetails.name + " (" + showDetails.premiered_year + ")") : 'Episodenliste'} image='/styling/backsplash/orange.jpg'>
             <div className='p-4 flex flex-col w-full h-full overflow-x-hidden gap-4'>
 
                 {showDetails?.name && (
                     <div className="flex flex-row gap-4">
-                        <div className="text-lg font-bold">Anime ID: {showDetails.id}</div>
+                        <div className="text-lg font-bold">Serien ID: {showDetails.id}</div>
                     </div>
                 )}
 
