@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { adjustEpisodeNumbersInDirectory } from '../../services/tauriService'; // Adjust import paths as necessary
 import { AnimatedButton } from '../stylingComponents/AnimatedButton';
 import GlassCard from '../stylingComponents/GlassCard';
+import ErrorMessage from '../stylingComponents/ErrorMessage';
 
 export default function EpisodeNumberAdjuster() {
     const [adjustmentValue, setAdjustmentValue] = useState<number | null>(null);
@@ -37,7 +38,7 @@ export default function EpisodeNumberAdjuster() {
                     placeholder="Gib eine Zahl ein (z.B. 1 oder -1)"
                     className="border rounded px-2 py-1"
                 />
-                {error && <div className="text-red-500">{error}</div>}
+                {error && <ErrorMessage message={error}></ErrorMessage>}
                 <AnimatedButton text="Anpassen" onClick={handleAdjust} image='/styling/buttons/button-purple.jpg' />
             </div>
         </GlassCard>

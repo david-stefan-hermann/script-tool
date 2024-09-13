@@ -5,6 +5,7 @@ import { renameEpisodesWithTitles, getCurrentEpisodeNames, openEpisodeTitleWindo
 import { listen } from '@tauri-apps/api/event'; // Import the event listener
 import { AnimatedButton } from '../stylingComponents/AnimatedButton';
 import GlassCard from '../stylingComponents/GlassCard';
+import ErrorMessage from '../stylingComponents/ErrorMessage';
 
 export default function EpisodeRenamer() {
     const [episodeTitles, setEpisodeTitles] = useState<string>('');
@@ -91,7 +92,7 @@ export default function EpisodeRenamer() {
                         className="border rounded px-2 py-1 font-mono w-full"
                     />
                 </div>
-                {error && <div className="text-red-500">{error}</div>}
+                {error && <ErrorMessage message={error}></ErrorMessage>}
                 <div className='flex flex-row w-full gap-2 justify-center flex-stretch'>
                     <AnimatedButton text="Titel laden" onClick={openEpisodeTitleWindow} image='/styling/buttons/button-blue.jpg' />
                     <AnimatedButton text="Umbenennen" onClick={handleRename} image='/styling/buttons/button-purple.jpg' />

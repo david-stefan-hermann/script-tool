@@ -6,6 +6,7 @@ import {
 import React, { useState } from 'react';
 import { AnimatedButton } from '../stylingComponents/AnimatedButton';
 import GlassCard from '../stylingComponents/GlassCard';
+import ErrorMessage from '../stylingComponents/ErrorMessage';
 
 // Placeholder for your components
 export default function FileRenamer() {
@@ -42,7 +43,7 @@ export default function FileRenamer() {
                     placeholder="Ersetzen"
                     className="border rounded px-2 py-1"
                 />
-                {error && <div className="text-red-500">{error}</div>}
+                {error && <ErrorMessage message={error}></ErrorMessage>}
                 <AnimatedButton text="Umbenennen" onClick={handleRename} image='/styling/buttons/button-purple.jpg' />
             </div>
         </GlassCard>

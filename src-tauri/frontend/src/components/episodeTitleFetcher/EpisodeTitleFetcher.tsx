@@ -5,6 +5,7 @@ import { SeasonedEpisodes, SeasonedEpisodesDetails, fetchJikanShowDetails, fetch
 import { AnimatedButton } from '../stylingComponents/AnimatedButton';
 import GlassCard from '../stylingComponents/GlassCard';
 import ImageButtonSwitch from '../stylingComponents/ImageButtonSwitch';
+import ErrorMessage from '../stylingComponents/ErrorMessage';
 
 interface EpisodeTitleFetcherProps {
   seasons: SeasonedEpisodes[];
@@ -72,8 +73,8 @@ export default function EpisodeTitleFetcher({ seasons, setSeasons, selectedSeaso
         setSelectedSeason(fetchedSeasons[0].season);
       }
     } catch (err) {
-      console.error(err);
       setError(String(err));
+      setShowDetails(null);
     }
   };
 
@@ -84,7 +85,7 @@ export default function EpisodeTitleFetcher({ seasons, setSeasons, selectedSeaso
 
   return (
     <GlassCard className='h-full' title='Episoden Laden' image='/styling/backsplash/green.jpg'>
-      <div className='p-4 flex flex-col w-full h-full overflow-x-hidden gap-4'>
+      <div className='p-2 flex flex-col w-full h-full overflow-x-hidden gap-4'>
         <div className="flex flex-row gap-4">
           {/* API Selection Images */}
           <div>
@@ -156,7 +157,7 @@ export default function EpisodeTitleFetcher({ seasons, setSeasons, selectedSeaso
         </div>
 
         {/* Error Display */}
-        {error && <div className="text-red-500">{error}</div>}
+        {error && <ErrorMessage message={error}></ErrorMessage>}
 
         {/* Fetch Episode Titles Button */}
         <div className='flex flex-row w-full'>
