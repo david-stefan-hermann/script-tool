@@ -20,7 +20,7 @@ export default function FileOperations() {
             {
                 id: 'SR',
                 title: 'Suchen und Ersetzen',
-                description: 'Benenne Video Dateien in einem Verzeichnis um.',
+                description: 'Benenne alle Video Dateien in einem Verzeichnis um.',
                 option: <FileRenamer />
             },
             {
@@ -32,7 +32,7 @@ export default function FileOperations() {
             {
                 id: 'ER',
                 title: 'Episoden umbenennen',
-                description: 'Benenne Episoden in einem Verzeichnis um.',
+                description: 'Benenne Episoden in einem Verzeichnis. Drücke "Titel laden" um automatisch Titel zu laden.',
                 option: <EpisodeRenamer />
             }
         ]);
@@ -50,8 +50,13 @@ export default function FileOperations() {
                         {/* Episode Renamer */}
                         <ImageButtonSwitch title="Episoden benennen" image='/styling/buttons/rename2.jpg' selected={toolOption == "ER"} onClick={() => setToolOption("ER")} />
                     </div>
-                    <span className="mr-2"><BsInfoCircle className='h-5 w-5 align-sub inline mr-2' />Beschreibung</span>
-                    <span>{options?.find((option) => option.id === toolOption)?.description}</span>
+                    <div className='flex bg-white bg-opacity-30 px-2 py-3 -mx-2 -mb-2'>
+
+                    <span>
+                        <BsInfoCircle className='h-5 w-5 align-sub inline mr-2' />
+                        {options?.find((option) => option.id === toolOption)?.description}
+                    </span>
+                    </div>
                 </div>
             </GlassCard>
             {selectedOperation && options?.find((option) => option.id === toolOption)?.option}
