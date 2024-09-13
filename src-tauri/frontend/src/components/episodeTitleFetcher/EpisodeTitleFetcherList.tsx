@@ -5,6 +5,7 @@ import { SeasonedEpisodes, SeasonedEpisodesDetails } from "@/services/tauriServi
 import { AnimatedButton } from "../stylingComponents/AnimatedButton";
 import { emit } from '@tauri-apps/api/event';
 import GlassCard from "../stylingComponents/GlassCard";
+import { BsFileEarmarkPlayFill } from "react-icons/bs";
 
 interface EpisodeTitleFetcherListProps {
     seasons: SeasonedEpisodes[];
@@ -49,14 +50,23 @@ export function EpisodeTitleFetcherList({ seasons, selectedSeason, setSelectedSe
     }
 
     return (
-        <GlassCard className='h-full' title={showDetails ? String(showDetails.name + " (" + showDetails.premiered_year + ")") : 'Episodenliste'} image='/styling/backsplash/orange.jpg'>
-            <div className='p-4 flex flex-col w-full h-full overflow-x-hidden gap-4'>
+        <GlassCard className='h-full' title='Episodenliste' image='/styling/backsplash/orange.jpg'>
+            <div className='p-2 flex flex-col w-full h-full overflow-x-hidden gap-4'>
 
-                {showDetails?.name && (
-                    <div className="flex flex-row gap-4">
-                        <div className="text-lg font-bold">Serien ID: {showDetails.id}</div>
+                {showDetails && <GlassCard className="text-purple-700 gap-2">
+                    <div className="flex flex-row justify-center p-2">
+                        <div className='flex items-center'>
+                            <BsFileEarmarkPlayFill className="h-5 w-5 align-sub inline mr-2" />
+                        </div>
+                        <div className='flex flex-col flex-grow'>
+                            <span>
+                                {showDetails?.name && showDetails.name}
+                                {showDetails?.premiered_year && <span> ({showDetails.premiered_year})</span>}
+                            </span>
+                            <span>{showDetails?.id && <span>ID: {showDetails.id}</span>}</span>
+                        </div>
                     </div>
-                )}
+                </GlassCard>}
 
                 {/* Season Dropdown and Text Area */}
                 {seasons.length > 0 && (
@@ -69,7 +79,7 @@ export function EpisodeTitleFetcherList({ seasons, selectedSeason, setSelectedSe
                             >
                                 {seasons.map((season) => (
                                     <option key={season.season} value={season.season}>
-                                        {`Staffel 0${season.season}`}
+                                        {`Staffel ${season.season}`}
                                     </option>
                                 ))}
                             </select>
