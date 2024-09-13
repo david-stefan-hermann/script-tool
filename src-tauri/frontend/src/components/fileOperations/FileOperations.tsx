@@ -44,11 +44,11 @@ export default function FileOperations() {
                 <div className="p-2 flex flex-col gap-2">
                     <div className="flex gap-2">
                         {/* Search and Replace */}
-                        <ImageButtonSwitch title="Suchen und Ersetzen" image='/logos/jikan_logo.png' selected={toolOption == "SR"} onClick={() => setToolOption("SR")} />
+                        <ImageButtonSwitch title="Suchen und Ersetzen" image='/styling/buttons/search.jpeg' selected={toolOption == "SR"} onClick={() => setToolOption("SR")} />
                         {/* Episode Counter Adjuster */}
-                        <ImageButtonSwitch title="Episodenzahl anpassen" image='/logos/thetvdb_logo.jpg' selected={toolOption == "ADJ"} onClick={() => setToolOption("ADJ")} />
+                        <ImageButtonSwitch title="Episodenzahl anpassen" image='/styling/buttons/adjuster.jpg' selected={toolOption == "ADJ"} onClick={() => setToolOption("ADJ")} />
                         {/* Episode Renamer */}
-                        <ImageButtonSwitch title="Episoden benennen" image='/logos/tvmaze_logo.png' selected={toolOption == "ER"} onClick={() => setToolOption("ER")} />
+                        <ImageButtonSwitch title="Episoden benennen" image='/styling/buttons/rename2.jpg' selected={toolOption == "ER"} onClick={() => setToolOption("ER")} />
                     </div>
                     <span className="mr-2"><BsInfoCircle className='h-5 w-5 align-sub inline mr-2' />Beschreibung</span>
                     <span>{options?.find((option) => option.id === toolOption)?.description}</span>
