@@ -27,12 +27,13 @@
     textarea,
     select {
         background-color: #edd2f1;
+        color: black;
     }
 
     input::placeholder,
     textarea::placeholder,
     select::placeholder {
-        color: rgb(71, 34, 105);
+        color: rgb(90, 60, 117);
     }
 }
 
