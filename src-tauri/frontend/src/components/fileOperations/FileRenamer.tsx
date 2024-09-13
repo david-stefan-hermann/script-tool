@@ -26,7 +26,7 @@ export default function FileRenamer() {
     }
 
     return (
-        <GlassCard title='Titel umbenennen' image='/styling/buttons/white.jpg'>
+        <GlassCard title='Titel umbenennen' image='/styling/backsplash/white.jpg'>
             <div className="flex flex-col gap-2 p-2">
                 <input
                     type="text"

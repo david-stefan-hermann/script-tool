@@ -28,7 +28,7 @@ export default function EpisodeNumberAdjuster() {
     }
 
     return (
-        <GlassCard title='Episodennummer anpassen' image='/styling/buttons/gray.jpg'>
+        <GlassCard title='Episodennummer anpassen' image='/styling/backsplash/gray.jpg'>
             <div className="flex flex-col gap-2 p-2">
                 <input
                     type="number"

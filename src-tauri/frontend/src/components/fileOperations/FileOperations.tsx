@@ -40,7 +40,7 @@ export default function FileOperations() {
 
     return (
         <>
-            <GlassCard title="Werkzeug" image='/styling/buttons/red.jpg' bgClass='bg-bottom'>
+            <GlassCard title="Werkzeug" image='/styling/backsplash/red.jpg' bgClass='bg-bottom'>
                 <div className="p-2 flex flex-col gap-2">
                     <div className="flex gap-2">
                         {/* Search and Replace */}
