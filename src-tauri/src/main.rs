@@ -3,20 +3,17 @@
     windows_subsystem = "windows"
 )]
 
-mod anime_episodes_jikan;
-mod anime_episodes_thetvdb;
-mod anime_episodes_tvmaze;
-mod file_explorer;
-mod file_operations;
+mod explorer;
+mod api;
 
-use anime_episodes_jikan::fetch_jikan_show_details;
-use anime_episodes_thetvdb::fetch_tvdb_episode_titles_grouped_by_season;
-use anime_episodes_tvmaze::fetch_tvmaze_show_details;
-use file_explorer::{
+use api::anime_episodes_jikan::fetch_jikan_show_details;
+use api::anime_episodes_thetvdb::fetch_tvdb_episode_titles_grouped_by_season;
+use api::anime_episodes_tvmaze::fetch_tvmaze_show_details;
+use explorer::file_explorer::{
     change_directory, get_current_path, get_directory_hierarchy, go_to_parent_directory,
     list_drives, list_files_in_current_directory, list_files_in_home_directory, FileExplorer,
 };
-use file_operations::{
+use explorer::file_operations::{
     adjust_episode_numbers_in_directory, get_current_episode_names, rename_episodes_with_titles,
     rename_files_in_directory,
 };
