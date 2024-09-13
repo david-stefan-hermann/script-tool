@@ -22,7 +22,7 @@ export default function LayeredBackground() {
             </div>
             <div className="w-full h-full relative overflow-hidden opacity-20">
                 <img
-                    src="/styling/background/landscape.jpg"
+                    src="/styling/background/clouds.webp"
                     alt="Background Landscape"
                     className="absolute bottom-0 left-1/2 transform -translate-x-1/2 min-w-full min-h-full object-cover"
                 />
