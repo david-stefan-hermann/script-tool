@@ -4,8 +4,8 @@ use std::fmt;
 use tauri::command;
 
 use crate::api::models::{
-    JikanAnimeDetailsResponse, JikanAnimeDetailsWrapper, JikanEpisodeResponse,
-    JikanSearchResponse, SeasonedEpisodes, ShowDetailsWithEpisodes,
+    JikanAnimeDetailsResponse, JikanAnimeDetailsWrapper, JikanEpisodeResponse, JikanSearchResponse,
+    SeasonedEpisodes, ShowDetailsWithEpisodes,
 };
 
 // Custom error type for better error handling
@@ -47,10 +47,8 @@ pub async fn fetch_jikan_show_details(
     let anime_details: JikanAnimeDetailsResponse;
 
     if let Some(id) = anime_id {
-        // Debug: Log fetching by ID
+        // Fetch anime details by ID
         println!("Fetching anime details by ID: {}", id);
-
-        // Fetch anime details using the anime ID
         let anime_url = format!("https://api.jikan.moe/v4/anime/{}", id);
         let anime_response = client
             .get(&anime_url)
@@ -58,87 +56,88 @@ pub async fn fetch_jikan_show_details(
             .await
             .map_err(|e| format!("Failed to fetch anime by ID: {}", e))?;
 
-        // Read and print the raw response body for debugging
         let response_text = anime_response
             .text()
             .await
             .map_err(|e| format!("Failed to read response body: {}", e))?;
         println!("Anime Response Body: {}", response_text);
 
-        // Deserialize the response into `JikanAnimeDetailsWrapper` struct
         let anime_json: JikanAnimeDetailsWrapper = serde_json::from_str(&response_text)
             .map_err(|e| format!("Failed to parse anime details response: {}", e))?;
-
-        // Extract `anime_details` from the `data` field
         anime_details = anime_json.data.clone();
 
-        // Debug: Check if `anime_details` is parsed correctly
-        println!("Parsed Anime Details: {:?}", anime_details);
-
-        // Now that we have anime details, fetch the episodes by season
+        // Proceed to fetch episodes
         url = format!(
             "https://api.jikan.moe/v4/anime/{}/episodes",
             anime_details.mal_id
         );
     } else if let Some(name) = anime_name {
-        // Debug: Log searching by name
-        println!("Searching anime by name: {}", name);
-
         // Search anime by name
-        let search_url = if let Some(year) = year {
-            format!(
-                "https://api.jikan.moe/v4/anime?q={}&start_date={}",
-                name, year
-            )
-        } else {
-            format!("https://api.jikan.moe/v4/anime?q={}", name)
-        };
-
+        println!("Searching anime by name: {}", name);
+        let search_url = format!("https://api.jikan.moe/v4/anime?q={}", name);
         let search_response = client
             .get(&search_url)
             .send()
             .await
             .map_err(|e| format!("Failed to search anime by name: {}", e))?;
 
-        // Parse the search response and handle errors
         let search_json: JikanSearchResponse = search_response
             .json()
             .await
             .map_err(|e| format!("Failed to parse search response: {}", e))?;
 
-        // Ensure we have at least one result
+        // Ensure we have results
         if search_json.data.is_empty() {
             return Err("No matching anime found.".to_string());
         }
 
-        // Fetch anime details using the anime ID from the search result
-        let anime_id_from_search = search_json.data[0].mal_id;
-        let anime_url = format!("https://api.jikan.moe/v4/anime/{}", anime_id_from_search);
-        let anime_response = client
-            .get(&anime_url)
-            .send()
-            .await
-            .map_err(|e| format!("Failed to fetch anime by ID from search result: {}", e))?;
+        // Filter by year if provided
+        let filtered_anime = if let Some(search_year) = year {
+            search_json.data.iter().find(|anime| {
+                anime
+                    .aired
+                    .from
+                    .as_ref()
+                    .map_or(false, |from| from.starts_with(&search_year.to_string()))
+            })
+        } else {
+            // No year provided, fallback to the first result
+            search_json.data.first()
+        };
 
-        // Read and print the raw response body for debugging
-        let response_text = anime_response
-            .text()
-            .await
-            .map_err(|e| format!("Failed to read response body: {}", e))?;
-        println!("Anime Response Body from Search Result: {}", response_text);
+        if let Some(anime_details_json) = filtered_anime {
+            let anime_id_from_search = anime_details_json.mal_id;
+            println!("Found anime ID: {} for name {}", anime_id_from_search, name);
 
-        // Deserialize the response into `JikanAnimeDetailsWrapper` struct
-        let anime_json: JikanAnimeDetailsWrapper = serde_json::from_str(&response_text)
-            .map_err(|e| format!("Failed to parse anime details response from search result: {}", e))?;
+            let anime_url = format!("https://api.jikan.moe/v4/anime/{}", anime_id_from_search);
+            let anime_response =
+                client.get(&anime_url).send().await.map_err(|e| {
+                    format!("Failed to fetch anime by ID from search result: {}", e)
+                })?;
 
-        // Extract `anime_details` from the `data` field
-        anime_details = anime_json.data.clone();
+            let response_text = anime_response
+                .text()
+                .await
+                .map_err(|e| format!("Failed to read response body: {}", e))?;
+            println!("Anime Response Body from Search Result: {}", response_text);
 
-        println!("Found anime ID: {}", anime_details.mal_id);
-        url = format!(
-            "https://api.jikan.moe/v4/anime/{}/episodes",
-            anime_details.mal_id
-        );
+            let anime_json: JikanAnimeDetailsWrapper = serde_json::from_str(&response_text)
+                .map_err(|e| {
+                    format!(
+                        "Failed to parse anime details response from search result: {}",
+                        e
+                    )
+                })?;
+
+            anime_details = anime_json.data.clone();
+
+            url = format!(
+                "https://api.jikan.moe/v4/anime/{}/episodes",
+                anime_details.mal_id
+            );
+        } else {
+            return Err("No matching anime found with the given year.".to_string());
+        }
     } else {
         return Err("You must provide either an anime ID or an anime name.".into());
     }
@@ -159,8 +158,6 @@ pub async fn fetch_jikan_show_details(
     let response_json: JikanEpisodeResponse = serde_json::from_str(&raw_response)
         .map_err(|e| format!("Failed to parse episodes response: {}", e))?;
 
-    // Group episodes by release year (extracted from aired
-
     // Group episodes by release year (extracted from aired field)
     let mut seasons_map: HashMap<i32, SeasonedEpisodes> = HashMap::new();
     for (i, episode) in response_json.data.iter().enumerate() {
@@ -169,23 +166,19 @@ pub async fn fetch_jikan_show_details(
             .clone()
             .unwrap_or_else(|| "Unknown".to_string());
 
-        // Parse the year as i32 from the aired date
         let year: i32 = aired_date
             .split('-')
             .next()
-            .unwrap_or("0") // Use "0" as default if the date is missing or malformed
+            .unwrap_or("0")
             .parse()
-            .unwrap_or(0); // Convert to i32, default to 0 if parsing fails
+            .unwrap_or(0);
 
-        // Get or create the season based on year
-        let season = seasons_map
-            .entry(year) // Using year as i32 key
-            .or_insert_with(|| SeasonedEpisodes {
-                season: year, // Store as i32 instead of String
-                start_episode: i as i32 + 1,
-                end_episode: 0,
-                titles: vec![],
-            });
+        let season = seasons_map.entry(year).or_insert_with(|| SeasonedEpisodes {
+            season: year,
+            start_episode: i as i32 + 1,
+            end_episode: 0,
+            titles: vec![],
+        });
 
         season.titles.push(
             episode
@@ -198,9 +191,7 @@ pub async fn fetch_jikan_show_details(
 
     // Convert the HashMap to a Vec of SeasonedEpisodes
     let mut seasons: Vec<SeasonedEpisodes> = seasons_map.into_values().collect();
-    seasons.sort_by(|a, b| a.season.cmp(&b.season)); // Sort by the year for consistency
-
-    println!("Grouped Episodes by Release Year: {:?}", seasons);
+    seasons.sort_by(|a, b| a.season.cmp(&b.season));
 
     // Extract the premiered year from the anime details
     let premiered_year = anime_details.aired.as_ref().and_then(|aired| {
