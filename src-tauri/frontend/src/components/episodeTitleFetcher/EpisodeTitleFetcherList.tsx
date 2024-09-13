@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { SeasonedEpisodes } from "@/services/tauriService";
+import { SeasonedEpisodes, SeasonedEpisodesDetails } from "@/services/tauriService";
 import { AnimatedButton } from "../stylingComponents/AnimatedButton";
 import { emit } from '@tauri-apps/api/event';
 import GlassCard from "../stylingComponents/GlassCard";
@@ -11,9 +11,10 @@ interface EpisodeTitleFetcherListProps {
     selectedSeason: number;
     setSelectedSeason: React.Dispatch<React.SetStateAction<number>>;
     setError: React.Dispatch<React.SetStateAction<string | null>>;
+    showDetails: SeasonedEpisodesDetails | null;
 }
 
-export function EpisodeTitleFetcherList({ seasons, selectedSeason, setSelectedSeason, setError }: EpisodeTitleFetcherListProps) {
+export function EpisodeTitleFetcherList({ seasons, selectedSeason, setSelectedSeason, setError, showDetails }: EpisodeTitleFetcherListProps) {
     const [copySuccess, setCopySuccess] = useState('');  // For displaying the copy success message
     const [sendSuccess, setsendSuccess] = useState('');
     const handleCopy = () => {
@@ -48,8 +49,14 @@ export function EpisodeTitleFetcherList({ seasons, selectedSeason, setSelectedSe
     }
 
     return (
-        <GlassCard className='h-full' title='Episoden' image='/styling/backsplash/orange.jpg'>
+        <GlassCard className='h-full' title={showDetails ? String(showDetails.name + " (" + showDetails.premiered_year + ")") : 'Episoden'} image='/styling/backsplash/orange.jpg'>
             <div className='p-4 flex flex-col w-full h-full overflow-x-hidden gap-4'>
+
+                {showDetails?.name && (
+                    <div className="flex flex-row gap-4">
+                        <div className="text-lg font-bold">Anime ID: {showDetails.id}</div>
+                    </div>
+                )}
 
                 {/* Season Dropdown and Text Area */}
                 {seasons.length > 0 && (

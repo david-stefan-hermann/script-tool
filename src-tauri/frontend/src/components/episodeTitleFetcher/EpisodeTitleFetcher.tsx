@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { SeasonedEpisodes, fetchAnimeEpisodeTitlesGroupedBySeason, fetchTVDBAnimeEpisodeTitles, fetchTVMAZEAnimeEpisodeTitlesBySeason } from '@/services/tauriService';
+import { SeasonedEpisodes, SeasonedEpisodesDetails, fetchAnimeEpisodeTitlesGroupedBySeason, fetchTVDBAnimeEpisodeTitles, fetchTVMAZEAnimeEpisodeTitlesBySeason } from '@/services/tauriService';
 import { AnimatedButton } from '../stylingComponents/AnimatedButton';
 import GlassCard from '../stylingComponents/GlassCard';
 import ImageButtonSwitch from '../stylingComponents/ImageButtonSwitch';
@@ -13,14 +13,14 @@ interface EpisodeTitleFetcherProps {
   setSelectedSeason: React.Dispatch<React.SetStateAction<number>>; // Function to update the state
   error: string | null;
   setError: React.Dispatch<React.SetStateAction<string | null>>; // Function to update the state
+  setShowDetails: React.Dispatch<React.SetStateAction<SeasonedEpisodesDetails | null>>;
 }
 
-export default function EpisodeTitleFetcher({ seasons, setSeasons, selectedSeason, setSelectedSeason, error, setError }: EpisodeTitleFetcherProps) {
+export default function EpisodeTitleFetcher({ seasons, setSeasons, selectedSeason, setSelectedSeason, error, setError, setShowDetails }: EpisodeTitleFetcherProps) {
   const [animeId, setAnimeId] = useState<number | null>(null);
   const [animeName, setAnimeName] = useState<string | null>(null);
   const [year, setYear] = useState<number | null>(null);
-  //const [seasons, setSeasons] = useState<SeasonedEpisodes[]>([]);
-  //const [selectedSeason, setSelectedSeason] = useState<number>(1);
+  
   const apiSourceUrl = {
     "TVDB": { href: "https://www.thetvdb.com/", name: "TheTVDB" },
     "JIKA": { href: "https://jikan.moe/", name: "Jikan" },
@@ -40,6 +40,7 @@ export default function EpisodeTitleFetcher({ seasons, setSeasons, selectedSeaso
 
     try {
       let fetchedSeasons: SeasonedEpisodes[] = [];
+      let fetchedShowDetails: SeasonedEpisodesDetails | null = null;
 
       if (apiOption == "TVDB") {
         if (!tvdbApiKey) {
@@ -53,8 +54,14 @@ export default function EpisodeTitleFetcher({ seasons, setSeasons, selectedSeaso
         fetchedSeasons = await fetchAnimeEpisodeTitlesGroupedBySeason(animeId, animeName, year);
       } else {
         // Fetch from TVmaze
-        fetchedSeasons = await fetchTVMAZEAnimeEpisodeTitlesBySeason(animeId, animeName, year);
+        const fetchedSeasonsDetails: SeasonedEpisodesDetails = await fetchTVMAZEAnimeEpisodeTitlesBySeason(animeId, animeName, year);
+        
+        fetchedShowDetails = fetchedSeasonsDetails;
+
+        fetchedSeasons = fetchedSeasonsDetails.episodes_by_season
       }
+
+      setShowDetails(fetchedShowDetails);
 
       setSeasons(fetchedSeasons);
       if (fetchedSeasons.length > 0) {

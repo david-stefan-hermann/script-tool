@@ -4,13 +4,14 @@ import EpisodeTitleFetcher from "@/components/episodeTitleFetcher/EpisodeTitleFe
 import FallingPetalsBackground from "@/components/stylingComponents/FallingPetalsBackground";
 import LayeredBackground from "@/components/stylingComponents/LayeredBackground";
 import { useState } from "react";
-import { SeasonedEpisodes } from '@/services/tauriService';
+import { SeasonedEpisodes, SeasonedEpisodesDetails } from '@/services/tauriService';
 import { EpisodeTitleFetcherList } from "@/components/episodeTitleFetcher/EpisodeTitleFetcherList";
 
 export default function Page() {
     const [seasons, setSeasons] = useState<SeasonedEpisodes[]>([]);
     const [selectedSeason, setSelectedSeason] = useState<number>(1);
     const [error, setError] = useState<string | null>(null);
+    const [showDetails, setShowDetails] = useState<SeasonedEpisodesDetails | null>(null);
 
     return (
         <main className="min-h-screen max-h-screen min-h-screen h-screen p-4 flex flex-row gap-4">
@@ -29,15 +30,17 @@ export default function Page() {
                     setSelectedSeason={setSelectedSeason}
                     error={error}
                     setError={setError}
+                    setShowDetails={setShowDetails}
                 />
             </div>
-            
+
             <div className="max-h-screen overflow-hidden basis-1/2">
                 <EpisodeTitleFetcherList
                     seasons={seasons}
                     selectedSeason={selectedSeason}
                     setSelectedSeason={setSelectedSeason}
                     setError={setError}
+                    showDetails={showDetails}
                 />
             </div>
         </main>

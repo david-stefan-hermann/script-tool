@@ -13,7 +13,7 @@ struct TVMazeEpisode {
 }
 
 // Struct to hold the search result response for finding anime by name
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 struct TVMazeShow {
     id: i32,
     name: String,
@@ -29,10 +29,19 @@ struct TVMazeSearchResponse {
 // Struct to hold episodes grouped by season
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct SeasonedEpisodes {
-    season: i32,   // Season number
+    season: i32, // Season number
     start_episode: i32,
     end_episode: i32,
     titles: Vec<String>,
+}
+
+// Struct to hold show details along with episodes
+#[derive(Debug, Serialize, Deserialize)]
+pub struct ShowDetailsWithEpisodes {
+    id: i32,
+    name: String,
+    premiered_year: Option<String>,
+    episodes_by_season: Vec<SeasonedEpisodes>,
 }
 
 // Custom error type for better error handling
@@ -40,7 +49,6 @@ pub struct SeasonedEpisodes {
 pub enum FetchError {
     RequestError(reqwest::Error),
     ParsingError(serde_json::Error),
-    //NotFoundError(String),
 }
 
 impl fmt::Display for FetchError {
@@ -48,7 +56,6 @@ impl fmt::Display for FetchError {
         match self {
             FetchError::RequestError(err) => write!(f, "Request Error: {}", err),
             FetchError::ParsingError(err) => write!(f, "Parsing Error: {}", err),
-            //FetchError::NotFoundError(message) => write!(f, "Not Found Error: {}", message),
         }
     }
 }
@@ -70,12 +77,25 @@ pub async fn fetch_tvmaze_episode_titles_grouped_by_season(
     anime_id: Option<i32>,
     anime_name: Option<String>,
     year: Option<i32>,
-) -> Result<Vec<SeasonedEpisodes>, String> {
+) -> Result<ShowDetailsWithEpisodes, String> {
     let client = Client::new();
     let url: String;
+    let show_details: TVMazeShow;
 
     if let Some(id) = anime_id {
-        // Fetch episodes directly using the anime ID
+        // Fetch show details using the anime ID
+        let show_url = format!("https://api.tvmaze.com/shows/{}", id);
+        let show_response = client
+            .get(&show_url)
+            .send()
+            .await
+            .map_err(|e| format!("Failed to fetch show by ID: {}", e))?;
+        show_details = show_response
+            .json()
+            .await
+            .map_err(|e| format!("Failed to parse show details response: {}", e))?;
+
+        // Fetch episodes using the anime ID
         url = format!("https://api.tvmaze.com/shows/{}/episodes", id);
     } else if let Some(name) = anime_name {
         // Search anime by name
@@ -93,22 +113,23 @@ pub async fn fetch_tvmaze_episode_titles_grouped_by_season(
 
         // Filter the search results by year if a year is provided
         let filtered_result = if let Some(target_year) = year {
-            search_json
-                .into_iter()
-                .find(|result| result.show.premiered.as_ref().map_or(false, |p| {
-                    p.starts_with(&target_year.to_string())
-                }))
+            search_json.into_iter().find(|result| {
+                result
+                    .show
+                    .premiered
+                    .as_ref()
+                    .map_or(false, |p| p.starts_with(&target_year.to_string()))
+            })
         } else {
             search_json.into_iter().next()
         };
 
-        let anime_id = filtered_result
+        let found_show = filtered_result
             .ok_or_else(|| "No matching anime found.".to_string())?
-            .show
-            .id;
+            .show;
 
-        // Fetch episodes by the found anime ID
-        url = format!("https://api.tvmaze.com/shows/{}/episodes", anime_id);
+        show_details = found_show.clone();
+        url = format!("https://api.tvmaze.com/shows/{}/episodes", found_show.id);
     } else {
         return Err("You must provide either an anime ID or an anime name.".into());
     }
@@ -138,17 +159,28 @@ pub async fn fetch_tvmaze_episode_titles_grouped_by_season(
                     season: episode.season,
                     start_episode: (i + 1) as i32,
                     end_episode: 0,
-                    titles: vec![episode.name.clone().unwrap_or_else(|| "Unknown Title".to_string())],
+                    titles: vec![episode
+                        .name
+                        .clone()
+                        .unwrap_or_else(|| "Unknown Title".to_string())],
                 });
             } else {
-                season.titles.push(episode.name.clone().unwrap_or_else(|| "Unknown Title".to_string()));
+                season.titles.push(
+                    episode
+                        .name
+                        .clone()
+                        .unwrap_or_else(|| "Unknown Title".to_string()),
+                );
             }
         } else {
             current_season = Some(SeasonedEpisodes {
                 season: episode.season,
                 start_episode: (i + 1) as i32,
                 end_episode: 0,
-                titles: vec![episode.name.clone().unwrap_or_else(|| "Unknown Title".to_string())],
+                titles: vec![episode
+                    .name
+                    .clone()
+                    .unwrap_or_else(|| "Unknown Title".to_string())],
             });
         }
     }
@@ -158,5 +190,14 @@ pub async fn fetch_tvmaze_episode_titles_grouped_by_season(
         seasons.push(season);
     }
 
-    Ok(seasons)
+    // Return show details with grouped episodes
+    Ok(ShowDetailsWithEpisodes {
+        id: show_details.id,
+        name: show_details.name,
+        premiered_year: show_details
+            .premiered
+            .as_ref()
+            .map(|p| p.split('-').next().unwrap_or("").to_string()),
+        episodes_by_season: seasons,
+    })
 }
