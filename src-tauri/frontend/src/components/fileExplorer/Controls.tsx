@@ -64,7 +64,7 @@ export default function Controls({ setFiles, setHierarchy }: ControlsProps) {
     return (
         <>
             {showDrives && <ControlsDriveList handleDirectoryClick={handleDirectoryClick} handleListDrives={handleListDrives} drives={drives} />}
-            <div className="flex text-2xl font-bold pl-2 py-3 text-blue-500 bg-white bg-opacity-30">
+            <div className="flex text-2xl font-bold pl-2 py-3 text-dir bg-white bg-opacity-30">
                 <ControlsButtonBack handleGoUp={handleGoUp} />
                 <ControlsButtonHome handleGoHome={handleGoHome} />
                 <ControlsButtonDrives handleListDrives={handleListDrives} showDrives={showDrives} />
@@ -81,7 +81,7 @@ function ControlsButtonBack({ handleGoUp }: ControlsButtonBackProps) {
     return (
         <Tooltip content="Zurück" placement="top" className='bg-white px-2 rounded border border-gray-100'>
             <div
-                className="h-6 w-6 text-purple-700 inline mr-2 cursor-pointer hover:text-purple-600 active:text-pink-600"
+                className="h-6 w-6 text-controls-100 inline mr-2 cursor-pointer hover:text-controls-200 active:text-controls-300"
                 onClick={handleGoUp}
             >
                 <BsArrowLeft />
@@ -98,7 +98,7 @@ function ControlsButtonHome({ handleGoHome }: ControlsButtonHomeProps) {
     return (
         <Tooltip content="Zum Home Verzeichnis" placement="top" className='bg-white px-2 rounded border border-gray-100'>
             <div
-                className="h-6 w-6 text-purple-700 inline mr-2 cursor-pointer hover:text-purple-600 active:text-pink-600"
+                className="h-6 w-6 text-controls-100 inline mr-2 cursor-pointer hover:text-controls-200 active:text-controls-300"
                 onClick={handleGoHome}
             >
                 <BsHouseFill />
@@ -117,7 +117,7 @@ function ControlsButtonDrives({ handleListDrives, showDrives }: ControlsButtonDr
     return (
         <Tooltip content="Laufwerke anzeigen" placement="top" className='bg-white px-2 rounded border border-gray-100'>
             <div
-                className={`inline mr-2 cursor-pointer ${showDrives ? 'text-pink-600 hover:text-pink-500' : 'text-purple-700 hover:text-purple-600'}`}
+                className={`inline mr-2 cursor-pointer ${showDrives ? 'text-controls-300 hover:text-controls-200' : 'text-controls-100 hover:text-controls-200'}`}
                 onClick={handleListDrives}
             >
                 <BsDeviceHddFill />
@@ -149,11 +149,11 @@ function ControlsDriveList({ drives, handleDirectoryClick, handleListDrives }: c
                         key={drive.letter}
                         className={`py-1 pl-2 flex cursor-pointer break-all text-md
                             ${index % 2 === 0 ? 'bg-white bg-opacity-0' : 'bg-white bg-opacity-10'}
-                            hover:text-blue-500 hover:bg-gray-200 transition-colors duration-200 glass-card-border-top`}
+                            hover:text-dir hover:bg-white-200 hover:bg-opacity-40 transition-colors duration-200 glass-card-border-top`}
                         onClick={() => handleDirectoryClick(drive.letter)}
                     >
                         <span>
-                            <BsDeviceHddFill className='align-text-top h-5 w-5 text-blue-500 inline mr-2' />
+                            <BsDeviceHddFill className='align-text-top h-5 w-5 text-dir inline mr-2' />
                             {drive.letter} {drive.name && `(${drive.name})`}
                         </span>
                     </li>

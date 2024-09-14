@@ -13,8 +13,8 @@ export default function File({ index, file, onClickFunction }: FileProps) {
             key={index}
             className={`py-1 pl-2 flex cursor-pointer break-all glass-card-border-top
                 ${index % 2 === 0 ? 'bg-white bg-opacity-0' : 'bg-white bg-opacity-10'}
-                ${file.is_dir ? 'hover:text-blue-500' : ''}
-                hover:bg-white hover:bg-opacity-30 transition-colors duration-200`}
+                ${file.is_dir ? 'hover:text-dir' : ''}
+                hover:bg-white-200 hover:bg-opacity-40 transition-colors duration-200`}
             onClick={() => { file.is_dir && onClickFunction(file.path) }}
         >
             <span>
@@ -28,15 +28,15 @@ export default function File({ index, file, onClickFunction }: FileProps) {
 function selectFolderIcon(file: FileInfo) {
     if (file.is_dir) {
         return (
-            <BsFolderFill className="align-text-top h-5 w-5 text-blue-500 inline mr-2" />
+            <BsFolderFill className="align-text-top h-5 w-5 text-dir inline mr-2" />
         )
     } else if (file.is_video) {
         return (
-            <BsFileEarmarkPlayFill className="align-text-top h-5 w-5 text-pink-800 inline mr-2" />
+            <BsFileEarmarkPlayFill className="align-text-top h-5 w-5 text-media inline mr-2" />
         )
     } else {
         return (
-            <BsFileEarmarkFill className="align-text-top h-5 w-5 text-gray-700 inline mr-2" />
+            <BsFileEarmarkFill className="align-text-top h-5 w-5 text-inactive inline mr-2" />
         )
     }
 }
