@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { renameEpisodesWithTitles, getCurrentEpisodeNames, openEpisodeTitleWindow, focusMainWindow } from '../../services/tauriService'; // Adjust the import path as necessary
+import { addTitlesToEpisodes, addTitlesToEpisodesPreview, getCurrentEpisodeNames, openEpisodeTitleWindow, focusMainWindow } from '../../services/tauriService'; // Adjust the import path as necessary
 import { listen } from '@tauri-apps/api/event'; // Import the event listener
 import { AnimatedButton } from '../stylingComponents/AnimatedButton';
 import GlassCard from '../stylingComponents/GlassCard';
@@ -27,7 +27,6 @@ export default function EpisodeRenamer() {
 
             // Focus the window after receiving the episode titles
             focusMainWindow();
-
         });
 
         // Cleanup the event listener on component unmount
@@ -70,7 +69,7 @@ export default function EpisodeRenamer() {
     function handleRename() {
         setError(null);
         const titles = episodeTitles.split('\n').map(title => title.trim());
-        renameEpisodesWithTitles(titles)
+        addTitlesToEpisodes(titles)
             .then(() => {
                 console.log("Files renamed successfully");
             })
@@ -79,6 +78,22 @@ export default function EpisodeRenamer() {
                 setError("Failed to rename files: " + err);
             });
     }
+
+    // Function to handle previewing new file names
+    useEffect(() => {
+        function handlePreview() {
+            const titles = episodeTitles.split('\n').map(title => title.trim());
+            addTitlesToEpisodesPreview(titles)
+                .then(() => {
+                    console.log("Files to be renamed previewed successfully");
+                })
+                .catch((err) => {
+                    console.error("Failed to preview new file names:", err);
+                });
+        }
+
+        episodeTitles && handlePreview();
+    }, [episodeTitles]);
 
     return (
         <GlassCard className='h-full' title='Episoden Umbenennen' image='/styling/backsplash/green.jpg'>
