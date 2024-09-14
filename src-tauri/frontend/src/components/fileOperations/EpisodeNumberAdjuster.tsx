@@ -21,6 +21,7 @@ export default function EpisodeNumberAdjuster() {
         adjustEpisodeNumbersInDirectory(adjustmentValue)
             .then(() => {
                 console.log("Episode numbers adjusted successfully");
+                setAdjustmentValue(null);
             })
             .catch((err) => {
                 console.error("Failed to adjust episode numbers:", err);
