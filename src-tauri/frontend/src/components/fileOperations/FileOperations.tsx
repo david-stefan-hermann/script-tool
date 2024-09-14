@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import FileRenamer from './FileRenamer';
 import EpisodeNumberAdjuster from './EpisodeNumberAdjuster';
 import { BsInfoCircle } from 'react-icons/bs';
 import EpisodeRenamer from './EpisodeRenamer';
 import GlassCard from '../stylingComponents/GlassCard';
 import ImageButtonSwitch from '../stylingComponents/ImageButtonSwitch';
+import { getCurrentEpisodeNames, triggerRefresh } from '@/services/tauriService';
 
 export default function FileOperations() {
     const [selectedOperation, setSelectedOperation] = useState<string>('fileRenamer');
@@ -37,6 +38,10 @@ export default function FileOperations() {
             }
         ]);
     });
+
+    useEffect(() => {
+        triggerRefresh();
+    }, [toolOption]);
 
     return (
         <>
