@@ -1,6 +1,28 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import localFont from 'next/font/local'
 import "./globals.css";
+
+
+const delaGothicOne = localFont({
+  src: [
+    {
+      path: '../../public/fonts/DelaGothicOne-Regular.ttf',
+      weight: '400'
+    }
+  ],
+  variable: '--font-dela-gothic-one'
+})
+
+const bangers = localFont({
+  src: [
+    {
+      path: '../../public/fonts/Bangers-Regular.ttf',
+      weight: '400'
+    }
+  ],
+  variable: '--font-bangers'
+})
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +38,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={`${inter.className} ${bangers.variable} ${delaGothicOne.variable}`}>{children}</body>
     </html>
   );
 }
