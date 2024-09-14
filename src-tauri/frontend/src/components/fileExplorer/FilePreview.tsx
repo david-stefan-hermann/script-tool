@@ -43,9 +43,37 @@ export default function FilePreview() {
             setFiles(files);
         });
 
+        const unlistenTriggerPreview = listen<{ new_file_names: string[] }>('trigger-preview', async (event) => {
+            const previewFiles = event.payload.new_file_names;
+
+            console.log("Previewing Files:", previewFiles);
+
+            // Map previewFiles to FileInfo[]
+            const fileInfos: FileInfo[] = previewFiles.map((fileName) => ({
+                path: path, // Use the current path
+                is_dir: false,
+                is_video: true,
+                name: fileName,
+            }));
+
+            setFiles(fileInfos);
+
+            // Check if episodeTitles is an array before joining
+            if (Array.isArray(previewFiles)) {
+                const joinedTitles = previewFiles.join('\n');
+
+                //setEpisodeTitles(joinedTitles);  // Set the state with the joined titles
+
+                console.log("Previewing Titles:", joinedTitles);
+            } else {
+                console.error('Expected an array, but got:', typeof previewFiles, previewFiles);
+            }
+        });
+
         return () => {
             unlisten.then((fn) => fn()); // Unsubscribe from the event when the component unmounts
             unlistenTriggerReload.then((fn) => fn());
+            unlistenTriggerPreview.then((fn) => fn());
         };
     }, []);
 

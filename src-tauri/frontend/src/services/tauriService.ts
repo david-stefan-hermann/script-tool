@@ -47,11 +47,6 @@ export type DriveInfo = {
     name: string;
 };
 
-export const renameFilesInDirectory = async (targetStr: string, replacementStr: string): Promise<void> => {
-    console.log("Renaming filesss:", targetStr, replacementStr);
-    return invoke('rename_files_in_directory', { targetStr: targetStr, replacementStr: replacementStr });
-};
-
 export const adjustEpisodeNumbersInDirectory = async (adjustmentValue: number): Promise<void> => {
     console.log("Adjusting episode numbers by:", adjustmentValue);
     return invoke('adjust_episode_numbers_in_directory', { adjustmentValue });
@@ -62,10 +57,30 @@ export const getCurrentEpisodeNames = async (): Promise<string[]> => {
     return invoke('get_current_episode_names');
 };
 
-export const renameEpisodesWithTitles = async (episodeTitles: string[]): Promise<void> => {
-    console.log("Renaming episodes with titles:", episodeTitles);
-    return invoke('rename_episodes_with_titles', { episodeTitles });
+// Rename Files in Directory ( search and replace )
+
+export const searchAndReplaceInDirectory = async (targetStr: string, replacementStr: string): Promise<void> => {
+    console.log("search_and_replace:", targetStr, replacementStr);
+    return invoke('search_and_replace', { targetStr: targetStr, replacementStr: replacementStr });
 };
+
+export const searchAndReplaceInDirectoryPreview = async (targetStr: string, replacementStr: string): Promise<String[]> => {
+    console.log("search_and_replace_preview:", targetStr, replacementStr);
+    return invoke('search_and_replace_generate_file_titles', { targetStr: targetStr, replacementStr: replacementStr });
+};
+
+// Append Titles to Episodes
+
+export const addTitlesToEpisodes = async (episodeTitles: string[]): Promise<void> => {
+    console.log("Add Titles to Episodes:", episodeTitles);
+    return invoke('add_titles_to_episodes', { episodeTitles });
+};
+
+export const addTitlesToEpisodesPreview = async (episodeTitles: string[]): Promise<String[]> => {
+    console.log("Add Titles to Episodes Preview:", episodeTitles);
+    return invoke('add_titles_to_episodes_generate_file_titles', { episodeTitles });
+};
+
 
 export const openEpisodeTitleWindow = async (): Promise<void> => {
     console.log("Opening episode title window");
@@ -105,4 +120,9 @@ export const fetchTVMAZEShowDetails = async (animeId: number | null, animeName: 
 export const focusMainWindow = async (): Promise<void> => {
     console.log("Focusing main window");
     return invoke('focus_main_window');
+};
+
+export const triggerRefresh = async (): Promise<void> => {
+    console.log("Triggering refresh");
+    return invoke('trigger_refresh');
 };

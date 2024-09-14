@@ -1,12 +1,42 @@
 use crate::explorer::file_explorer::{is_video_file, FileExplorer}; // Import necessary items
 use regex::Regex;
 use sanitize_filename::sanitize;
+use serde::Serialize;
 use std::ffi::OsStr;
 use std::fs;
 use std::io;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
 use tauri::{command, State, Window};
+
+// STRUCTS
+#[derive(Serialize, Clone)]
+struct PreviewPayload {
+    new_file_names: Vec<String>,
+}
+
+#[derive(Debug)]
+pub enum RenameError {
+    IoError(io::Error),
+    InvalidFilename,
+}
+
+impl From<io::Error> for RenameError {
+    fn from(error: io::Error) -> Self {
+        RenameError::IoError(error)
+    }
+}
+
+impl std::fmt::Display for RenameError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            RenameError::IoError(e) => write!(f, "IO Error: {}", e),
+            RenameError::InvalidFilename => write!(f, "Invalid Filename"),
+        }
+    }
+}
+
+impl std::error::Error for RenameError {}
 
 // START GET EPISODE TITLES
 
@@ -57,17 +87,30 @@ pub fn get_current_episode_names(
 // START RENAME EPISODES WITH TITLES
 
 #[command]
-pub fn rename_episodes_with_titles(
+pub async fn add_titles_to_episodes(
     state: State<'_, Arc<Mutex<FileExplorer>>>,
     episode_titles: Vec<String>, // List of episode titles from the frontend
     window: Window,              // To emit events
 ) -> Result<(), String> {
-    let explorer = state.lock().unwrap();
-    let current_path = PathBuf::from(explorer.get_current_path());
+    // Generate new file names
+    let new_file_names = add_titles_to_episodes_generate_file_titles(
+        state.clone(),
+        episode_titles.clone(),
+        window.clone(),
+    )
+    .await
+    .map_err(|e| format!("Failed to generate new file names: {:?}", e))?;
 
-    // Rename media files by appending episode titles
-    rename_media_files_with_titles(&current_path, &episode_titles)
-        .map_err(|e| format!("Failed to rename files with episode titles: {:?}", e))?;
+    // Get the current path from FileExplorer
+    let current_path = {
+        let explorer = state.lock().unwrap();
+        PathBuf::from(explorer.get_current_path())
+    };
+
+    // Rename media files
+    add_titles_to_episodes_rename_media_files(&current_path, &new_file_names)
+        .await
+        .map_err(|e| format!("Failed to rename files: {:?}", e))?;
 
     // Emit an event when renaming is successful
     window
@@ -80,26 +123,69 @@ pub fn rename_episodes_with_titles(
     Ok(())
 }
 
-pub fn rename_media_files_with_titles(
-    directory: &Path,
-    episode_titles: &[String], // Slice of episode titles
-) -> Result<(), io::Error> {
-    let entries = fs::read_dir(directory)?;
+#[command]
+pub async fn add_titles_to_episodes_generate_file_titles(
+    state: State<'_, Arc<Mutex<FileExplorer>>>,
+    episode_titles: Vec<String>, // Use Vec<String> to pass the episode titles from the frontend
+    window: Window,              // To emit events
+) -> Result<Vec<String>, String> {
+    let explorer = state.lock().unwrap();
+    let current_path = PathBuf::from(explorer.get_current_path());
+
+    let entries =
+        fs::read_dir(&current_path).map_err(|e| format!("Failed to read directory: {:?}", e))?;
     let pattern = Regex::new(r"(S\d{2,3}E\d{2,3})").unwrap(); // Pattern to match SXXEXX or SXXEXXX
     let mut episode_idx = 0; // Track episode title index
+    let mut new_file_names = Vec::new();
+
+    for entry in entries {
+        let entry = entry.map_err(|e| format!("Failed to read entry: {:?}", e))?;
+        let path = entry.path();
+
+        if path.is_file() && is_video_file(&path) {
+            if let Some(file_name) = path.file_name().and_then(OsStr::to_str) {
+                if let Some(new_file_name) =
+                    create_new_file_name(file_name, &pattern, &episode_titles, &mut episode_idx)
+                {
+                    new_file_names.push(new_file_name);
+                }
+            }
+        }
+    }
+
+    // Emit an event when renaming is successful
+    window
+        .emit(
+            "trigger-preview",
+            PreviewPayload {
+                new_file_names: new_file_names.clone(),
+            },
+        )
+        .unwrap();
+
+    Ok(new_file_names)
+}
+
+pub async fn add_titles_to_episodes_rename_media_files(
+    directory: &Path,
+    new_file_names: &[String], // Slice of new file names
+) -> Result<(), io::Error> {
+    let entries = fs::read_dir(directory)?;
+    let mut file_idx = 0; // Track file index
 
     for entry in entries {
         let entry = entry?;
         let path = entry.path();
 
         if path.is_file() && is_video_file(&path) {
-            if let Some(file_name) = path.file_name().and_then(OsStr::to_str) {
-                if let Some(new_file_name) =
-                    rename_episode_with_title(file_name, &pattern, episode_titles, &mut episode_idx)
-                {
+            if let Some(_file_name) = path.file_name().and_then(OsStr::to_str) {
+                if file_idx < new_file_names.len() {
+                    let new_file_name = &new_file_names[file_idx];
+                    file_idx += 1;
+
                     // Split the filename and extension
                     let extension = path.extension().and_then(OsStr::to_str).unwrap_or("");
-                    let sanitized_base_name = sanitize(&new_file_name); // Sanitize the base file name
+                    let sanitized_base_name = sanitize(new_file_name); // Sanitize the base file name
 
                     // Construct the new filename by attaching the extension back
                     let final_file_name = format!("{}.{}", sanitized_base_name, extension);
@@ -114,7 +200,7 @@ pub fn rename_media_files_with_titles(
     Ok(())
 }
 
-fn rename_episode_with_title(
+fn create_new_file_name(
     file_name: &str,
     pattern: &Regex,
     episode_titles: &[String],
@@ -148,10 +234,11 @@ fn rename_episode_with_title(
 
 // END RENAME EPISODES WITH TITLES
 
-// START REPLACE FILE TITLES
+// START SEARCH AND REPLACE FILE TITLES
+
 
 #[command]
-pub fn rename_files_in_directory(
+pub fn search_and_replace(
     state: State<'_, Arc<Mutex<FileExplorer>>>,
     target_str: String,
     replacement_str: String,
@@ -164,7 +251,7 @@ pub fn rename_files_in_directory(
     let explorer = state.lock().unwrap();
     let current_path = PathBuf::from(explorer.get_current_path());
 
-    rename_media_files_in_directory(&current_path, &target_str, &replacement_str)
+    search_and_replace_rename_media_files_in_directory(&current_path, &target_str, &replacement_str)
         .map_err(|e| format!("Failed to rename files: {:?}", e))?;
 
     // Emit an event when renaming is successful
@@ -175,30 +262,7 @@ pub fn rename_files_in_directory(
     Ok(())
 }
 
-#[derive(Debug)]
-pub enum RenameError {
-    IoError(io::Error),
-    InvalidFilename,
-}
-
-impl From<io::Error> for RenameError {
-    fn from(error: io::Error) -> Self {
-        RenameError::IoError(error)
-    }
-}
-
-impl std::fmt::Display for RenameError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            RenameError::IoError(e) => write!(f, "IO Error: {}", e),
-            RenameError::InvalidFilename => write!(f, "Invalid Filename"),
-        }
-    }
-}
-
-impl std::error::Error for RenameError {}
-
-pub fn rename_media_files_in_directory(
+pub fn search_and_replace_rename_media_files_in_directory(
     directory: &Path,
     target_str: &str,
     replacement_str: &str,
@@ -225,7 +289,8 @@ pub fn rename_media_files_in_directory(
     Ok(())
 }
 
-// END REPLACE FILE TITLES
+
+// END SEARCH AND REPLACE FILE TITLES
 
 // START ADJUST EPISODE NUMBERS
 
