@@ -1,7 +1,7 @@
 "use client";
 
 import {
-    renameFilesInDirectory,
+    searchAndReplaceInDirectory,
 } from '../../services/tauriService';
 import React, { useState } from 'react';
 import { AnimatedButton } from '../stylingComponents/AnimatedButton';
@@ -16,7 +16,7 @@ export default function FileRenamer() {
 
     function handleRename() {
         setError(null);
-        renameFilesInDirectory(searchString, replaceString)
+        searchAndReplaceInDirectory(searchString, replaceString)
             .then(() => {
                 console.log("Files renamed successfully");
             })
