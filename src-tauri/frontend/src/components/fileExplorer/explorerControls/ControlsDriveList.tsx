@@ -1,6 +1,7 @@
+import LoadingCircle from "@/components/common/LoadingCircle";
 import { DriveInfo } from "@/services/tauriService";
 import { Tooltip } from "@nextui-org/tooltip";
-import { BsDeviceHddFill, BsX } from "react-icons/bs";
+import { BsDeviceHddFill, BsXLg } from "react-icons/bs";
 
 interface controlsDriveList {
     handleDirectoryClick: (path: string) => void;
@@ -11,12 +12,13 @@ interface controlsDriveList {
 export default function ControlsDriveList({ drives, handleDirectoryClick, handleListDrives }: controlsDriveList) {
     return (
         <div className='glass-card'>
-            <h2 className="flex justify-between text-lg font-bold px-2 py-1">
-                <span>Laufwerke</span>
-                <span onClick={handleListDrives}>
-                    <Tooltip content="Schließen" placement="top" className='bg-white px-2 rounded border border-gray-100'>
-                        <BsX className='h-6 w-6 inline hover:cursor-pointer' />
-                    </Tooltip>
+            <h2 className="flex flex-row justify-between text-lg font-bold px-2 py-1 gap-2">
+                <span className="flex flex-grow">Laufwerke</span>
+                <span className='flex inline'>
+                    <LoadingCircle show={drives.length < 0} />
+                </span>
+                <span onClick={handleListDrives} className='flex inline hover:cursor-pointer text-error'>
+                    <BsXLg className="h-full w-full" />
                 </span>
             </h2>
             <ul className='flex-col w-full max-h-full overflow-x-hidden flex-grow'>
