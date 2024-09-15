@@ -1,0 +1,81 @@
+use serde::Serialize;
+use std::ffi::OsString;
+use std::os::windows::ffi::OsStrExt;
+use std::os::windows::ffi::OsStringExt;
+use std::sync::{Arc, Mutex};
+use tauri::command;
+use winapi::um::fileapi::GetDriveTypeW;
+use winapi::um::fileapi::{GetLogicalDrives, GetVolumeInformationW};
+use winapi::um::winbase::{DRIVE_FIXED, DRIVE_REMOTE};
+
+use super::file_explorer::FileExplorer;
+use super::file_explorer::FileInfo;
+
+#[derive(Serialize)]
+pub struct DriveInfo {
+    letter: String,
+    name: String,
+}
+
+#[command]
+pub fn list_drives() -> Result<Vec<DriveInfo>, String> {
+    let drives_bitmask = unsafe { GetLogicalDrives() };
+    if drives_bitmask == 0 {
+        return Err("Failed to get logical drives".to_string());
+    }
+
+    let mut drives = Vec::new();
+    for i in 0..26 {
+        if drives_bitmask & (1 << i) != 0 {
+            let drive_letter = (b'A' + i) as u16;
+            let drive = OsString::from_wide(&[drive_letter, b':' as u16, b'\\' as u16, 0]);
+            let drive_wide: Vec<u16> = drive.encode_wide().collect();
+            let drive_type = unsafe { GetDriveTypeW(drive_wide.as_ptr()) };
+            if drive_type == DRIVE_FIXED || drive_type == DRIVE_REMOTE {
+                let mut volume_name = [0u16; 256];
+                let success = unsafe {
+                    GetVolumeInformationW(
+                        drive_wide.as_ptr(),
+                        volume_name.as_mut_ptr(),
+                        volume_name.len() as u32,
+                        std::ptr::null_mut(),
+                        std::ptr::null_mut(),
+                        std::ptr::null_mut(),
+                        std::ptr::null_mut(),
+                        0,
+                    )
+                };
+                let volume_name = if success != 0 {
+                    let volume_name_str = OsString::from_wide(&volume_name)
+                        .to_string_lossy()
+                        .trim_end_matches('\u{0}')
+                        .to_string();
+                    volume_name_str
+                } else {
+                    "Unknown".to_string()
+                };
+                drives.push(DriveInfo {
+                    letter: drive
+                        .to_string_lossy()
+                        .trim_end_matches('\u{0}')
+                        .to_string(),
+                    name: volume_name,
+                });
+            }
+        }
+    }
+
+    if drives.is_empty() {
+        Err("No drives found".to_string())
+    } else {
+        Ok(drives)
+    }
+}
+
+#[command]
+pub fn list_files_in_home_directory(
+    state: tauri::State<'_, Arc<Mutex<FileExplorer>>>,
+) -> Result<Vec<FileInfo>, String> {
+    let mut explorer = state.lock().unwrap();
+    explorer.list_files_in_home_directory()
+}

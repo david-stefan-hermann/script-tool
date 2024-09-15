@@ -3,8 +3,8 @@
     windows_subsystem = "windows"
 )]
 
-mod explorer;
 mod api;
+mod explorer;
 mod utils;
 
 use api::anime_episodes_jikan::fetch_jikan_show_details;
@@ -12,18 +12,18 @@ use api::anime_episodes_thetvdb::fetch_tvdb_episode_titles_grouped_by_season;
 use api::anime_episodes_tvmaze::fetch_tvmaze_show_details;
 use explorer::file_explorer::{
     change_directory, get_current_path, get_directory_hierarchy, go_to_parent_directory,
-    list_drives, list_files_in_current_directory, list_files_in_home_directory, FileExplorer,
+    list_files_in_current_directory, FileExplorer,
 };
 use explorer::file_operations::{
-    get_current_episode_names,
-    adjust_episode_numbers, adjust_episode_numbers_preview, 
-    add_titles_to_episodes, add_titles_to_episodes_preview,
-    search_and_replace, search_and_replace_preview
+    add_titles_to_episodes, add_titles_to_episodes_preview, adjust_episode_numbers,
+    adjust_episode_numbers_preview, get_current_episode_names, search_and_replace,
+    search_and_replace_preview,
 };
-use utils::utils::{trigger_refresh, open_episode_title_window, focus_main_window};
+use explorer::utils::{list_drives, list_files_in_home_directory};
+use utils::utils::{focus_main_window, open_episode_title_window, trigger_refresh};
 
 use std::sync::{Arc, Mutex};
-use tauri::{ generate_handler, Builder, Manager};
+use tauri::{generate_handler, Builder, Manager};
 
 fn main() {
     Builder::default()
