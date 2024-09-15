@@ -34,10 +34,10 @@ export default function EpisodeNumberAdjuster() {
             !adjustmentValue ? triggerRefresh() :
             adjustEpisodeNumbersPreview(adjustmentValue)
                 .then(() => {
-                    console.log("Files to be renamed previewed successfully");
+                    console.log("Preview successfull: Number Adjuster");
                 })
                 .catch((err) => {
-                    console.error("Failed to preview new file names:", err);
+                    console.error("Preview failed: Number Adjuster: :", err);
                     triggerRefresh();
                 });
         };

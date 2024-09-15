@@ -46,7 +46,8 @@ export default function FilePreview() {
         const unlistenTriggerPreview = listen<{ new_file_names: string[] }>('trigger-preview', async (event) => {
             const previewFiles = event.payload.new_file_names;
 
-            console.log("Previewing Files:", previewFiles);
+            // console.log("Previewing Files:", previewFiles);
+            console.log("Previewing Files");
 
             // Map previewFiles to FileInfo[]
             const fileInfos: FileInfo[] = previewFiles.map((fileName) => ({
@@ -57,17 +58,6 @@ export default function FilePreview() {
             }));
 
             setFiles(fileInfos);
-
-            // Check if episodeTitles is an array before joining
-            if (Array.isArray(previewFiles)) {
-                const joinedTitles = previewFiles.join('\n');
-
-                //setEpisodeTitles(joinedTitles);  // Set the state with the joined titles
-
-                console.log("Previewing Titles:", joinedTitles);
-            } else {
-                console.error('Expected an array, but got:', typeof previewFiles, previewFiles);
-            }
         });
 
         return () => {

@@ -32,10 +32,10 @@ export default function FileRenamer() {
         function handlePreview() {
             searchAndReplacePreview(searchString, replaceString)
                 .then(() => {
-                    console.log("Files to be renamed previewed successfully");
+                    console.log("Preview successfull: Search and Replace");
                 })
                 .catch((err) => {
-                    console.error("Failed to preview new file names:", err);
+                    console.error("Preview failed: Search and Replace:", err);
                 });
         };
         searchString ? handlePreview() : triggerRefresh();

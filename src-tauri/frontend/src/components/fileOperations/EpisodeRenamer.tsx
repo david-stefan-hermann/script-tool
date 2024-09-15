@@ -85,10 +85,10 @@ export default function EpisodeRenamer() {
             const titles = episodeTitles.split('\n').map(title => title.trim());
             addTitlesToEpisodesPreview(titles)
                 .then(() => {
-                    console.log("Files to be renamed previewed successfully");
+                    console.log("Preview successfull: Episode Renamer");
                 })
                 .catch((err) => {
-                    console.error("Failed to preview new file names:", err);
+                    console.error("Preview failed: Episode Renamer:", err);
                 });
         }
 
