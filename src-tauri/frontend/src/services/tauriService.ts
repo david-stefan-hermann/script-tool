@@ -45,6 +45,7 @@ export type DirectoryHierarchy = {
 export type DriveInfo = {
     letter: string;
     name: string;
+    is_offline: boolean;
 };
 
 export const getCurrentEpisodeNames = async (): Promise<string[]> => {
