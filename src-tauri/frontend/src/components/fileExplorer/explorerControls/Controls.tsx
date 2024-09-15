@@ -6,8 +6,6 @@ import {
     changeDirectory,
     goToParentDirectory,
     getDirectoryHierarchy,
-    listDrives,
-    DriveInfo,
     goToHomeDirectory,
     FileInfo,
     DirectoryHierarchy,
