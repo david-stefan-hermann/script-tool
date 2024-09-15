@@ -8,7 +8,7 @@ import {
     FileInfo,
     DirectoryHierarchy,
 } from '../../services/tauriService';
-import Controls from './Controls';
+import Controls from './explorerControls/Controls';
 import File from './File';
 import BreadCrumbs from './BreadCrumbs';
 import { listen } from '@tauri-apps/api/event';
