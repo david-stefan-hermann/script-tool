@@ -96,7 +96,6 @@ pub async fn add_titles_to_episodes(
     let new_file_names = add_titles_to_episodes_generate_file_titles(
         state.clone(),
         episode_titles.clone(),
-        window.clone(),
     )
     .await
     .map_err(|e| format!("Failed to generate new file names: {:?}", e))?;
@@ -127,7 +126,6 @@ pub async fn add_titles_to_episodes(
 pub async fn add_titles_to_episodes_generate_file_titles(
     state: State<'_, Arc<Mutex<FileExplorer>>>,
     episode_titles: Vec<String>, // Use Vec<String> to pass the episode titles from the frontend
-    window: Window,              // To emit events
 ) -> Result<Vec<String>, String> {
     let explorer = state.lock().unwrap();
     let current_path = PathBuf::from(explorer.get_current_path());
@@ -153,17 +151,63 @@ pub async fn add_titles_to_episodes_generate_file_titles(
         }
     }
 
-    // Emit an event when renaming is successful
+    Ok(new_file_names)
+}
+
+#[command]
+pub async fn add_titles_to_episodes_preview(
+    state: State<'_, Arc<Mutex<FileExplorer>>>,
+    episode_titles: Vec<String>, // List of episode titles from the frontend
+    window: Window,              // To emit events
+) -> Result<(), String> {
+    // Generate new file names
+    let new_file_names = add_titles_to_episodes_generate_file_titles(
+        state.clone(),
+        episode_titles.clone(),
+    )
+    .await
+    .map_err(|e| format!("Failed to generate new file names: {:?}", e))?;
+
+    // Get the current path from FileExplorer
+    let current_path = {
+        let explorer = state.lock().unwrap();
+        PathBuf::from(explorer.get_current_path())
+    };
+
+    // Get the file extensions from the current directory
+    let entries =
+        fs::read_dir(&current_path).map_err(|e| format!("Failed to read directory: {:?}", e))?;
+    let mut file_extensions = Vec::new();
+
+    for entry in entries {
+        let entry = entry.map_err(|e| format!("Failed to read entry: {:?}", e))?;
+        let path = entry.path();
+
+        if path.is_file() && is_video_file(&path) {
+            if let Some(extension) = path.extension().and_then(OsStr::to_str) {
+                file_extensions.push(extension.to_string());
+            }
+        }
+    }
+
+    // Append the extensions to the new file names
+    let mut final_file_names = Vec::new();
+    for (new_file_name, extension) in new_file_names.iter().zip(file_extensions.iter()) {
+        let final_file_name = format!("{}.{}", new_file_name, extension);
+        final_file_names.push(final_file_name);
+    }
+
+    // Emit an event with the preview file names
     window
         .emit(
             "trigger-preview",
             PreviewPayload {
-                new_file_names: new_file_names.clone(),
+                new_file_names: final_file_names.clone(),
             },
         )
         .unwrap();
 
-    Ok(new_file_names)
+    Ok(())
 }
 
 pub async fn add_titles_to_episodes_rename_media_files(
@@ -236,7 +280,6 @@ fn create_new_file_name(
 
 // START SEARCH AND REPLACE FILE TITLES
 
-
 #[command]
 pub fn search_and_replace(
     state: State<'_, Arc<Mutex<FileExplorer>>>,
@@ -251,8 +294,12 @@ pub fn search_and_replace(
     let explorer = state.lock().unwrap();
     let current_path = PathBuf::from(explorer.get_current_path());
 
-    search_and_replace_rename_media_files_in_directory(&current_path, &target_str, &replacement_str)
-        .map_err(|e| format!("Failed to rename files: {:?}", e))?;
+    search_and_replace_rename_media_files_in_directory(
+        &current_path,
+        &target_str,
+        &replacement_str,
+    )
+    .map_err(|e| format!("Failed to rename files: {:?}", e))?;
 
     // Emit an event when renaming is successful
     window
@@ -288,7 +335,6 @@ pub fn search_and_replace_rename_media_files_in_directory(
 
     Ok(())
 }
-
 
 // END SEARCH AND REPLACE FILE TITLES
 

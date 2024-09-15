@@ -16,7 +16,7 @@ use explorer::file_explorer::{
 };
 use explorer::file_operations::{
     adjust_episode_numbers_in_directory, get_current_episode_names, 
-    add_titles_to_episodes, add_titles_to_episodes_generate_file_titles,
+    add_titles_to_episodes, add_titles_to_episodes_preview,
     search_and_replace,
 };
 use utils::utils::{trigger_refresh, open_episode_title_window, focus_main_window};
@@ -49,7 +49,7 @@ fn main() {
             open_episode_title_window,
             focus_main_window,
             add_titles_to_episodes,
-            add_titles_to_episodes_generate_file_titles,
+            add_titles_to_episodes_preview,
             search_and_replace,
             trigger_refresh
         ])

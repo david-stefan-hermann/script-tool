@@ -78,7 +78,7 @@ export const addTitlesToEpisodes = async (episodeTitles: string[]): Promise<void
 
 export const addTitlesToEpisodesPreview = async (episodeTitles: string[]): Promise<String[]> => {
     console.log("Add Titles to Episodes Preview:", episodeTitles);
-    return invoke('add_titles_to_episodes_generate_file_titles', { episodeTitles });
+    return invoke('add_titles_to_episodes_preview', { episodeTitles });
 };
 
 
