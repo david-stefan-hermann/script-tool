@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import localFont from 'next/font/local'
 import "./globals.css";
 
-
 const delaGothicOne = localFont({
   src: [
     {
@@ -38,7 +37,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} ${bangers.variable} ${delaGothicOne.variable}`}>{children}</body>
+      <body className={`${inter.className} ${bangers.variable} ${delaGothicOne.variable}`}>
+        {children}
+      </body>
     </html>
   );
 }
