@@ -2,8 +2,10 @@
 
 import {
     searchAndReplaceInDirectory,
+    searchAndReplaceInDirectoryPreview,
+    triggerRefresh,
 } from '../../services/tauriService';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AnimatedButton } from '../stylingComponents/AnimatedButton';
 import GlassCard from '../stylingComponents/GlassCard';
 import ErrorMessage from '../stylingComponents/ErrorMessage';
@@ -25,6 +27,19 @@ export default function FileRenamer() {
                 setError("Failed to rename files: " + err);
             });
     }
+
+    useEffect(() => {
+        function handlePreview() {
+            searchAndReplaceInDirectoryPreview(searchString, replaceString)
+                .then(() => {
+                    console.log("Files to be renamed previewed successfully");
+                })
+                .catch((err) => {
+                    console.error("Failed to preview new file names:", err);
+                });
+        };
+        searchString ? handlePreview() : triggerRefresh();
+    }, [searchString, replaceString]);
 
     return (
         <GlassCard title='Titel umbenennen' image='/styling/backsplash/white.jpg'>

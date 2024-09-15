@@ -66,7 +66,7 @@ export const searchAndReplaceInDirectory = async (targetStr: string, replacement
 
 export const searchAndReplaceInDirectoryPreview = async (targetStr: string, replacementStr: string): Promise<String[]> => {
     console.log("search_and_replace_preview:", targetStr, replacementStr);
-    return invoke('search_and_replace_generate_file_titles', { targetStr: targetStr, replacementStr: replacementStr });
+    return invoke('search_and_replace_preview', { targetStr: targetStr, replacementStr: replacementStr });
 };
 
 // Append Titles to Episodes

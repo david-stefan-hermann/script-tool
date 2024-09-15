@@ -336,6 +336,54 @@ pub fn search_and_replace_rename_media_files_in_directory(
     Ok(())
 }
 
+#[command]
+pub fn search_and_replace_preview(
+    state: State<'_, Arc<Mutex<FileExplorer>>>,
+    target_str: String,
+    replacement_str: String,
+    window: Window, // Add the window parameter to emit events
+) -> Result<(), String> {
+    if target_str.is_empty() {
+        return Err("Target string cannot be empty.".to_string());
+    }
+
+    let explorer = state.lock().unwrap();
+    let current_path = PathBuf::from(explorer.get_current_path());
+
+    let entries = fs::read_dir(&current_path).map_err(|e| format!("Failed to read directory: {:?}", e))?;
+    let mut new_file_names = Vec::new();
+    let mut file_extensions = Vec::new();
+
+    for entry in entries {
+        let entry = entry.map_err(|e| format!("Failed to read entry: {:?}", e))?;
+        let path = entry.path();
+
+        if path.is_file() && is_video_file(&path) {
+            if let Some(file_name) = path.file_name().and_then(OsStr::to_str) {
+                let new_file_name = file_name.replace(&target_str, &replacement_str);
+                new_file_names.push(new_file_name);
+                if let Some(extension) = path.extension().and_then(OsStr::to_str) {
+                    file_extensions.push(extension.to_string());
+                }
+            } else {
+                return Err("Invalid filename.".to_string());
+            }
+        }
+    }
+
+    // Emit an event with the preview file names
+    window
+        .emit(
+            "trigger-preview",
+            PreviewPayload {
+                new_file_names: new_file_names.clone(),
+            },
+        )
+        .map_err(|e| format!("Failed to emit event: {:?}", e))?;
+
+    Ok(())
+}
+
 // END SEARCH AND REPLACE FILE TITLES
 
 // START ADJUST EPISODE NUMBERS
