@@ -17,8 +17,10 @@ export default function File({ index, file, onClickFunction }: FileProps) {
                 hover:bg-white-200 hover:bg-opacity-40 transition-colors duration-200`}
             onClick={() => { file.is_dir && onClickFunction(file.path) }}
         >
-            <span>
+            <span className="flex items-center">
                 {selectFolderIcon(file)}
+            </span>
+            <span className="flex">
                 {file.name}
             </span>
         </li>
