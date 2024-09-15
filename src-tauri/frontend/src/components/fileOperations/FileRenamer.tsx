@@ -7,7 +7,7 @@ import {
 } from '../../services/tauriService';
 import React, { useEffect, useState } from 'react';
 import { AnimatedButton } from '../ui/AnimatedButton';
-import GlassCard from '../ui/GlassCard';
+import GlassCard from '../layout/GlassCard';
 import ErrorMessage from '../common/ErrorMessage';
 
 // Placeholder for your components

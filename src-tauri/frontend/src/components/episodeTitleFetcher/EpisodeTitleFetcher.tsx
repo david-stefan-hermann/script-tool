@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { SeasonedEpisodes, SeasonedEpisodesDetails, fetchJikanShowDetails, fetchTVDBShowDetails, fetchTVMAZEShowDetails } from '@/services/tauriService';
 import { AnimatedButton } from '../ui/AnimatedButton';
-import GlassCard from '../ui/GlassCard';
+import GlassCard from '../layout/GlassCard';
 import ImageButtonSwitch from '../ui/ImageButtonSwitch';
 import ErrorMessage from '../common/ErrorMessage';
 

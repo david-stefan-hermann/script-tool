@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { addTitlesToEpisodes, addTitlesToEpisodesPreview, getCurrentEpisodeNames, openEpisodeTitleWindow, focusMainWindow } from '../../services/tauriService'; // Adjust the import path as necessary
 import { listen } from '@tauri-apps/api/event'; // Import the event listener
 import { AnimatedButton } from '../ui/AnimatedButton';
-import GlassCard from '../ui/GlassCard';
+import GlassCard from '../layout/GlassCard';
 import ErrorMessage from '../common/ErrorMessage';
 
 export default function EpisodeRenamer() {
