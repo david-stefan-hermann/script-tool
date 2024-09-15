@@ -15,7 +15,8 @@ use explorer::file_explorer::{
     list_drives, list_files_in_current_directory, list_files_in_home_directory, FileExplorer,
 };
 use explorer::file_operations::{
-    adjust_episode_numbers_in_directory, get_current_episode_names, 
+    get_current_episode_names,
+    adjust_episode_numbers, adjust_episode_numbers_preview, 
     add_titles_to_episodes, add_titles_to_episodes_preview,
     search_and_replace, search_and_replace_preview
 };
@@ -41,7 +42,8 @@ fn main() {
             get_directory_hierarchy,
             list_drives,
             list_files_in_home_directory,
-            adjust_episode_numbers_in_directory,
+            adjust_episode_numbers,
+            adjust_episode_numbers_preview,
             get_current_episode_names,
             fetch_jikan_show_details,
             fetch_tvdb_episode_titles_grouped_by_season,

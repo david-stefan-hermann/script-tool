@@ -47,43 +47,42 @@ export type DriveInfo = {
     name: string;
 };
 
-export const adjustEpisodeNumbersInDirectory = async (adjustmentValue: number): Promise<void> => {
-    console.log("Adjusting episode numbers by:", adjustmentValue);
-    return invoke('adjust_episode_numbers_in_directory', { adjustmentValue });
-};
-
 export const getCurrentEpisodeNames = async (): Promise<string[]> => {
-    console.log("Getting current episode names");
     return invoke('get_current_episode_names');
 };
 
-// Rename Files in Directory ( search and replace )
+// Adjust Episode Numbers
 
-export const searchAndReplaceInDirectory = async (targetStr: string, replacementStr: string): Promise<void> => {
-    console.log("search_and_replace:", targetStr, replacementStr);
+export const adjustEpisodeNumbers = async (adjustmentValue: number): Promise<void> => {
+    return invoke('adjust_episode_numbers', { adjustmentValue });
+};
+
+export const adjustEpisodeNumbersPreview = async (adjustmentValue: number): Promise<void> => {
+    return invoke('adjust_episode_numbers_preview', { adjustmentValue });
+};
+
+// Rename Files ( search and replace )
+
+export const searchAndReplace = async (targetStr: string, replacementStr: string): Promise<void> => {
     return invoke('search_and_replace', { targetStr: targetStr, replacementStr: replacementStr });
 };
 
-export const searchAndReplaceInDirectoryPreview = async (targetStr: string, replacementStr: string): Promise<String[]> => {
-    console.log("search_and_replace_preview:", targetStr, replacementStr);
+export const searchAndReplacePreview = async (targetStr: string, replacementStr: string): Promise<String[]> => {
     return invoke('search_and_replace_preview', { targetStr: targetStr, replacementStr: replacementStr });
 };
 
 // Append Titles to Episodes
 
 export const addTitlesToEpisodes = async (episodeTitles: string[]): Promise<void> => {
-    console.log("Add Titles to Episodes:", episodeTitles);
     return invoke('add_titles_to_episodes', { episodeTitles });
 };
 
 export const addTitlesToEpisodesPreview = async (episodeTitles: string[]): Promise<String[]> => {
-    console.log("Add Titles to Episodes Preview:", episodeTitles);
     return invoke('add_titles_to_episodes_preview', { episodeTitles });
 };
 
 
 export const openEpisodeTitleWindow = async (): Promise<void> => {
-    console.log("Opening episode title window");
     try {
         await invoke('open_episode_title_window'); // Call the Tauri command
     } catch (error) {

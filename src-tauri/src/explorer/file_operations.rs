@@ -93,12 +93,10 @@ pub async fn add_titles_to_episodes(
     window: Window,              // To emit events
 ) -> Result<(), String> {
     // Generate new file names
-    let new_file_names = add_titles_to_episodes_generate_file_titles(
-        state.clone(),
-        episode_titles.clone(),
-    )
-    .await
-    .map_err(|e| format!("Failed to generate new file names: {:?}", e))?;
+    let new_file_names =
+        add_titles_to_episodes_generate_file_titles(state.clone(), episode_titles.clone())
+            .await
+            .map_err(|e| format!("Failed to generate new file names: {:?}", e))?;
 
     // Get the current path from FileExplorer
     let current_path = {
@@ -161,12 +159,10 @@ pub async fn add_titles_to_episodes_preview(
     window: Window,              // To emit events
 ) -> Result<(), String> {
     // Generate new file names
-    let new_file_names = add_titles_to_episodes_generate_file_titles(
-        state.clone(),
-        episode_titles.clone(),
-    )
-    .await
-    .map_err(|e| format!("Failed to generate new file names: {:?}", e))?;
+    let new_file_names =
+        add_titles_to_episodes_generate_file_titles(state.clone(), episode_titles.clone())
+            .await
+            .map_err(|e| format!("Failed to generate new file names: {:?}", e))?;
 
     // Get the current path from FileExplorer
     let current_path = {
@@ -350,7 +346,8 @@ pub fn search_and_replace_preview(
     let explorer = state.lock().unwrap();
     let current_path = PathBuf::from(explorer.get_current_path());
 
-    let entries = fs::read_dir(&current_path).map_err(|e| format!("Failed to read directory: {:?}", e))?;
+    let entries =
+        fs::read_dir(&current_path).map_err(|e| format!("Failed to read directory: {:?}", e))?;
     let mut new_file_names = Vec::new();
     let mut file_extensions = Vec::new();
 
@@ -389,7 +386,7 @@ pub fn search_and_replace_preview(
 // START ADJUST EPISODE NUMBERS
 
 #[command]
-pub fn adjust_episode_numbers_in_directory(
+pub fn adjust_episode_numbers(
     state: State<'_, Arc<Mutex<FileExplorer>>>,
     adjustment_value: i32,
     window: Window, // To emit events
@@ -406,7 +403,7 @@ pub fn adjust_episode_numbers_in_directory(
         return Err("Episode E0 already exists, cannot adjust to negative episode numbers.".into());
     }
 
-    adjust_episode_numbers(&current_path, adjustment_value, episode_zero_exists)
+    adjust_episode_numbers_renaming(&current_path, adjustment_value, episode_zero_exists)
         .map_err(|e| format!("Failed to adjust episode numbers: {:?}", e))?;
 
     // Emit an event when adjustment is successful
@@ -437,7 +434,7 @@ fn check_if_episode_zero_exists(directory: &Path) -> Result<bool, io::Error> {
     Ok(false) // No file with E00 found
 }
 
-pub fn adjust_episode_numbers(
+fn adjust_episode_numbers_renaming(
     directory: &Path,
     adjustment_value: i32,
     episode_zero_exists: bool,
@@ -470,7 +467,7 @@ pub fn adjust_episode_numbers(
     for entry in entries {
         let path = entry.path();
         if let Some(file_name) = path.file_name().and_then(OsStr::to_str) {
-            if let Some(new_file_name) = adjust_episode_number_in_filename(
+            if let Some(new_file_name) = adjust_episode_counter_in_filename(
                 file_name,
                 &pattern,
                 adjustment_value,
@@ -487,7 +484,7 @@ pub fn adjust_episode_numbers(
     Ok(())
 }
 
-fn adjust_episode_number_in_filename(
+fn adjust_episode_counter_in_filename(
     file_name: &str,
     pattern: &Regex,
     adjustment_value: i32,
@@ -522,6 +519,73 @@ fn adjust_episode_number_in_filename(
         }
     }
     None
+}
+
+#[command]
+pub fn adjust_episode_numbers_preview(
+    state: State<'_, Arc<Mutex<FileExplorer>>>,
+    adjustment_value: i32,
+    window: Window, // To emit events
+) -> Result<(), String> {
+    let explorer = state.lock().unwrap();
+    let current_path = PathBuf::from(explorer.get_current_path());
+
+    // Check if episode E0 already exists
+    let episode_zero_exists = check_if_episode_zero_exists(&current_path)
+        .map_err(|e| format!("Failed to check for episode E0: {:?}", e))?;
+
+    // Prevent negative adjustments if E0 already exists
+    if episode_zero_exists && adjustment_value < 0 {
+        return Err("Episode E0 already exists, cannot adjust to negative episode numbers.".into());
+    }
+
+    let entries =
+        fs::read_dir(&current_path).map_err(|e| format!("Failed to read directory: {:?}", e))?;
+    let mut new_file_names = Vec::new();
+    let mut file_extensions = Vec::new();
+
+    let pattern = Regex::new(r"(S\d{2,3})E(\d{2,3})").unwrap();
+
+    for entry in entries {
+        let entry = entry.map_err(|e| format!("Failed to read entry: {:?}", e))?;
+        let path = entry.path();
+
+        if path.is_file() && is_video_file(&path) {
+            if let Some(file_name) = path.file_name().and_then(OsStr::to_str) {
+                if let Some(new_file_name) = adjust_episode_counter_in_filename(
+                    file_name,
+                    &pattern,
+                    adjustment_value,
+                    episode_zero_exists,
+                ) {
+                    new_file_names.push(new_file_name);
+                    if let Some(extension) = path.extension().and_then(OsStr::to_str) {
+                        file_extensions.push(extension.to_string());
+                    }
+                } else {
+                    // If no adjustment, keep the original file name
+                    new_file_names.push(file_name.to_string());
+                    if let Some(extension) = path.extension().and_then(OsStr::to_str) {
+                        file_extensions.push(extension.to_string());
+                    }
+                }
+            } else {
+                return Err("Invalid filename.".to_string());
+            }
+        }
+    }
+
+    // Emit an event with the preview file names
+    window
+        .emit(
+            "trigger-preview",
+            PreviewPayload {
+                new_file_names: new_file_names.clone(),
+            },
+        )
+        .map_err(|e| format!("Failed to emit event: {:?}", e))?;
+
+    Ok(())
 }
 
 // END ADJUST EPISODE NUMBERS

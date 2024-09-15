@@ -1,8 +1,8 @@
 "use client";
 
 import {
-    searchAndReplaceInDirectory,
-    searchAndReplaceInDirectoryPreview,
+    searchAndReplace,
+    searchAndReplacePreview,
     triggerRefresh,
 } from '../../services/tauriService';
 import React, { useEffect, useState } from 'react';
@@ -18,7 +18,7 @@ export default function FileRenamer() {
 
     function handleRename() {
         setError(null);
-        searchAndReplaceInDirectory(searchString, replaceString)
+        searchAndReplace(searchString, replaceString)
             .then(() => {
                 console.log("Files renamed successfully");
             })
@@ -30,7 +30,7 @@ export default function FileRenamer() {
 
     useEffect(() => {
         function handlePreview() {
-            searchAndReplaceInDirectoryPreview(searchString, replaceString)
+            searchAndReplacePreview(searchString, replaceString)
                 .then(() => {
                     console.log("Files to be renamed previewed successfully");
                 })

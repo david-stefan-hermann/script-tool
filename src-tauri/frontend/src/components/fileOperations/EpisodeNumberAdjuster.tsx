@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from 'react';
-import { adjustEpisodeNumbersInDirectory } from '../../services/tauriService'; // Adjust import paths as necessary
+import React, { useEffect, useState } from 'react';
+import { adjustEpisodeNumbers, adjustEpisodeNumbersPreview, triggerRefresh } from '../../services/tauriService'; // Adjust import paths as necessary
 import { AnimatedButton } from '../stylingComponents/AnimatedButton';
 import GlassCard from '../stylingComponents/GlassCard';
 import ErrorMessage from '../stylingComponents/ErrorMessage';
@@ -18,7 +18,7 @@ export default function EpisodeNumberAdjuster() {
         }
 
         setError(null);
-        adjustEpisodeNumbersInDirectory(adjustmentValue)
+        adjustEpisodeNumbers(adjustmentValue)
             .then(() => {
                 console.log("Episode numbers adjusted successfully");
                 setAdjustmentValue(null);
@@ -28,6 +28,20 @@ export default function EpisodeNumberAdjuster() {
                 setError("Failed to adjust episode numbers: " + err);
             });
     }
+
+    useEffect(() => {
+        function handlePreview() {
+            !adjustmentValue ? triggerRefresh() :
+            adjustEpisodeNumbersPreview(adjustmentValue)
+                .then(() => {
+                    console.log("Files to be renamed previewed successfully");
+                })
+                .catch((err) => {
+                    console.error("Failed to preview new file names:", err);
+                });
+        };
+        handlePreview()
+    }, [adjustmentValue]);
 
     return (
         <GlassCard title='Episodennummer anpassen' image='/styling/backsplash/gray.jpg'>
