@@ -10,7 +10,7 @@ import File from './File';
 import { listen } from '@tauri-apps/api/event';
 import React from 'react';
 import { BsDeviceHddFill } from 'react-icons/bs';
-import GlassCard from '../stylingComponents/GlassCard';
+import GlassCard from '../ui/GlassCard';
 
 export default function FilePreview() {
     const [files, setFiles] = useState<FileInfo[]>([]);

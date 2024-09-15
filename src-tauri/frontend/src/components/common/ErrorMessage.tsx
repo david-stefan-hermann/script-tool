@@ -1,5 +1,5 @@
 import { BsExclamationCircleFill } from "react-icons/bs";
-import GlassCard from "./GlassCard";
+import GlassCard from "../ui/GlassCard";
 
 export default function ErrorMessage({ message }: { message: string }) {
     return (

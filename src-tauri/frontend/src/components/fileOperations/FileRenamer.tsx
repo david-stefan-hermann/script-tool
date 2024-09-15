@@ -6,9 +6,9 @@ import {
     triggerRefresh,
 } from '../../services/tauriService';
 import React, { useEffect, useState } from 'react';
-import { AnimatedButton } from '../stylingComponents/AnimatedButton';
-import GlassCard from '../stylingComponents/GlassCard';
-import ErrorMessage from '../stylingComponents/ErrorMessage';
+import { AnimatedButton } from '../ui/AnimatedButton';
+import GlassCard from '../ui/GlassCard';
+import ErrorMessage from '../common/ErrorMessage';
 
 // Placeholder for your components
 export default function FileRenamer() {

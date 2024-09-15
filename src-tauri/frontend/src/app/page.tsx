@@ -1,8 +1,8 @@
 import FileExplorer from "@/components/fileExplorer/FileExplorer";
 import FilePreview from "@/components/fileExplorer/FilePreview";
 import FileOperations from "@/components/fileOperations/FileOperations";
-import FallingPetalsBackground from "@/components/stylingComponents/FallingPetalsBackground";
-import LayeredBackground from "@/components/stylingComponents/LayeredBackground";
+import FallingPetalsBackground from "@/components/layout/FallingPetalsBackground";
+import LayeredBackground from "@/components/layout/LayeredBackground";
 
 export default function Home() {
   return (

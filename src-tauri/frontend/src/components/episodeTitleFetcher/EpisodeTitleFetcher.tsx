@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { SeasonedEpisodes, SeasonedEpisodesDetails, fetchJikanShowDetails, fetchTVDBShowDetails, fetchTVMAZEShowDetails } from '@/services/tauriService';
-import { AnimatedButton } from '../stylingComponents/AnimatedButton';
-import GlassCard from '../stylingComponents/GlassCard';
-import ImageButtonSwitch from '../stylingComponents/ImageButtonSwitch';
-import ErrorMessage from '../stylingComponents/ErrorMessage';
+import { AnimatedButton } from '../ui/AnimatedButton';
+import GlassCard from '../ui/GlassCard';
+import ImageButtonSwitch from '../ui/ImageButtonSwitch';
+import ErrorMessage from '../common/ErrorMessage';
 
 interface EpisodeTitleFetcherProps {
   seasons: SeasonedEpisodes[];

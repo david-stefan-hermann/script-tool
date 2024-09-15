@@ -1,8 +1,8 @@
 "use client";
 
 import EpisodeTitleFetcher from "@/components/episodeTitleFetcher/EpisodeTitleFetcher";
-import FallingPetalsBackground from "@/components/stylingComponents/FallingPetalsBackground";
-import LayeredBackground from "@/components/stylingComponents/LayeredBackground";
+import FallingPetalsBackground from "@/components/layout/FallingPetalsBackground";
+import LayeredBackground from "@/components/layout/LayeredBackground";
 import { useState } from "react";
 import { SeasonedEpisodes, SeasonedEpisodesDetails } from '@/services/tauriService';
 import { EpisodeTitleFetcherList } from "@/components/episodeTitleFetcher/EpisodeTitleFetcherList";

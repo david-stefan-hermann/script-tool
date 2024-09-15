@@ -1,5 +1,5 @@
 import { Tooltip } from '@nextui-org/tooltip';
-import React, { useEffect } from 'react';
+import React from 'react';
 import "./glow-on-hover.css";
 import "./fire-border.css";
 

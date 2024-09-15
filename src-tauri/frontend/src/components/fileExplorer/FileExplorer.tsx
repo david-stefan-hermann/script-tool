@@ -12,7 +12,7 @@ import Controls from './explorerControls/Controls';
 import File from './File';
 import BreadCrumbs from './BreadCrumbs';
 import { listen } from '@tauri-apps/api/event';
-import GlassCard from '../stylingComponents/GlassCard';
+import GlassCard from '../ui/GlassCard';
 
 
 export default function FileExplorer() {

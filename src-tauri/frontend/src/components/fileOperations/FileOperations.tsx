@@ -5,8 +5,8 @@ import FileRenamer from './FileRenamer';
 import EpisodeNumberAdjuster from './EpisodeNumberAdjuster';
 import { BsInfoCircle } from 'react-icons/bs';
 import EpisodeRenamer from './EpisodeRenamer';
-import GlassCard from '../stylingComponents/GlassCard';
-import ImageButtonSwitch from '../stylingComponents/ImageButtonSwitch';
+import GlassCard from '../ui/GlassCard';
+import ImageButtonSwitch from '../ui/ImageButtonSwitch';
 import { getCurrentEpisodeNames, triggerRefresh } from '@/services/tauriService';
 
 export default function FileOperations() {

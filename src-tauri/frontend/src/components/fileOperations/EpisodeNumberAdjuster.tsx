@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { adjustEpisodeNumbers, adjustEpisodeNumbersPreview, triggerRefresh } from '../../services/tauriService'; // Adjust import paths as necessary
-import { AnimatedButton } from '../stylingComponents/AnimatedButton';
-import GlassCard from '../stylingComponents/GlassCard';
-import ErrorMessage from '../stylingComponents/ErrorMessage';
+import { AnimatedButton } from '../ui/AnimatedButton';
+import GlassCard from '../ui/GlassCard';
+import ErrorMessage from '../common/ErrorMessage';
 
 export default function EpisodeNumberAdjuster() {
     const [adjustmentValue, setAdjustmentValue] = useState<number | null>(null);
