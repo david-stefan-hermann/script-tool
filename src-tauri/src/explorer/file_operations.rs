@@ -394,16 +394,18 @@ pub fn adjust_episode_numbers(
     let explorer = state.lock().unwrap();
     let current_path = PathBuf::from(explorer.get_current_path());
 
-    // Check if episode E0 already exists
-    let episode_zero_exists = check_if_episode_zero_exists(&current_path)
-        .map_err(|e| format!("Failed to check for episode E0: {:?}", e))?;
+    // Check if the adjustment would result in negative episode numbers
+    let min_episode_number = find_min_episode_number(&current_path)
+        .map_err(|e| format!("Failed to find minimum episode number: {:?}", e))?;
 
-    // Prevent negative adjustments if E0 already exists
-    if episode_zero_exists && adjustment_value < 0 {
-        return Err("Episode E0 already exists, cannot adjust to negative episode numbers.".into());
+    if adjustment_value < 0 && min_episode_number + adjustment_value < 0 {
+        return Err(format!(
+            "Cannot adjust episode numbers by {}. Minimum episode number is E{:02}, which would result in negative episode numbers.",
+            adjustment_value, min_episode_number
+        ));
     }
 
-    adjust_episode_numbers_renaming(&current_path, adjustment_value, episode_zero_exists)
+    adjust_episode_numbers_renaming(&current_path, adjustment_value)
         .map_err(|e| format!("Failed to adjust episode numbers: {:?}", e))?;
 
     // Emit an event when adjustment is successful
@@ -414,9 +416,10 @@ pub fn adjust_episode_numbers(
     Ok(())
 }
 
-fn check_if_episode_zero_exists(directory: &Path) -> Result<bool, io::Error> {
+fn find_min_episode_number(directory: &Path) -> Result<i32, io::Error> {
     let entries = fs::read_dir(directory)?;
-    let pattern = Regex::new(r"(S\d{2,3})E00").unwrap(); // Regex to detect E00
+    let pattern = Regex::new(r"(S\d{2,3})E(\d{2,3})").unwrap();
+    let mut min_episode_number = i32::MAX;
 
     for entry in entries {
         let entry = entry?;
@@ -424,20 +427,27 @@ fn check_if_episode_zero_exists(directory: &Path) -> Result<bool, io::Error> {
 
         if path.is_file() && is_video_file(&path) {
             if let Some(file_name) = path.file_name().and_then(OsStr::to_str) {
-                if pattern.is_match(file_name) {
-                    return Ok(true); // Found a file with E00, episode zero exists
+                if let Some(caps) = pattern.captures(file_name) {
+                    if let Ok(episode_number) = caps[2].parse::<i32>() {
+                        if episode_number < min_episode_number {
+                            min_episode_number = episode_number;
+                        }
+                    }
                 }
             }
         }
     }
 
-    Ok(false) // No file with E00 found
+    if min_episode_number == i32::MAX {
+        return Err(io::Error::new(io::ErrorKind::NotFound, "No episodes found"));
+    }
+
+    Ok(min_episode_number)
 }
 
 fn adjust_episode_numbers_renaming(
     directory: &Path,
     adjustment_value: i32,
-    episode_zero_exists: bool,
 ) -> Result<(), io::Error> {
     let mut entries: Vec<_> = fs::read_dir(directory)?
         .filter_map(|entry| entry.ok())
@@ -471,7 +481,6 @@ fn adjust_episode_numbers_renaming(
                 file_name,
                 &pattern,
                 adjustment_value,
-                episode_zero_exists,
             ) {
                 let new_path = path.with_file_name(new_file_name);
 
@@ -488,7 +497,6 @@ fn adjust_episode_counter_in_filename(
     file_name: &str,
     pattern: &Regex,
     adjustment_value: i32,
-    episode_zero_exists: bool, // Indicate if episode E0 already exists
 ) -> Option<String> {
     if let Some(caps) = pattern.captures(file_name) {
         let season_part = &caps[1]; // e.g., "S01" or "S010"
@@ -496,11 +504,6 @@ fn adjust_episode_counter_in_filename(
 
         if let Ok(episode_number) = episode_number_str.parse::<i32>() {
             let new_episode_number = episode_number + adjustment_value;
-
-            // Prevent further negative adjustments if E0 already exists
-            if episode_zero_exists && new_episode_number < 0 {
-                return None;
-            }
 
             // Block renaming to negative episode numbers
             if new_episode_number < 0 {
@@ -530,13 +533,15 @@ pub fn adjust_episode_numbers_preview(
     let explorer = state.lock().unwrap();
     let current_path = PathBuf::from(explorer.get_current_path());
 
-    // Check if episode E0 already exists
-    let episode_zero_exists = check_if_episode_zero_exists(&current_path)
-        .map_err(|e| format!("Failed to check for episode E0: {:?}", e))?;
+    // Check if the adjustment would result in negative episode numbers
+    let min_episode_number = find_min_episode_number(&current_path)
+        .map_err(|e| format!("Failed to find minimum episode number: {:?}", e))?;
 
-    // Prevent negative adjustments if E0 already exists
-    if episode_zero_exists && adjustment_value < 0 {
-        return Err("Episode E0 already exists, cannot adjust to negative episode numbers.".into());
+    if adjustment_value < 0 && min_episode_number + adjustment_value < 0 {
+        return Err(format!(
+            "Cannot adjust episode numbers by {}. Minimum episode number is E{:02}, which would result in negative episode numbers.",
+            adjustment_value, min_episode_number
+        ));
     }
 
     let entries =
@@ -556,7 +561,6 @@ pub fn adjust_episode_numbers_preview(
                     file_name,
                     &pattern,
                     adjustment_value,
-                    episode_zero_exists,
                 ) {
                     new_file_names.push(new_file_name);
                     if let Some(extension) = path.extension().and_then(OsStr::to_str) {

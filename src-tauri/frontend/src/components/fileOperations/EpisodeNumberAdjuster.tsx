@@ -38,6 +38,7 @@ export default function EpisodeNumberAdjuster() {
                 })
                 .catch((err) => {
                     console.error("Failed to preview new file names:", err);
+                    triggerRefresh();
                 });
         };
         handlePreview()
