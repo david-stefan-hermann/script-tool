@@ -1,21 +1,36 @@
 import LoadingCircle from "@/components/common/LoadingCircle";
-import { DriveInfo } from "@/services/tauriService";
-import { Tooltip } from "@nextui-org/tooltip";
+import { DriveInfo, listDrives } from "@/services/tauriService";
+import { useEffect, useState } from "react";
 import { BsDeviceHddFill, BsXLg } from "react-icons/bs";
 
 interface controlsDriveList {
     handleDirectoryClick: (path: string) => void;
     handleListDrives: () => void;
-    drives: DriveInfo[];
+    //drives: DriveInfo[];
 }
 
-export default function ControlsDriveList({ drives, handleDirectoryClick, handleListDrives }: controlsDriveList) {
+export default function ControlsDriveList({ handleDirectoryClick, handleListDrives }: controlsDriveList) {
+    const [drives, setDrives] = useState<DriveInfo[]>([]);
+
+    useEffect(() => {
+        async function fetchDrives() {
+            const drives = await listDrives();
+            setDrives(drives);
+        }
+
+        fetchDrives();
+    }, []);
+
+    useEffect(() => {
+        console.log('ControlsDriveList.tsx: drives', drives.length);
+    }, [drives]);
+
     return (
         <div className='glass-card'>
             <h2 className="flex flex-row justify-between text-lg font-bold px-2 py-1 gap-2">
                 <span className="flex flex-grow">Laufwerke</span>
                 <span className='flex inline'>
-                    <LoadingCircle show={drives.length < 0} />
+                    <LoadingCircle show={drives.length <= 0} />
                 </span>
                 <span onClick={handleListDrives} className='flex inline hover:cursor-pointer text-error'>
                     <BsXLg className="h-full w-full" />

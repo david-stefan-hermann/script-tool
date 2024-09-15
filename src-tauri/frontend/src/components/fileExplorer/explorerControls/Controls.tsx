@@ -24,7 +24,6 @@ interface ControlsProps {
 
 export default function Controls({ setFiles, setHierarchy }: ControlsProps) {
     const [showDrives, setShowDrives] = useState(false);
-    const [drives, setDrives] = useState<DriveInfo[]>([]);
 
     const handleGoUp = async () => {
         await goToParentDirectory();
@@ -48,8 +47,8 @@ export default function Controls({ setFiles, setHierarchy }: ControlsProps) {
 
     const handleListDrives = async () => {
         setShowDrives(!showDrives); // Show the drives list
-        const drives = await listDrives();
-        setDrives(drives);
+        //const drives = await listDrives();
+        //setDrives(drives);
     };
 
     const handleDirectoryClick = async (path: string) => {
@@ -65,7 +64,7 @@ export default function Controls({ setFiles, setHierarchy }: ControlsProps) {
 
     return (
         <>
-            {showDrives && <ControlsDriveList handleDirectoryClick={handleDirectoryClick} handleListDrives={handleListDrives} drives={drives} />}
+            {showDrives && <ControlsDriveList handleDirectoryClick={handleDirectoryClick} handleListDrives={handleListDrives} />}
             <div className="flex text-2xl font-bold pl-2 py-3 text-dir bg-white bg-opacity-30">
                 <ControlsButtonBack handleGoUp={handleGoUp} />
                 <ControlsButtonHome handleGoHome={handleGoHome} />
