@@ -7,13 +7,18 @@ import { BsInfoCircle } from 'react-icons/bs';
 import EpisodeRenamer from './EpisodeRenamer';
 import GlassCard from '../layout/GlassCard';
 import ImageButtonSwitch from '../ui/ImageButtonSwitch';
-import { getCurrentEpisodeNames, triggerRefresh } from '@/services/tauriService';
+import { triggerRefresh } from '@/services/tauriService';
+
+interface FileOperationsOptions {
+    id: string;
+    title: string;
+    description: string;
+    option: React.ReactNode;
+}
 
 export default function FileOperations() {
-    const [selectedOperation, setSelectedOperation] = useState<string>('fileRenamer');
-    const [options, setOptions] = useState<FileOperationsOptions[]>();
-
     type ToolOption = 'SR' | 'ADJ' | 'ER';  // Define the three possible options
+    const [options, setOptions] = useState<FileOperationsOptions[]>();
     const [toolOption, setToolOption] = useState<ToolOption>('SR');  // Initialize with one of the options
 
     useState(() => {
@@ -67,14 +72,8 @@ export default function FileOperations() {
                     </GlassCard>
                 </div>
             </GlassCard>
-            {selectedOperation && options?.find((option) => option.id === toolOption)?.option}
+            {toolOption && options?.find((option) => option.id === toolOption)?.option}
         </>
     );
 }
 
-interface FileOperationsOptions {
-    id: string;
-    title: string;
-    description: string;
-    option: React.ReactNode;
-}
