@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import GlassCard from './GlassCard';
 import ImageButtonSwitch from '../ui/ImageButtonSwitch';
 import { usePathname, useRouter } from 'next/navigation'
+import Image from 'next/image';
 
 type ToolOptions = {
     title: string;
@@ -44,12 +45,17 @@ export default function Sidebar() {
         <nav className="flex flex-col h-screen w-20 min-w-20">
             <GlassCard className='h-full'>
 
-                <img className='w-20 h-20 p-1 glass-card-border-bottom hover:cursor-pointer'
+                <Image
+                    width={10}
+                    height={10}
+                    className='w-20 h-20 p-1 glass-card-border-bottom hover:cursor-pointer'
                     src="/icon.png"
                     alt="Logo"
-                    onClick={() => showTool("/windows/home")} />
+                    onClick={() => showTool("/windows/home")}
+                    unoptimized
+                />
 
-                <div className="p-2 flex flex-col gap-2 items-center">
+                <div className="p-3 flex flex-col gap-3 items-center">
                     {toolOptions?.map((option, index) => (
                         <React.Fragment key={index}>
                             <ImageButtonSwitch
@@ -57,7 +63,9 @@ export default function Sidebar() {
                                 image={option.image}
                                 selected={getActiveTool(option.link)}
                                 onClick={() => showTool(option.link)}
-                                scale={0.9} />
+                                className='h-14 w-14'
+                                borderStyle='arrow-border'
+                            />
                         </React.Fragment>
                     ))}
                 </div>
