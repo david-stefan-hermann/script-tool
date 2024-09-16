@@ -22,12 +22,12 @@ export default function Sidebar() {
         setToolOptions([
             {
                 title: 'Video Dateien bearbeiten',
-                image: '/styling/buttons/search.jpeg',
+                image: '/styling/buttons/video.jpg',
                 link: "/windows/media-manipulator",
             },
             {
                 title: 'QR Code Generator',
-                image: '/styling/buttons/adjuster.jpg',
+                image: '/styling/buttons/qr.jpg',
                 link: "/windows/qr",
             }
         ]);
@@ -63,8 +63,8 @@ export default function Sidebar() {
                                 image={option.image}
                                 selected={getActiveTool(option.link)}
                                 onClick={() => showTool(option.link)}
-                                className='h-14 w-14'
-                                borderStyle='arrow-border'
+                                className='h-16 w-16'
+                                borderStyle='thunder-border'
                             />
                         </React.Fragment>
                     ))}
