@@ -1,6 +1,7 @@
 use std::{fs::File, io::Write};
 
 use base64::{engine::general_purpose, Engine as _};
+use image::Luma;
 use qrcode::{render::svg, QrCode};
 use serde::Serialize;
 use tauri::{command, Window};
@@ -48,15 +49,34 @@ pub async fn generate_qr_code<'a>(
 }
 
 #[command]
-pub async fn save_qr_code(file_path: String, base64_image: String) -> Result<(), String> {
-    // Decode the base64 string
-    let binary_data = general_purpose::STANDARD
-        .decode(base64_image)
+pub async fn save_qr_code_as_svg(file_path: String, qr_string: String) -> Result<(), String> {
+    // Generate the QR code
+    let code = QrCode::new(qr_string).map_err(|e| e.to_string())?;
+    let svg_data = code.render::<svg::Color>().build();
+
+    // Write the SVG data to the specified file path
+    let mut file = File::create(file_path).map_err(|e| e.to_string())?;
+    file.write_all(svg_data.as_bytes())
         .map_err(|e| e.to_string())?;
 
-    // Write the binary data to the specified file path
-    let mut file = File::create(file_path).map_err(|e| e.to_string())?;
-    file.write_all(&binary_data).map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+#[command]
+pub async fn save_qr_code_as_png(file_path: String, qr_string: String) -> Result<(), String> {
+    // Generate the QR code
+    let code = QrCode::new(qr_string).map_err(|e| e.to_string())?;
+    let image = code.render::<Luma<u8>>().build();
+
+    // Ensure the file path has a .png extension
+    let file_path = if file_path.ends_with(".png") {
+        file_path
+    } else {
+        format!("{}.png", file_path)
+    };
+
+    // Write the PNG data to the specified file path
+    image.save(file_path).map_err(|e| e.to_string())?;
 
     Ok(())
 }

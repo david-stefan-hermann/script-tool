@@ -21,7 +21,7 @@ use explorer::file_operations::{
     organize_videos_into_directories, search_and_replace, search_and_replace_preview,
 };
 use explorer::utils::{list_drives, list_files_in_home_directory};
-use utils::qr_code_generator::{generate_qr_code, save_qr_code};
+use utils::qr_code_generator::{generate_qr_code, save_qr_code_as_svg, save_qr_code_as_png};
 use utils::utils::{focus_main_window, open_episode_title_window, trigger_refresh};
 
 use std::sync::{Arc, Mutex};
@@ -58,7 +58,8 @@ fn main() {
             search_and_replace_preview,
             trigger_refresh,
             generate_qr_code,
-            save_qr_code,
+            save_qr_code_as_svg,
+            save_qr_code_as_png,
             organize_videos_into_directories,
             flatten_single_file_directories,
             open_in_file_explorer, 
