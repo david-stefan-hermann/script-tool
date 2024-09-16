@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import FileRenamer from './FileRenamer';
 import EpisodeNumberAdjuster from './EpisodeNumberAdjuster';
-import { BsInfoCircle } from 'react-icons/bs';
 import EpisodeRenamer from './EpisodeRenamer';
 import GlassCard from '../layout/GlassCard';
 import ImageButtonSwitch from '../ui/ImageButtonSwitch';
