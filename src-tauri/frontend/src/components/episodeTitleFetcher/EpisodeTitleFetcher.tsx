@@ -84,7 +84,7 @@ export default function EpisodeTitleFetcher({ seasons, setSeasons, selectedSeaso
   }, [animeId, animeName, year, apiOption, tvdbApiKey]);
 
   return (
-    <GlassCard className='h-full' title='Episoden Laden' image='/styling/backsplash/green.jpg'>
+    <GlassCard title='Episoden Laden' image='/styling/backsplash/green.jpg'>
       <div className='p-2 flex flex-col w-full h-full overflow-x-hidden gap-4'>
         <div className="flex flex-row gap-4">
           {/* API Selection Images */}

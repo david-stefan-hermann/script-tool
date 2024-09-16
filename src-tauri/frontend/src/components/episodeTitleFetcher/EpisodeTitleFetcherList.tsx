@@ -50,9 +50,8 @@ export function EpisodeTitleFetcherList({ seasons, selectedSeason, setSelectedSe
     }
 
     return (
-        <GlassCard className='h-full' title='Episodenliste' image='/styling/backsplash/orange.jpg'>
+        <GlassCard fullHeight title='Episodenliste' image='/styling/backsplash/orange.jpg'>
             <div className='p-2 flex flex-col w-full h-full overflow-x-hidden gap-4'>
-
                 {showDetails && <GlassCard className="text-purple-700 gap-2">
                     <div className="flex flex-row justify-center p-2">
                         <div className='flex items-center'>

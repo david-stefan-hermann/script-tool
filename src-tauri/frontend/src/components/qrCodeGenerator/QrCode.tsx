@@ -20,7 +20,7 @@ export default function QrCode() {
     }, []);
 
     return (
-        <GlassCard className='flex-grow h-full' title='QR Code' image='/styling/backsplash/port.jpg' bgClass="bg-center">
+        <GlassCard fullHeight title='QR Code' image='/styling/backsplash/port.jpg' bgClass="bg-center">
             <div className="flex flex-col flex h-full gap-2 p-2">
                 {qrCode &&
                     <div

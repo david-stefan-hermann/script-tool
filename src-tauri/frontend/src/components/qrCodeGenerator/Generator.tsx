@@ -56,7 +56,7 @@ export default function Generator() {
     };
 
     return (
-        <GlassCard className='' title='Generator' image='/styling/backsplash/slots.jpg'>
+        <GlassCard title='Generator' image='/styling/backsplash/slots.jpg'>
             <div className="flex flex-col gap-2 p-2">
                 <InfoMessage message='Gib den Text oder die Webseite ein, die zu einem QR Code umgewandelt werden soll.' />
 

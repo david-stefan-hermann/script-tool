@@ -19,7 +19,7 @@ interface FileOperationsOptions {
 }
 
 export default function FileOperations() {
-    type ToolOption = 'SR' | 'ADJ' | 'ER';  // Define the three possible options
+    type ToolOption = 'SR' | 'ADJ' | 'ER' | 'FO';  // Define the three possible options
     const [options, setOptions] = useState<FileOperationsOptions[]>();
     const [toolOption, setToolOption] = useState<ToolOption>('SR');  // Initialize with one of the options
 
@@ -62,9 +62,9 @@ export default function FileOperations() {
 
     return (
         <>
-            <GlassCard title="Werkzeug" image='/styling/backsplash/red.jpg' bgClass='bg-bottom'>
+            <GlassCard collapseable title="Werkzeug" image='/styling/backsplash/red.jpg' bgClass='bg-bottom'>
                 <div className="p-2 flex flex-col gap-2">
-                    <div className="flex gap-2 justify-center">
+                    <div className="flex gap-2">
                         {options?.map((option) => (
                             <ImageButtonSwitch
                                 key={option.id}

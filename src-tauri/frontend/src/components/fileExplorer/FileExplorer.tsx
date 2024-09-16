@@ -57,7 +57,7 @@ export default function FileExplorer() {
     };
 
     return (
-        <GlassCard className='h-full' title='Dateiexplorer' image='/styling/backsplash/blue2.jpg'>
+        <GlassCard fullHeight title='Dateiexplorer' image='/styling/backsplash/blue2.jpg'>
             <div className="flex items-center p-2 bg-white bg-opacity-30">
                 <BreadCrumbs onClickFunction={handleDirectoryClick} hierarchy={hierarchy} />
             </div>

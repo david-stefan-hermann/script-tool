@@ -96,7 +96,7 @@ export default function EpisodeRenamer() {
     }, [episodeTitles]);
 
     return (
-        <GlassCard className='h-full' title='Episoden Umbenennen' image='/styling/backsplash/green.jpg'>
+        <GlassCard fullHeight title='Episoden Umbenennen' image='/styling/backsplash/green.jpg'>
             <div className="flex flex-col gap-2 p-2 h-full">
                 <div className="flex flex-row flex-grow">
                     <textarea

@@ -68,7 +68,7 @@ export default function FilePreview() {
     }, []);
 
     return (
-        <GlassCard className='h-full' title='Vorschau' image='/styling/backsplash/orange.jpg'>
+        <GlassCard fullHeight title='Vorschau' image='/styling/backsplash/orange.jpg'>
             <span className='p-2 bg-white bg-opacity-30 break-all'>
                 <BsDeviceHddFill className="align-text-top h-5 w-5 text-dir inline mr-1" />
                 {path}
