@@ -1,5 +1,6 @@
 import { invoke } from '@tauri-apps/api/tauri';
-import exp from 'constants';
+
+// File Explorer Commands
 
 export const listFilesInCurrentDirectory = async () => {
     return await invoke<FileInfo[]>('list_files_in_current_directory');
@@ -29,6 +30,18 @@ export const listDrives = async () => {
     return await invoke<DriveInfo[]>('list_drives');
 };
 
+export const openInFileExplorer = async () => {
+    return await invoke<void>('open_in_file_explorer');
+};
+
+export const openInTerminal = async () => {
+    return await invoke<void>('open_in_terminal');
+};
+
+export const selectDirectory = async () => {
+    return await invoke<void>('select_and_set_current_path');
+};
+
 // Define the types returned by the Rust commands
 export type FileInfo = {
     path: string;
@@ -47,6 +60,8 @@ export type DriveInfo = {
     name: string;
     is_offline: boolean;
 };
+
+// Get Current Episode Names
 
 export const getCurrentEpisodeNames = async (): Promise<string[]> => {
     return invoke('get_current_episode_names');
@@ -141,3 +156,14 @@ export const generateQrCode = async (qrValue: string): Promise<QrCodeResponse> =
 export const saveQrCode = async (filePath: string, base64Image: string): Promise<void> => {
     return invoke('save_qr_code', { filePath, base64Image });
 }
+
+// File Organizer
+
+export const putFilesInFolders = async (): Promise<void> => {
+    return invoke('organize_videos_into_directories');
+};
+
+export const pullFilesFromFolders = async (): Promise<String[]> => {
+    return invoke('flatten_single_file_directories');
+};
+

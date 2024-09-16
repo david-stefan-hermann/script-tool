@@ -477,11 +477,9 @@ fn adjust_episode_numbers_renaming(
     for entry in entries {
         let path = entry.path();
         if let Some(file_name) = path.file_name().and_then(OsStr::to_str) {
-            if let Some(new_file_name) = adjust_episode_counter_in_filename(
-                file_name,
-                &pattern,
-                adjustment_value,
-            ) {
+            if let Some(new_file_name) =
+                adjust_episode_counter_in_filename(file_name, &pattern, adjustment_value)
+            {
                 let new_path = path.with_file_name(new_file_name);
 
                 // Rename the file
@@ -557,11 +555,9 @@ pub fn adjust_episode_numbers_preview(
 
         if path.is_file() && is_video_file(&path) {
             if let Some(file_name) = path.file_name().and_then(OsStr::to_str) {
-                if let Some(new_file_name) = adjust_episode_counter_in_filename(
-                    file_name,
-                    &pattern,
-                    adjustment_value,
-                ) {
+                if let Some(new_file_name) =
+                    adjust_episode_counter_in_filename(file_name, &pattern, adjustment_value)
+                {
                     new_file_names.push(new_file_name);
                     if let Some(extension) = path.extension().and_then(OsStr::to_str) {
                         file_extensions.push(extension.to_string());
@@ -593,3 +589,88 @@ pub fn adjust_episode_numbers_preview(
 }
 
 // END ADJUST EPISODE NUMBERS
+
+// START ORGANIZE VIDEOS INTO DIRECTORIES
+
+#[command]
+pub fn organize_videos_into_directories(
+    state: State<'_, Arc<Mutex<FileExplorer>>>,
+    window: Window, // To emit events
+) -> Result<(), String> {
+    let explorer = state.lock().map_err(|e| e.to_string())?;
+    let current_dir = PathBuf::from(explorer.get_current_path());
+
+    for entry in fs::read_dir(&current_dir).map_err(|e| e.to_string())? {
+        let entry = entry.map_err(|e| e.to_string())?;
+        let path = entry.path();
+        if path.is_file() && is_video_file(&path) {
+            let file_name = path.file_name().unwrap().to_str().unwrap();
+            let file_stem = path.file_stem().unwrap().to_str().unwrap(); // Get the file name without extension
+            let new_dir = current_dir.join(file_stem.replace(".", "_"));
+            fs::create_dir_all(&new_dir).map_err(|e| e.to_string())?;
+            fs::rename(&path, new_dir.join(file_name)).map_err(|e| e.to_string())?;
+        }
+    }
+
+    // Emit an event
+    window
+        .emit(
+            "trigger-reload",
+            "Videos organized into directories successfully",
+        )
+        .unwrap();
+
+    Ok(())
+}
+
+#[command]
+pub fn flatten_single_file_directories(
+    state: State<'_, Arc<Mutex<FileExplorer>>>,
+    window: Window, // To emit events
+) -> Result<(), String> {
+    let explorer = state.lock().map_err(|e| e.to_string())?;
+    let current_dir = PathBuf::from(explorer.get_current_path());
+    let current_dir_clone = current_dir.clone();
+
+    for entry in fs::read_dir(current_dir).map_err(|e| e.to_string())? {
+        let entry = entry.map_err(|e| e.to_string())?;
+        let path = entry.path();
+        if path.is_dir() {
+            let mut video_files = vec![];
+            let mut file_count = 0;
+            for sub_entry in fs::read_dir(&path).map_err(|e| e.to_string())? {
+                let sub_entry = sub_entry.map_err(|e| e.to_string())?;
+                let sub_path = sub_entry.path();
+                if sub_path.is_file() {
+                    file_count += 1;
+                    if is_video_file(&sub_path) {
+                        video_files.push(sub_path);
+                    }
+                }
+                // Skip the directory if it contains more than one file
+                if file_count > 1 {
+                    break;
+                }
+            }
+            if file_count == 1 && video_files.len() == 1 {
+                let video_file = video_files.pop().unwrap();
+                let file_name = video_file.file_name().unwrap();
+                fs::rename(&video_file, current_dir_clone.join(file_name))
+                    .map_err(|e| e.to_string())?;
+                fs::remove_dir(&path).map_err(|e| e.to_string())?;
+            }
+        }
+    }
+
+    // Emit an event
+    window
+        .emit(
+            "trigger-reload",
+            "Single file directories flattened successfully",
+        )
+        .unwrap();
+
+    Ok(())
+}
+
+// END ORGANIZE VIDEOS INTO DIRECTORIES

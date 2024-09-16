@@ -1,10 +1,12 @@
 use dirs;
 use serde::Serialize;
-use tauri::AppHandle;
 use std::fs;
 use std::path::{Path, PathBuf};
+use std::process::Command;
 use std::sync::{Arc, Mutex};
+use tauri::api::dialog::blocking::FileDialogBuilder;
 use tauri::command;
+use tauri::AppHandle;
 use tauri::Manager;
 
 #[derive(Debug, Serialize)]
@@ -65,11 +67,13 @@ impl FileExplorer {
             self.current_path = path;
 
             // Emit event
-            self.app_handle.emit_all(
-                "directory-changed",
-                Some(self.current_path.to_string_lossy().to_string()),
-            ).map_err(|e| e.to_string())?;
-            
+            self.app_handle
+                .emit_all(
+                    "directory-changed",
+                    Some(self.current_path.to_string_lossy().to_string()),
+                )
+                .map_err(|e| e.to_string())?;
+
             Ok(())
         } else {
             Err("Path is not a directory".to_string())
@@ -81,10 +85,12 @@ impl FileExplorer {
             self.current_path = parent.to_path_buf();
 
             // Emit event
-            self.app_handle.emit_all(
-                "directory-changed",
-                Some(self.current_path.to_string_lossy().to_string()),
-            ).map_err(|e| e.to_string())?;
+            self.app_handle
+                .emit_all(
+                    "directory-changed",
+                    Some(self.current_path.to_string_lossy().to_string()),
+                )
+                .map_err(|e| e.to_string())?;
 
             Ok(())
         } else {
@@ -126,10 +132,12 @@ impl FileExplorer {
         self.current_path = home_dir.clone(); // Update the current path to home directory
 
         // Emit event
-        self.app_handle.emit_all(
-            "directory-changed",
-            Some(self.current_path.to_string_lossy().to_string()),
-        ).map_err(|e| e.to_string())?;
+        self.app_handle
+            .emit_all(
+                "directory-changed",
+                Some(self.current_path.to_string_lossy().to_string()),
+            )
+            .map_err(|e| e.to_string())?;
 
         let entries = fs::read_dir(&home_dir).map_err(|e| e.to_string())?;
         let mut files = Vec::new();
@@ -154,6 +162,45 @@ impl FileExplorer {
         }
 
         Ok(files)
+    }
+
+    pub fn open_in_file_explorer(&self) -> Result<(), String> {
+        Command::new("explorer")
+            .arg(self.current_path.to_str().ok_or("Invalid path")?)
+            .spawn()
+            .map_err(|e| e.to_string())?;
+        Ok(())
+    }
+
+    pub fn select_and_set_current_path(&mut self) -> Result<(), String> {
+        let selected_path = FileDialogBuilder::new()
+            .pick_folder()
+            .ok_or("No folder selected")?;
+
+        self.current_path = selected_path;
+
+        // Emit event
+        self.app_handle
+            .emit_all(
+                "directory-changed",
+                Some(self.current_path.to_string_lossy().to_string()),
+            )
+            .map_err(|e| e.to_string())?;
+
+        Ok(())
+    }
+
+    pub fn open_in_terminal(&self) -> Result<(), String> {
+        Command::new("cmd")
+            .arg("/C")
+            .arg("start")
+            .arg("cmd")
+            .arg("/K")
+            .arg("cd")
+            .arg(self.current_path.to_str().ok_or("Invalid path")?)
+            .spawn()
+            .map_err(|e| e.to_string())?;
+        Ok(())
     }
 }
 
@@ -205,4 +252,26 @@ pub fn get_directory_hierarchy(
 ) -> Result<Vec<DirectoryHierarchy>, String> {
     let explorer = state.lock().unwrap();
     explorer.get_directory_hierarchy()
+}
+
+#[command]
+pub fn open_in_file_explorer(
+    state: tauri::State<'_, Arc<Mutex<FileExplorer>>>,
+) -> Result<(), String> {
+    let explorer = state.lock().unwrap();
+    explorer.open_in_file_explorer()
+}
+
+#[command]
+pub fn select_and_set_current_path(
+    state: tauri::State<'_, Arc<Mutex<FileExplorer>>>,
+) -> Result<(), String> {
+    let mut explorer = state.lock().unwrap();
+    explorer.select_and_set_current_path()
+}
+
+#[command]
+pub fn open_in_terminal(state: tauri::State<'_, Arc<Mutex<FileExplorer>>>) -> Result<(), String> {
+    let explorer = state.lock().unwrap();
+    explorer.open_in_terminal()
 }

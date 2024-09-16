@@ -13,15 +13,16 @@ use api::anime_episodes_tvmaze::fetch_tvmaze_show_details;
 use explorer::file_explorer::{
     change_directory, get_current_path, get_directory_hierarchy, go_to_parent_directory,
     list_files_in_current_directory, FileExplorer,
+    open_in_file_explorer, select_and_set_current_path, open_in_terminal,
 };
 use explorer::file_operations::{
     add_titles_to_episodes, add_titles_to_episodes_preview, adjust_episode_numbers,
-    adjust_episode_numbers_preview, get_current_episode_names, search_and_replace,
-    search_and_replace_preview,
+    adjust_episode_numbers_preview, flatten_single_file_directories, get_current_episode_names,
+    organize_videos_into_directories, search_and_replace, search_and_replace_preview,
 };
 use explorer::utils::{list_drives, list_files_in_home_directory};
-use utils::utils::{focus_main_window, open_episode_title_window, trigger_refresh};
 use utils::qr_code_generator::{generate_qr_code, save_qr_code};
+use utils::utils::{focus_main_window, open_episode_title_window, trigger_refresh};
 
 use std::sync::{Arc, Mutex};
 use tauri::{generate_handler, Builder, Manager};
@@ -57,7 +58,12 @@ fn main() {
             search_and_replace_preview,
             trigger_refresh,
             generate_qr_code,
-            save_qr_code
+            save_qr_code,
+            organize_videos_into_directories,
+            flatten_single_file_directories,
+            open_in_file_explorer, 
+            select_and_set_current_path, 
+            open_in_terminal,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
