@@ -15,12 +15,12 @@ export default function Generator() {
 
     function handleGenerateQrCode() {
         setError(null);
-        
+
         if (qrValue === null || qrValue === '') {
             setError("Bitte gib einen Text oder eine Webseite ein.");
             return;
         }
-        
+
         setQrResponse(null);
 
         if (qrValue) {
@@ -40,7 +40,7 @@ export default function Generator() {
         if (qrResponse?.base64_image) {
             try {
                 const filePath = await save({
-                    defaultPath: 'qr_code.svg',
+                    defaultPath: sanitizeString(qrResponse.qr_value) + '.svg',
                     filters: [{ name: 'SVG', extensions: ['svg'] }],
                 });
 
@@ -75,4 +75,14 @@ export default function Generator() {
             </div>
         </GlassCard>
     );
+}
+
+/**
+ * Sanitizes a string by removing unwanted characters and replacing spaces with underscores.
+ * @param {string} input - The string to sanitize.
+ * @returns {string} - The sanitized string.
+ */
+function sanitizeString(input: string): string {
+    // Remove any unwanted characters (e.g., special characters) and replace spaces with underscores
+    return input.replace(/[^a-zA-Z0-9 ]/g, '').replace(/\s+/g, '_');
 }
