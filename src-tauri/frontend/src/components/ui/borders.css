@@ -1,0 +1,13 @@
+.fire-border::after {
+    border: 4px darkorange solid;
+    background-image: url("/styling/buttons/fire-small-slow.webp");
+    background-size: 100% 100%;
+    opacity: 0.8;
+}
+
+.thunder-border::after {
+    border: 4px darkorange solid;
+    background-image: url("/styling/buttons/fire-small-slow.webp");
+    background-size: 100% 100%;
+    opacity: 0.8;
+}
