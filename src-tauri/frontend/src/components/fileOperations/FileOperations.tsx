@@ -8,6 +8,7 @@ import EpisodeRenamer from './EpisodeRenamer';
 import GlassCard from '../layout/GlassCard';
 import ImageButtonSwitch from '../ui/ImageButtonSwitch';
 import { triggerRefresh } from '@/services/tauriService';
+import InfoMessage from '../common/InfoMessage';
 
 interface FileOperationsOptions {
     id: string;
@@ -61,14 +62,7 @@ export default function FileOperations() {
                         <ImageButtonSwitch title="Episoden benennen" image='/styling/buttons/rename2.jpg' selected={toolOption == "ER"} onClick={() => setToolOption("ER")} />
                     </div>
                     <GlassCard>
-                        <div className='flex flex-row bg-white bg-opacity-30 p-2 gap-2'>
-                            <div className='flex items-center'>
-                                <BsInfoCircle className='h-5 w-5 align-sub inline' />
-                            </div>
-                            <div className='flex flex-grow'>
-                                {options?.find((option) => option.id === toolOption)?.description}
-                            </div>
-                        </div>
+                        <InfoMessage message={options?.find((option) => option.id === toolOption)?.description} />
                     </GlassCard>
                 </div>
             </GlassCard>
