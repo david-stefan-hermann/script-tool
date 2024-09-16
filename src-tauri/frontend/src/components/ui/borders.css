@@ -3,6 +3,7 @@
     background-image: url("/styling/buttons/fire-small-slow.webp");
     background-size: 100% 100%;
     opacity: 0.8;
+    border-radius: 0.4em;
 }
 
 .thunder-border::after {
@@ -10,4 +11,5 @@
     background-image: url("/styling/buttons/fire-small-slow.webp");
     background-size: 100% 100%;
     opacity: 0.8;
+    border-radius: 0.4em;
 }
