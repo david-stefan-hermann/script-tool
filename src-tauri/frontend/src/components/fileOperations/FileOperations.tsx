@@ -29,28 +29,28 @@ export default function FileOperations() {
                 id: 'SR',
                 title: 'Suchen und Ersetzen',
                 description: 'Benenne alle Video Dateien in einem Verzeichnis um.',
-                image: '/styling/buttons/search.jpeg',
+                image: '/styling/buttons/glasses.jpg',
                 option: <FileRenamer />
             },
             {
                 id: 'ADJ',
                 title: 'Episodennummer anpassen',
                 description: 'Passe die Episodennummern in den Dateinamen an.',
-                image: '/styling/buttons/adjuster.jpg',
+                image: '/styling/buttons/numbers.jpg',
                 option: <EpisodeNumberAdjuster />
             },
             {
                 id: 'ER',
                 title: 'Episoden umbenennen',
                 description: 'Benenne Episoden in einem Verzeichnis. Drücke "Titel laden" um automatisch Titel zu laden.',
-                image: '/styling/buttons/rename2.jpg',
+                image: '/styling/buttons/rename.jpg',
                 option: <EpisodeRenamer />
             },
             {
                 id: 'FO',
                 title: 'In Ordner Verschieben',
                 description: 'Verschiebe Dateien in Ordner. Oder ziehe Dateien aus Ordnern.',
-                image: '/styling/buttons/folder.jpg',
+                image: '/styling/buttons/package.jpg',
                 option: <FolderOrganizer />
             }
         ]);
