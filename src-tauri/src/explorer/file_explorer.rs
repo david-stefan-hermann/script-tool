@@ -191,13 +191,15 @@ impl FileExplorer {
     }
 
     pub fn open_in_terminal(&self) -> Result<(), String> {
+        let current_path_str = self.current_path.to_str().ok_or("Invalid path")?;
+        let drive_letter = &current_path_str[0..2]; // Get the drive letter (e.g., "C:")
+
         Command::new("cmd")
             .arg("/C")
             .arg("start")
             .arg("cmd")
             .arg("/K")
-            .arg("cd")
-            .arg(self.current_path.to_str().ok_or("Invalid path")?)
+            .arg(format!("{} && cd {}", drive_letter, current_path_str))
             .spawn()
             .map_err(|e| e.to_string())?;
         Ok(())
