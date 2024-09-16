@@ -1,6 +1,15 @@
+import { BsDownload, BsFillCloudDownloadFill } from "react-icons/bs";
 import "./glow-on-hover.css";
+import { BiSolidDownload } from "react-icons/bi";
 
-export function AnimatedButton({ text, onClick, image }: { text: string, onClick: () => void, image?: string }) {
+interface AnimatedButtonProps {
+    text: string,
+    onClick: () => void,
+    image?: string
+    download?: boolean
+}
+
+export function AnimatedButton({ text, onClick, image, download }: AnimatedButtonProps) {
     return (
         <a
             className="flex justify-center text-white text-center px-4 py-2 glow-on-hover glow-on-hover-darken align-middle lg:text-base text-sm flex-grow border-solid border-1"
@@ -9,6 +18,7 @@ export function AnimatedButton({ text, onClick, image }: { text: string, onClick
                 backgroundImage: "url(" + image + ")",
                 textShadow: '1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000'
             }}>
+            {download && <><BiSolidDownload className="h-full text-controls-100 lg:text-xl text-lg" />&nbsp;</>}
             {text}
         </a>
     );
