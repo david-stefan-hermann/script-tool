@@ -25,7 +25,7 @@ const ApiOptionTooltip: React.FC<ApiOptionTooltipProps> = ({
         <Tooltip content={title} placement="top" className='bg-white px-2 rounded border border-gray-100'>
             <div
                 className={`
-                    flex glow-on-hover cursor-pointer h-16 w-16
+                    flex glow-on-hover cursor-pointer h-16 w-16 rounded-lg border-solid border-1
                     ${selected && borderStyle}
                     ${className}
                     `}
