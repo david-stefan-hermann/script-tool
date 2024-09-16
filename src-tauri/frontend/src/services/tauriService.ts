@@ -153,9 +153,14 @@ export const generateQrCode = async (qrValue: string): Promise<QrCodeResponse> =
     return invoke('generate_qr_code', { qrValue });
 };
 
-export const saveQrCode = async (filePath: string, base64Image: string): Promise<void> => {
-    return invoke('save_qr_code', { filePath, base64Image });
+export const saveQrCodeSvg = async (filePath: string, qrString: string): Promise<void> => {
+    return invoke('save_qr_code_as_svg', { filePath, qrString });
 }
+
+export const saveQrCodePng = async (filePath: string, qrString: string): Promise<void> => {
+    return invoke('save_qr_code_as_png', { filePath, qrString });
+}
+
 
 // File Organizer
 
