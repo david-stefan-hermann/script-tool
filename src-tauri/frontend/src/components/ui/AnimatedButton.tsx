@@ -1,4 +1,3 @@
-import { BsDownload, BsFillCloudDownloadFill } from "react-icons/bs";
 import "./glow-on-hover.css";
 import { BiSolidDownload } from "react-icons/bi";
 
