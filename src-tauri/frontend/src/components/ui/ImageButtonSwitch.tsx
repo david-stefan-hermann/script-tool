@@ -1,8 +1,7 @@
 import { Tooltip } from '@nextui-org/tooltip';
 import React from 'react';
 import "./glow-on-hover.css";
-import "./fire-border.css";
-import "./arrow-border.css";
+import "./borders.css";
 
 interface ApiOptionTooltipProps {
     title: string;
