@@ -93,11 +93,11 @@ export default function EpisodeTitleFetcher({ seasons, setSeasons, selectedSeaso
             </label>
             <div className="flex gap-2">
               {/* Jikan Button */}
-              <ImageButtonSwitch title="Jikan" image='/logos/jikan_logo.png' scale={0.8} selected={apiOption == "JIKA"} onClick={() => setApiOption("JIKA")} />
+              <ImageButtonSwitch title="Jikan" image='/logos/jikan_logo.png' selected={apiOption == "JIKA"} onClick={() => setApiOption("JIKA")} />
               {/* TVDB Button */}
-              <ImageButtonSwitch title="TheTVDB" image='/logos/thetvdb_logo.jpg' scale={0.8} selected={apiOption == "TVDB"} onClick={() => setApiOption("TVDB")} />
+              <ImageButtonSwitch title="TheTVDB" image='/logos/thetvdb_logo.jpg' selected={apiOption == "TVDB"} onClick={() => setApiOption("TVDB")} />
               {/* TVMaze Button */}
-              <ImageButtonSwitch title="TVMaze" image='/logos/tvmaze_logo.png' scale={0.8} selected={apiOption == "TVMZ"} onClick={() => setApiOption("TVMZ")} />
+              <ImageButtonSwitch title="TVMaze" image='/logos/tvmaze_logo.png' selected={apiOption == "TVMZ"} onClick={() => setApiOption("TVMZ")} />
             </div>
           </div>
         </div>
