@@ -1,72 +1,56 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-    listFilesInCurrentDirectory,
     changeDirectory,
-    goToParentDirectory,
-    getDirectoryHierarchy,
-    goToHomeDirectory,
-    FileInfo,
-    DirectoryHierarchy,
 } from '../../../services/tauriService';
 import ControlsDriveList from './ControlsDriveList';
 import ControlsButtonDrives from './ControlsButtonDrives';
 import ControlsButtonHome from './ControlsButtonHome';
 import ControlsButtonBack from './ControlsButtonBack';
+import { listen } from '@tauri-apps/api/event';
+import ControlsButtonSelectPath from './ControlsButtonSelectPath';
+import ControlsButtonExplorer from './ControlsButtonExplorer';
+import ControlsButtonTerminal from './ControlsButtonTerminal';
+import ControlsButtonRefresh from './ControlsButtonRefresh';
 
-interface ControlsProps {
-    setFiles: (files: FileInfo[]) => void;
-    setHierarchy: (hierarchy: DirectoryHierarchy[]) => void;
-}
-
-export default function Controls({ setFiles, setHierarchy }: ControlsProps) {
+export default function Controls() {
     const [showDrives, setShowDrives] = useState(false);
-
-    const handleGoUp = async () => {
-        await goToParentDirectory();
-        const newFiles = await listFilesInCurrentDirectory();
-        const newHierarchy = await getDirectoryHierarchy();
-
-        setFiles(newFiles);
-        setHierarchy(newHierarchy);
-        setShowDrives(false); // Hide drives after going up
-    };
-
-    const handleGoHome = async () => {
-        await goToHomeDirectory();
-        const newFiles = await listFilesInCurrentDirectory();
-        const newHierarchy = await getDirectoryHierarchy();
-
-        setFiles(newFiles);
-        setHierarchy(newHierarchy);
-        setShowDrives(false); // Hide drives after going home
-    }
 
     const handleListDrives = async () => {
         setShowDrives(!showDrives); // Show the drives list
-        //const drives = await listDrives();
-        //setDrives(drives);
     };
 
     const handleDirectoryClick = async (path: string) => {
         await changeDirectory(path);
-        const newFiles = await listFilesInCurrentDirectory();
-        const newHierarchy = await getDirectoryHierarchy();
-
-        setFiles(newFiles);
-        //setCurrentPath(newPath);
-        setHierarchy(newHierarchy);
-        setShowDrives(false); // Hide drives after changing directory
     };
+
+    useEffect(() => {
+        const unlisten = listen<string>('trigger-reload', async (event) => {
+            setShowDrives(false);
+        });
+
+        const unlisten2 = listen<string>('directory-changed', async (event) => {
+            setShowDrives(false);
+        });
+
+        return () => {
+            unlisten.then((fn) => fn()); // Unsubscribe from the event when the component unmounts
+            unlisten2.then((fn) => fn()); // Unsubscribe from the event when the component unmounts
+        };
+    }, []);
 
     return (
         <>
             {showDrives && <ControlsDriveList handleDirectoryClick={handleDirectoryClick} handleListDrives={handleListDrives} />}
             <div className="flex text-2xl font-bold pl-2 py-3 text-dir bg-white bg-opacity-30">
-                <ControlsButtonBack handleGoUp={handleGoUp} />
-                <ControlsButtonHome handleGoHome={handleGoHome} />
+                <ControlsButtonBack />
+                <ControlsButtonHome />
                 <ControlsButtonDrives handleListDrives={handleListDrives} showDrives={showDrives} />
+                <ControlsButtonSelectPath />
+                <ControlsButtonExplorer />
+                <ControlsButtonTerminal />
+                <ControlsButtonRefresh />
             </div>
         </>
     );
