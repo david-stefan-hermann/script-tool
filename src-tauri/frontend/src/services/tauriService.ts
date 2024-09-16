@@ -126,3 +126,18 @@ export const triggerRefresh = async (): Promise<void> => {
     console.log("Triggering refresh");
     return invoke('trigger_refresh');
 };
+
+// QR Code Generator
+
+export interface QrCodeResponse {
+    qr_value: string;
+    base64_image: string;
+}
+
+export const generateQrCode = async (qrValue: string): Promise<QrCodeResponse> => {
+    return invoke('generate_qr_code', { qrValue });
+};
+
+export const saveQrCode = async (filePath: string, base64Image: string): Promise<void> => {
+    return invoke('save_qr_code', { filePath, base64Image });
+}
