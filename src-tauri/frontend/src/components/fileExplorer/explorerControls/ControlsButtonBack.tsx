@@ -1,11 +1,13 @@
+import { goToParentDirectory } from "@/services/tauriService";
 import { Tooltip } from "@nextui-org/tooltip";
 import { BsArrowLeft } from "react-icons/bs";
 
-interface ControlsButtonBackProps {
-    handleGoUp: () => void;
-}
+export default function ControlsButtonBack() {
 
-export default function ControlsButtonBack({ handleGoUp }: ControlsButtonBackProps) {
+    const handleGoUp = async () => {
+        await goToParentDirectory();
+    };
+
     return (
         <Tooltip content="Zurück" placement="top" className='bg-white px-2 rounded border border-gray-100'>
             <div

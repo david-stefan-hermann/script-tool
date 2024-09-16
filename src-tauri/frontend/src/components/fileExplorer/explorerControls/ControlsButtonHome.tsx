@@ -1,3 +1,4 @@
+import { goToHomeDirectory } from "@/services/tauriService";
 import { Tooltip } from "@nextui-org/tooltip";
 import { BsHouseFill } from "react-icons/bs";
 
@@ -5,7 +6,12 @@ interface ControlsButtonHomeProps {
     handleGoHome: () => void;
 }
 
-export default function ControlsButtonHome({ handleGoHome }: ControlsButtonHomeProps) {
+export default function ControlsButtonHome() {
+
+    const handleGoHome = async () => {
+        await goToHomeDirectory();
+    }
+
     return (
         <Tooltip content="Zum Home Verzeichnis" placement="top" className='bg-white px-2 rounded border border-gray-100'>
             <div
