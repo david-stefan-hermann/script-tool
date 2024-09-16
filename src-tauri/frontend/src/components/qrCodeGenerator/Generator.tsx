@@ -5,7 +5,7 @@ import InfoMessage from "../common/InfoMessage";
 import GlassCard from "../layout/GlassCard";
 import ErrorMessage from "../common/ErrorMessage";
 import { AnimatedButton } from "../ui/AnimatedButton";
-import { generateQrCode, QrCodeResponse, saveQrCode } from "@/services/tauriService";
+import { generateQrCode, QrCodeResponse, saveQrCodePng, saveQrCodeSvg } from "@/services/tauriService";
 import { save } from '@tauri-apps/api/dialog';
 
 export default function Generator() {
@@ -36,16 +36,19 @@ export default function Generator() {
         }
     }
 
-    const handleDownloadQrCode = async () => {
+    async function handleDownloadQrCode(asPng: boolean = false) {
+        const extension = asPng ? 'png' : 'svg';
+
         if (qrResponse?.base64_image) {
             try {
                 const filePath = await save({
-                    defaultPath: sanitizeString(qrResponse.qr_value) + '.svg',
-                    filters: [{ name: 'SVG', extensions: ['svg'] }],
+                    defaultPath: sanitizeString(qrResponse.qr_value) + '.' + extension,
+                    filters: [{ name: extension.toUpperCase(), extensions: [extension] }],
                 });
 
                 if (filePath) {
-                    saveQrCode(filePath, qrResponse.base64_image);
+                    asPng ? saveQrCodePng(filePath, qrResponse.qr_value) :
+                        saveQrCodeSvg(filePath, qrResponse.qr_value);
                     console.log("QR Code saved successfully");
                 }
             } catch (err) {
@@ -71,7 +74,10 @@ export default function Generator() {
                 {error && <ErrorMessage message={error}></ErrorMessage>}
                 <AnimatedButton text="Generieren" onClick={() => handleGenerateQrCode()} image='/styling/buttons/button-purple.jpg' />
                 {qrResponse && <InfoMessage message={`QR Code wurde erfolgreich generiert für: ${qrResponse.qr_value}`} />}
-                {qrResponse && <AnimatedButton text="Download" onClick={() => handleDownloadQrCode()} image='/styling/buttons/button-blue.jpg' />}
+                {qrResponse && <div className="flex flex-row gap-2">
+                    <AnimatedButton download text="SVG" onClick={() => handleDownloadQrCode()} image='/styling/buttons/button-blue.jpg' />
+                    <AnimatedButton download text="PNG" onClick={() => handleDownloadQrCode(true)} image='/styling/buttons/button-blue.jpg' />
+                </div>}
             </div>
         </GlassCard>
     );
