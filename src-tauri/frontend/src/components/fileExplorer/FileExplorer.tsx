@@ -20,27 +20,31 @@ export default function FileExplorer() {
     const [hierarchy, setHierarchy] = useState<DirectoryHierarchy[]>([]);
 
     useEffect(() => {
-        const unlisten = listen<string>('trigger-reload', async (event) => {
-            const newFiles = await listFilesInCurrentDirectory();
+        loadInitialData();
+    }, []);
+    
+    async function loadInitialData() {
+        console.log('FileExplorer mounted');
+        const initialFiles = await listFilesInCurrentDirectory();
+        const hierarchy = await getDirectoryHierarchy();
 
-            setFiles(newFiles);
+        setFiles(initialFiles);
+        setHierarchy(hierarchy);
+    }
+
+    useEffect(() => {
+        const unlisten = listen<string>('trigger-reload', async (event) => {
+            loadInitialData();
+        });
+
+        const unlisten2 = listen<string>('directory-changed', async (event) => {
+            loadInitialData();
         });
 
         return () => {
             unlisten.then((fn) => fn()); // Unsubscribe from the event when the component unmounts
+            unlisten2.then((fn) => fn()); // Unsubscribe from the event when the component unmounts
         };
-    }, []);
-
-    useEffect(() => {
-        async function loadInitialData() {
-            const initialFiles = await listFilesInCurrentDirectory();
-            const hierarchy = await getDirectoryHierarchy();
-
-            setFiles(initialFiles);
-            setHierarchy(hierarchy);
-        }
-
-        loadInitialData();
     }, []);
 
     const handleDirectoryClick = async (path: string) => {
@@ -63,7 +67,7 @@ export default function FileExplorer() {
                     <File key={index} index={index} file={file} onClickFunction={handleDirectoryClick} />
                 ))}
             </ul >
-            <Controls setFiles={setFiles} setHierarchy={setHierarchy} />
+            <Controls />
         </GlassCard>
     );
 }
