@@ -21,6 +21,7 @@ use explorer::file_operations::{
 };
 use explorer::utils::{list_drives, list_files_in_home_directory};
 use utils::utils::{focus_main_window, open_episode_title_window, trigger_refresh};
+use utils::qr_code_generator::{generate_qr_code, save_qr_code};
 
 use std::sync::{Arc, Mutex};
 use tauri::{generate_handler, Builder, Manager};
@@ -54,7 +55,9 @@ fn main() {
             add_titles_to_episodes_preview,
             search_and_replace,
             search_and_replace_preview,
-            trigger_refresh
+            trigger_refresh,
+            generate_qr_code,
+            save_qr_code
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
