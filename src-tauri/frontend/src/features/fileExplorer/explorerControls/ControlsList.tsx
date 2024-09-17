@@ -2,19 +2,19 @@ import LoadingCircle from "@/components/common/LoadingCircle";
 import GlassCard from "@/components/layout/GlassCard";
 import { BsXLg } from "react-icons/bs";
 
-interface controlsDropUpItems {
+interface controlsListItems {
     item: React.ReactNode[];
     onClick: () => void;
 }
 
-interface controlsDropUp {
+interface controlsList {
     title: string;
     isLoading: boolean;
-    items: controlsDropUpItems[];
+    items: controlsListItems[];
     toggleDropUp: () => void;
 }
 
-export default function ControlsDropUp({ title, isLoading, items, toggleDropUp }: controlsDropUp) {
+export default function ControlsList({ title, isLoading, items, toggleDropUp }: controlsList) {
 
     return (
         <GlassCard>
@@ -24,7 +24,9 @@ export default function ControlsDropUp({ title, isLoading, items, toggleDropUp }
                     <LoadingCircle show={isLoading} />
                 </span>
                 <span onClick={toggleDropUp} className='flex inline hover:cursor-pointer text-error'>
-                    <BsXLg className="h-full w-full" />
+                    <div>
+                        <BsXLg className="h-full w-full" />
+                    </div>
                 </span>
             </h2>
             <ul className='flex-col w-full max-h-full overflow-x-hidden flex-grow'>
