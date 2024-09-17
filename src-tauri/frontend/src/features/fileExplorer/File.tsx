@@ -9,21 +9,24 @@ type FileProps = {
 
 export default function File({ index, file, onClickFunction }: FileProps) {
     return (
-        <li
-            key={index}
-            className={`py-1 pl-2 flex cursor-pointer break-all glass-card-border-top
-                ${index % 2 === 0 ? 'bg-white bg-opacity-0' : 'bg-white bg-opacity-10'}
-                ${file.is_dir ? 'hover:text-dir' : ''}
-                hover:bg-white-200 hover:bg-opacity-40 transition-colors duration-200`}
-            onClick={() => { file.is_dir && onClickFunction(file.path) }}
-        >
-            <span className="flex items-center">
-                {selectFolderIcon(file)}
-            </span>
-            <span className="flex">
-                {file.name}
-            </span>
-        </li>
+        <>
+            <li
+                key={index}
+                className={`py-1 pl-2 flex cursor-pointer break-all glass-card-border-top hover:bg-white-200 hover:bg-opacity-40 transition-colors duration-200
+                    ${file.is_dir ? ' hover:text-dir' : ''}`}
+                style={{
+                    backgroundColor: index % 2 === 0 ? 'rgba(255, 255, 255, 0)' : 'rgba(255, 255, 255, 0.1)',
+                }}
+                onClick={() => { file.is_dir && onClickFunction(file.path) }}
+            >
+                <span className="flex items-center">
+                    {selectFolderIcon(file)}
+                </span>
+                <span className="flex">
+                    {file.name}
+                </span>
+            </li>
+        </>
     );
 }
 
