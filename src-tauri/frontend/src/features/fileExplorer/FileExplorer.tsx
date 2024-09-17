@@ -12,8 +12,7 @@ import Controls from './explorerControls/Controls';
 import File from './File';
 import BreadCrumbs from './BreadCrumbs';
 import { listen } from '@tauri-apps/api/event';
-import GlassCard from '../layout/GlassCard';
-
+import GlassCard from '@/components/layout/GlassCard';
 
 export default function FileExplorer() {
     const [files, setFiles] = useState<FileInfo[]>([]);

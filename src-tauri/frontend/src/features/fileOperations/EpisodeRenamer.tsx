@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { addTitlesToEpisodes, addTitlesToEpisodesPreview, getCurrentEpisodeNames, openEpisodeTitleWindow, focusMainWindow } from '../../services/tauriService'; // Adjust the import path as necessary
+import { addTitlesToEpisodes, addTitlesToEpisodesPreview, getCurrentEpisodeNames, openEpisodeTitleWindow, focusMainWindow } from '@/services/tauriService'; // Adjust the import path as necessary
 import { listen } from '@tauri-apps/api/event'; // Import the event listener
-import { AnimatedButton } from '../ui/AnimatedButton';
-import GlassCard from '../layout/GlassCard';
-import ErrorMessage from '../common/ErrorMessage';
+import { AnimatedButton } from '@/components/ui/AnimatedButton';
+import GlassCard from '@/components/layout/GlassCard';
+import ErrorMessage from '@/components/common/ErrorMessage';
 
 export default function EpisodeRenamer() {
     const [episodeTitles, setEpisodeTitles] = useState<string>('');

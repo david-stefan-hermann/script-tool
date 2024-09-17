@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { adjustEpisodeNumbers, adjustEpisodeNumbersPreview, triggerRefresh } from '../../services/tauriService'; // Adjust import paths as necessary
-import { AnimatedButton } from '../ui/AnimatedButton';
-import GlassCard from '../layout/GlassCard';
-import ErrorMessage from '../common/ErrorMessage';
+import { adjustEpisodeNumbers, adjustEpisodeNumbersPreview, triggerRefresh } from '@/services/tauriService'; // Adjust import paths as necessary
+import { AnimatedButton } from '@/components/ui/AnimatedButton';
+import GlassCard from '@/components/layout/GlassCard';
+import ErrorMessage from '@/components/common/ErrorMessage';
 
 export default function EpisodeNumberAdjuster() {
     const [adjustmentValue, setAdjustmentValue] = useState<number | null>(null);

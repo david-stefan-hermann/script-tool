@@ -1,5 +1,5 @@
-import Generator from "@/components/qrCodeGenerator/Generator";
-import QrCode from "@/components/qrCodeGenerator/QrCode";
+import Generator from "@/features/qrCodeGenerator/Generator";
+import QrCode from "@/features/qrCodeGenerator/QrCode";
 
 export default function Page() {
   return (

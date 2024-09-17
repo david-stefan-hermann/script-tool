@@ -1,6 +1,6 @@
-import FileExplorer from "@/components/fileExplorer/FileExplorer";
-import FilePreview from "@/components/fileExplorer/FilePreview";
-import FileOperations from "@/components/fileOperations/FileOperations";
+import FileExplorer from "@/features/fileExplorer/FileExplorer";
+import FilePreview from "@/features/fileExplorer/FilePreview";
+import FileOperations from "@/features/fileOperations/FileOperations";
 
 export default function Page() {
   return (

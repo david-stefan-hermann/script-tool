@@ -4,11 +4,11 @@ import {
     searchAndReplace,
     searchAndReplacePreview,
     triggerRefresh,
-} from '../../services/tauriService';
+} from '@/services/tauriService';
 import React, { useEffect, useState } from 'react';
-import { AnimatedButton } from '../ui/AnimatedButton';
-import GlassCard from '../layout/GlassCard';
-import ErrorMessage from '../common/ErrorMessage';
+import { AnimatedButton } from '@/components/ui/AnimatedButton';
+import GlassCard from '@/components/layout/GlassCard';
+import ErrorMessage from '@/components/common/ErrorMessage';
 
 // Placeholder for your components
 export default function FileRenamer() {

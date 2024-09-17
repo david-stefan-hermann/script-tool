@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import GlassCard from "../layout/GlassCard";
+import GlassCard from "@/components/layout/GlassCard";
 import { listen } from "@tauri-apps/api/event";
 
 export default function QrCode() {

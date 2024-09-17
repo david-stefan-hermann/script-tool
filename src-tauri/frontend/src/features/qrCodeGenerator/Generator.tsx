@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import InfoMessage from "../common/InfoMessage";
-import GlassCard from "../layout/GlassCard";
-import ErrorMessage from "../common/ErrorMessage";
-import { AnimatedButton } from "../ui/AnimatedButton";
+import InfoMessage from "@/components/common/InfoMessage";
+import GlassCard from "@/components/layout/GlassCard";
+import ErrorMessage from "@/components/common/ErrorMessage";
+import { AnimatedButton } from "@/components/ui/AnimatedButton";
 import { generateQrCode, QrCodeResponse, saveQrCodePng, saveQrCodeSvg } from "@/services/tauriService";
 import { save } from '@tauri-apps/api/dialog';
 

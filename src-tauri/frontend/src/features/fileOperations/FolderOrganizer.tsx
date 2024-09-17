@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import GlassCard from "../layout/GlassCard";
+import { useState } from "react";
+import GlassCard from "@/components/layout/GlassCard";
 import { pullFilesFromFolders, putFilesInFolders } from "@/services/tauriService";
-import { AnimatedButton } from "../ui/AnimatedButton";
-import ErrorMessage from "../common/ErrorMessage";
+import { AnimatedButton } from "@/components/ui/AnimatedButton";
+import ErrorMessage from "@/components/common/ErrorMessage";
 
 export default function FolderOrganizer() {
 

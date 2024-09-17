@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { SeasonedEpisodes, SeasonedEpisodesDetails } from "@/services/tauriService";
-import { AnimatedButton } from "../ui/AnimatedButton";
+import { AnimatedButton } from "@/components/ui/AnimatedButton";
 import { emit } from '@tauri-apps/api/event';
-import GlassCard from "../layout/GlassCard";
+import GlassCard from "@/components/layout/GlassCard";
 import { BsFileEarmarkPlayFill } from "react-icons/bs";
 
 interface EpisodeTitleFetcherListProps {

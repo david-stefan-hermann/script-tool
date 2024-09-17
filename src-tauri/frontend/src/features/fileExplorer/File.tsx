@@ -1,5 +1,5 @@
 import { BsFileEarmarkFill, BsFolderFill, BsFileEarmarkPlayFill } from "react-icons/bs";
-import { FileInfo } from '../../services/tauriService';
+import { FileInfo } from '@/services/tauriService';
 
 type FileProps = {
     index: number;

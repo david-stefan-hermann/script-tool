@@ -4,10 +4,10 @@ import React, { useEffect, useState } from 'react';
 import FileRenamer from './FileRenamer';
 import EpisodeNumberAdjuster from './EpisodeNumberAdjuster';
 import EpisodeRenamer from './EpisodeRenamer';
-import GlassCard from '../layout/GlassCard';
-import ImageButtonSwitch from '../ui/ImageButtonSwitch';
+import GlassCard from '@/components/layout/GlassCard';
+import ImageButtonSwitch from '@/components/ui/ImageButtonSwitch';
 import { triggerRefresh } from '@/services/tauriService';
-import InfoMessage from '../common/InfoMessage';
+import InfoMessage from '@/components/common/InfoMessage';
 import FolderOrganizer from './FolderOrganizer';
 
 interface FileOperationsOptions {

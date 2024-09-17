@@ -1,11 +1,11 @@
 "use client";
 
-import EpisodeTitleFetcher from "@/components/episodeTitleFetcher/EpisodeTitleFetcher";
+import EpisodeTitleFetcher from "@/features/episodeTitleFetcher/EpisodeTitleFetcher";
 import FallingPetalsBackground from "@/components/layout/FallingPetalsBackground";
 import LayeredBackground from "@/components/layout/LayeredBackground";
 import { useState } from "react";
 import { SeasonedEpisodes, SeasonedEpisodesDetails } from '@/services/tauriService';
-import { EpisodeTitleFetcherList } from "@/components/episodeTitleFetcher/EpisodeTitleFetcherList";
+import { EpisodeTitleFetcherList } from "@/features/episodeTitleFetcher/EpisodeTitleFetcherList";
 
 export default function Page() {
     const [seasons, setSeasons] = useState<SeasonedEpisodes[]>([]);
