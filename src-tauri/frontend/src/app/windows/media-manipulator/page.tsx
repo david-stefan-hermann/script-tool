@@ -4,7 +4,7 @@ import FileOperations from "@/features/fileOperations/FileOperations";
 
 export default function Page() {
   return (
-    <main className="h-full w-full p-4 flex flex-row gap-4">
+    <main className="h-full w-full p-4 flex flex-row gap-4 overflow-hidden">
       <div className="max-h-screen overflow-hidden basis-1/3">
         <FileExplorer />
       </div>
