@@ -11,7 +11,7 @@ interface AnimatedButtonProps {
 export function AnimatedButton({ text, onClick, image, download }: AnimatedButtonProps) {
     return (
         <a
-            className="flex justify-center text-white text-center px-4 py-2 glow-on-hover glow-on-hover-darken align-middle lg:text-base text-sm flex-grow border-solid border-1"
+            className="flex justify-center text-white text-center px-4 py-2 glow-on-hover glow-on-hover-darken align-middle lg:text-base text-sm flex-grow border-solid border-1 overflow-hidden"
             onClick={onClick}
             style={{
                 backgroundImage: "url(" + image + ")",
