@@ -50,3 +50,18 @@ body {
 
     color: black;
 }
+
+/* Titles */
+
+h2 {
+    color: rgb(192 132 252);
+    text-shadow:
+        /* Shadow to the bottom-right */
+        1px 1px 0 #000,
+        /* Shadow to the top-left */
+        -1px -1px 0 #000,
+        /* Shadow to the top-right */
+        1px -1px 0 #000,
+        /* Shadow to the bottom-left */
+        -1px 1px 0 #000;
+}
