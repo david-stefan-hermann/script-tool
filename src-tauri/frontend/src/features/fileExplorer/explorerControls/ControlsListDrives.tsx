@@ -1,14 +1,14 @@
 import { DriveInfo, listDrives } from "@/services/tauriService";
 import { useEffect, useState } from "react";
 import { BsDeviceHddFill } from "react-icons/bs";
-import ControlsDropUp from "./ControlsDropUp";
+import ControlsDropUp from "./ControlsList";
 
-interface controlsDriveList {
+interface ControlsListDrivesProps {
     handleDirectoryClick: (path: string) => void;
-    handleListDrives: () => void;
+    toggleListDrives: () => void;
 }
 
-export default function ControlsDriveList({ handleDirectoryClick, handleListDrives }: controlsDriveList) {
+export default function ControlsListDrives({ handleDirectoryClick, toggleListDrives }: ControlsListDrivesProps) {
     const [drives, setDrives] = useState<DriveInfo[]>([]);
 
     useEffect(() => {
@@ -19,10 +19,6 @@ export default function ControlsDriveList({ handleDirectoryClick, handleListDriv
 
         fetchDrives();
     }, []);
-
-    useEffect(() => {
-        console.log('ControlsDriveList.tsx: drives', drives.length);
-    }, [drives]);
 
     return (
         <ControlsDropUp
@@ -41,7 +37,7 @@ export default function ControlsDriveList({ handleDirectoryClick, handleListDriv
                 ],
                 onClick: () => !drive.is_offline && handleDirectoryClick(drive.letter),
             }))}
-            toggleDropUp={handleListDrives}
+            toggleDropUp={toggleListDrives}
         />
     );
 }
