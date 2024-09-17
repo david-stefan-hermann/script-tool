@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { BsDeviceHddFill } from "react-icons/bs";
-import ControlsDropUp from "./ControlsList";
+import { BsDeviceHddFill, BsPrinterFill } from "react-icons/bs";
+import ControlsList from "./ControlsList";
 
 interface ControlsListPrintProps {
     toggleListPrint: () => void;
@@ -8,34 +8,46 @@ interface ControlsListPrintProps {
 
 export default function ControlsListPrint({ toggleListPrint }: ControlsListPrintProps) {
 
+    function handlePrintMediaFilesInDirectories() {
+        toggleListPrint();
+        console.log('Drucker: Mediendateien in Verzeichnissen anzeigen');
+    };
+
+    function handlePrintFileSizes() {
+        toggleListPrint();
+        console.log('Drucker: Dateigrößen anzeigen');
+    };
+
     return (
-        <ControlsDropUp
+        <ControlsList
             title='Laufwerke'
             isLoading={false}
             items={[
                 {
                     item: [
-                        <span>
-                            <BsDeviceHddFill
-                                className={`align-text-top h-5 w-5 
-                                    text-dir
-                                    inline mr-2`} />
+                        <div
+                            key={0}
+                            className='text-controls-100 hover:text-controls-200 active:text-controls-300 min-w-full'
+                        >
+                            <BsPrinterFill
+                                className={`align-text-top h-5 w-5 inline mr-2`} />
                             Mediendateien in Verzeichnissen anzeigen
-                        </span>
+                        </div>
                     ],
-                    onClick: () => console.log('Drucker: Mediendateien in Verzeichnissen anzeigen'),
+                    onClick: () => handlePrintMediaFilesInDirectories(),
                 },
                 {
                     item: [
-                        <span>
-                            <BsDeviceHddFill
-                                className={`align-text-top h-5 w-5 
-                                    text-dir
-                                    inline mr-2`} />
+                        <div
+                            key={1}
+                            className='text-controls-100 hover:text-controls-200 active:text-controls-300'
+                        >
+                            <BsPrinterFill
+                                className={`align-text-top h-5 w-5 inline mr-2`} />
                             Dateigrößen anzeigen
-                        </span>
+                        </div>
                     ],
-                    onClick: () => console.log('Drucker: Dateigrößen anzeigen'),
+                    onClick: () => handlePrintFileSizes(),
                 }
             ]}
             toggleDropUp={toggleListPrint}
