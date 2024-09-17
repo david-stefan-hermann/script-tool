@@ -59,7 +59,7 @@ export default function Controls() {
         <>
             {showPrint && <ControlsListPrint toggleListPrint={handleListPrint} />}
             {showDrives && <ControlsListDrives handleDirectoryClick={handleDirectoryClick} toggleListDrives={handleListDrives} />}
-            <div className="flex text-2xl font-bold pl-2 py-3 text-dir bg-white bg-opacity-30">
+            <div className="flex text-2xl font-bold py-3 px-2 gap-2 text-dir bg-white bg-opacity-30 flex-wrap">
                 <ControlsButtonBack />
                 <ControlsButtonHome />
                 <ControlsButtonDrives toggleListDrives={handleListDrives} showDrives={showDrives} />

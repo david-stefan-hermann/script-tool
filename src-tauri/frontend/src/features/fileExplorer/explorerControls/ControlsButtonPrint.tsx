@@ -11,7 +11,7 @@ export default function ControlsButtonPrint({ toggleListPrint, showPrint }: Cont
     return (
         <Tooltip content="Dateien Drucken" placement="top" className='bg-white px-2 rounded border border-gray-100'>
             <div
-                className={`inline mr-2 cursor-pointer ${showPrint ? 'text-controls-300 hover:text-controls-200' : 'text-controls-100 hover:text-controls-200'}`}
+                className={`inline cursor-pointer ${showPrint ? 'text-controls-300 hover:text-controls-200' : 'text-controls-100 hover:text-controls-200'}`}
                 onClick={toggleListPrint}
             >
                 <BsPrinterFill />
