@@ -64,7 +64,7 @@ export default function FileOperations() {
         <>
             <GlassCard collapseable title="Werkzeug" image='/styling/backsplash/red.jpg' bgClass='bg-bottom'>
                 <div className="p-2 flex flex-col gap-2">
-                    <div className="flex gap-2">
+                    <div className="flex flex-row gap-2 w-full h-full justify-center flex-wrap overflow-hidden">
                         {options?.map((option) => (
                             <ImageButtonSwitch
                                 key={option.id}
