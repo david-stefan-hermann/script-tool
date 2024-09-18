@@ -10,11 +10,12 @@ use tauri::AppHandle;
 use tauri::Manager;
 
 #[derive(Debug, Serialize)]
+#[derive(Clone)]
 pub struct FileInfo {
-    path: String,
-    is_dir: bool,
-    is_video: bool,
-    name: String,
+    pub(crate) path: String,
+    pub(crate) is_dir: bool,
+    pub(crate) is_video: bool,
+    pub(crate) name: String,
 }
 
 #[derive(Debug)]
