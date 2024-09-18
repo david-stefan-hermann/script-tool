@@ -135,6 +135,8 @@ dependencies = [
  "tauri",
  "tauri-build",
  "tokio",
+ "tokio-util",
+ "uuid",
  "winapi",
 ]
 
