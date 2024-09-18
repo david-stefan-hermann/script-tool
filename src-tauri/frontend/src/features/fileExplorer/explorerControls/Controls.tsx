@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import {
     changeDirectory,
-} from '../../../services/tauriService';
+    caancelFilePrinter,
+} from '@/services/tauriService';
 import ControlsListDrives from './ControlsListDrives';
 import ControlsButtonDrives from './ControlsButtonDrives';
 import ControlsButtonHome from './ControlsButtonHome';
@@ -15,11 +16,13 @@ import ControlsButtonTerminal from './ControlsButtonTerminal';
 import ControlsButtonRefresh from './ControlsButtonRefresh';
 import ControlsButtonPrint from './ControlsButtonPrint';
 import ControlsListPrint from './ControlsListPrint';
+import LoadingScreen from '@/components/common/LoadingScreen';
 
 
 export default function Controls() {
     const [showDrives, setShowDrives] = useState(false);
     const [showPrint, setShowPrint] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     async function handleDirectoryClick(path: string) {
         await changeDirectory(path);
@@ -57,7 +60,8 @@ export default function Controls() {
 
     return (
         <>
-            {showPrint && <ControlsListPrint toggleListPrint={handleListPrint} />}
+            {isLoading && <LoadingScreen message='Dateien Laden' onClick={caancelFilePrinter} />}
+            {showPrint && <ControlsListPrint setIsLoading={setIsLoading} toggleListPrint={handleListPrint} />}
             {showDrives && <ControlsListDrives handleDirectoryClick={handleDirectoryClick} toggleListDrives={handleListDrives} />}
             <div className="flex text-2xl font-bold py-3 px-2 gap-2 text-dir bg-white bg-opacity-30 flex-wrap">
                 <ControlsButtonBack />
