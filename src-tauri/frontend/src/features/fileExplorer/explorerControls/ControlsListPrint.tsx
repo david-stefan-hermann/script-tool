@@ -1,22 +1,46 @@
+"use client";
+
 import { BsPrinterFill } from "react-icons/bs";
 import ControlsList from "./ControlsList";
 import { printFileSizes, printMediaFilesInDirectories } from "@/services/tauriService";
+import { useState } from "react";
 
 interface ControlsListPrintProps {
     toggleListPrint: () => void;
+    setIsLoading: (loading: boolean) => void;
 }
 
-export default function ControlsListPrint({ toggleListPrint }: ControlsListPrintProps) {
+export default function ControlsListPrint({ toggleListPrint, setIsLoading }: ControlsListPrintProps) {
 
     function handlePrintMediaFilesInDirectories() {
         toggleListPrint();
-        printMediaFilesInDirectories();
+        setIsLoading(true);
+
+        printMediaFilesInDirectories()
+            .catch((error) => {
+                console.error('Error printing media files in directories:', error);
+                setIsLoading(false);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
+
         console.log('Drucker: Mediendateien in Verzeichnissen anzeigen');
     };
 
     function handlePrintFileSizes() {
         toggleListPrint();
-        printFileSizes();
+        setIsLoading(true);
+
+        printFileSizes()
+            .catch((error) => {
+                console.error('Error printing file siyes:', error);
+                setIsLoading(false);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
+
         console.log('Drucker: Dateigrößen anzeigen');
     };
 
