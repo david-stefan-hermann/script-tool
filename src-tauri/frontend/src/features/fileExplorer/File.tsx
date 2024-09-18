@@ -4,10 +4,11 @@ import { FileInfo } from '@/services/tauriService';
 type FileProps = {
     index: number;
     file: FileInfo;
+    inactive?: boolean;
     onClickFunction: (path: string) => void;
 };
 
-export default function File({ index, file, onClickFunction }: FileProps) {
+export default function File({ index, file, inactive, onClickFunction }: FileProps) {
     return (
         <>
             <li
@@ -16,6 +17,7 @@ export default function File({ index, file, onClickFunction }: FileProps) {
                     ${file.is_dir ? ' hover:text-dir' : ''}`}
                 style={{
                     backgroundColor: index % 2 === 0 ? 'rgba(255, 255, 255, 0)' : 'rgba(255, 255, 255, 0.1)',
+                    pointerEvents: inactive ? 'none' : 'auto'
                 }}
                 onClick={() => { file.is_dir && onClickFunction(file.path) }}
             >
