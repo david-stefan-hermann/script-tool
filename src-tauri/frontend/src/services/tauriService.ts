@@ -181,3 +181,7 @@ export const printMediaFilesInDirectories = async (): Promise<void> => {
 export const printFileSizes = async (): Promise<void> => {
     return invoke('print_file_sizes');
 };
+
+export const caancelFilePrinter = async (): Promise<void> => {
+    return invoke('cancel_file_printer');
+};

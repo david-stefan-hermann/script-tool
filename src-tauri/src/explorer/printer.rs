@@ -6,7 +6,7 @@ use std::future::Future;
 use std::path::{Path, PathBuf};
 use std::pin::Pin;
 use std::sync::{Arc, Mutex};
-use tauri::{command, AppHandle, State, WindowBuilder, WindowUrl};
+use tauri::{command, AppHandle, Manager, State, WindowBuilder, WindowUrl};
 use tokio::sync::Mutex as AsyncMutex;
 use tokio_util::sync::CancellationToken;
 
@@ -159,6 +159,11 @@ pub async fn print_file_sizes(
         current_dir = PathBuf::from(explorer.get_current_path());
     } // MutexGuard is dropped here
 
+    let token = {
+        let app_state = app_state.lock().await;
+        app_state.cancellation_token.clone().unwrap()
+    };
+
     let mut file_info_list = vec![];
     let entries = fs::read_dir(&current_dir).map_err(|e| e.to_string())?;
     for entry in entries {
@@ -166,7 +171,7 @@ pub async fn print_file_sizes(
         let path = entry.path();
         let metadata = fs::metadata(&path).map_err(|e| e.to_string())?;
         let size = if metadata.is_dir() {
-            get_directory_size(&path)
+            get_directory_size(&path, token.clone())?
         } else {
             metadata.len()
         };
@@ -199,21 +204,25 @@ pub async fn print_file_sizes(
     Ok(file_info_list)
 }
 
-fn get_directory_size(path: &PathBuf) -> u64 {
+fn get_directory_size(path: &PathBuf, token: CancellationToken) -> Result<u64, String> {
+    if token.is_cancelled() {
+        return Err("Operation cancelled".into());
+    }
+
     let mut total_size = 0;
     if let Ok(entries) = fs::read_dir(path) {
         for entry in entries {
             if let Ok(entry) = entry {
                 let metadata = fs::metadata(entry.path()).unwrap();
                 if metadata.is_dir() {
-                    total_size += get_directory_size(&entry.path());
+                    total_size += get_directory_size(&entry.path(), token.clone())?;
                 } else {
                     total_size += metadata.len();
                 }
             }
         }
     }
-    total_size
+    Ok(total_size)
 }
 
 fn extract_size(size_str: &str) -> u64 {
@@ -227,5 +236,25 @@ fn extract_size(size_str: &str) -> u64 {
         "MB" => (size * 1_048_576.0) as u64,
         "KB" => (size * 1_024.0) as u64,
         _ => 0,
+    }
+}
+
+#[command]
+pub async fn cancel_file_printer(
+    app_state: State<'_, Arc<AsyncMutex<AppState>>>,
+    app: AppHandle, // Add AppHandle to emit events
+) -> Result<(), String> {
+    let mut app_state = app_state.lock().await;
+    if let Some(token) = &app_state.cancellation_token {
+        token.cancel();
+        app_state.cancellation_token = None;
+
+        // Emit an event to notify the frontend about the cancellation
+        app.emit_all("cancel_file_printer", {})
+            .map_err(|e| e.to_string())?;
+
+        Ok(())
+    } else {
+        Err("No ongoing task to cancel".into())
     }
 }
