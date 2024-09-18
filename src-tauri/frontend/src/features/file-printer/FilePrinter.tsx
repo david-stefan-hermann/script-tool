@@ -25,7 +25,7 @@ export default function FilePrinter() {
 
     return (
         <GlassCard fullHeight title='Vorschau' image='/styling/backsplash/orange.jpg'>
-            <ul className="flex-col w-full max-h-full overflow-x-hidden flex-grow text-md">
+            <ul className="flex-col w-full overflow-x-hidden flex-grow text-md">
                 {files.map((file, index) => (
                     <React.Fragment key={index}>
                         <File index={index} file={file} onClickFunction={() => { }} inactive />
