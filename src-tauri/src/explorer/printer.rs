@@ -10,6 +10,66 @@ use tauri::{command, AppHandle, Manager, State, WindowBuilder, WindowUrl};
 use tokio::sync::Mutex as AsyncMutex;
 use tokio_util::sync::CancellationToken;
 
+// Open a new window with the media files data
+
+#[tauri::command]
+pub async fn open_media_files_window(
+    app: AppHandle,
+    media_files: Vec<FileInfo>,
+    window_state: State<'_, Arc<Mutex<WindowState>>>,
+) -> Result<(), String> {
+    // Create a unique label for the new window
+    let window_label = format!("media_files_window_{}", uuid::Uuid::new_v4());
+
+    // Serialize the media files data to JSON
+    let media_files_json = serde_json::to_string(&media_files).map_err(|e| e.to_string())?;
+
+    // Create a new window
+    let _new_window = WindowBuilder::new(
+        &app,
+        &window_label,                          // Unique label for the new window
+        WindowUrl::App("/file-printer".into()), // Load the route
+    )
+    .title("Media Files")
+    .inner_size(688.0, 600.0) // Set window size
+    .resizable(true) // Make the window resizable
+    .initialization_script(&format!("window.initialData = {};", media_files_json))
+    .build()
+    .map_err(|e| e.to_string())?;
+
+    // Store the window label to prevent sending data multiple times
+    {
+        let mut state = window_state.lock().unwrap();
+        state.sent_windows.insert(window_label);
+    }
+
+    Ok(())
+}
+
+// Cancel operations
+
+#[command]
+pub async fn cancel_file_printer(
+    app_state: State<'_, Arc<AsyncMutex<AppState>>>,
+    app: AppHandle, // Add AppHandle to emit events
+) -> Result<(), String> {
+    let mut app_state = app_state.lock().await;
+    if let Some(token) = &app_state.cancellation_token {
+        token.cancel();
+        app_state.cancellation_token = None;
+
+        // Emit an event to notify the frontend about the cancellation
+        app.emit_all("cancel_file_printer", {})
+            .map_err(|e| e.to_string())?;
+
+        Ok(())
+    } else {
+        Err("No ongoing task to cancel".into())
+    }
+}
+
+// Print Media Files in Directories
+
 #[command]
 pub async fn print_media_files_in_directories(
     state: State<'_, Arc<Mutex<FileExplorer>>>,
@@ -103,38 +163,16 @@ fn get_media_files_recursive<'a>(
     })
 }
 
-#[tauri::command]
-pub async fn open_media_files_window(
-    app: AppHandle,
-    media_files: Vec<FileInfo>,
-    window_state: State<'_, Arc<Mutex<WindowState>>>,
-) -> Result<(), String> {
-    // Create a unique label for the new window
-    let window_label = format!("media_files_window_{}", uuid::Uuid::new_v4());
+// Print file sizes
 
-    // Serialize the media files data to JSON
-    let media_files_json = serde_json::to_string(&media_files).map_err(|e| e.to_string())?;
-
-    // Create a new window
-    let _new_window = WindowBuilder::new(
-        &app,
-        &window_label,                          // Unique label for the new window
-        WindowUrl::App("/file-printer".into()), // Load the route
-    )
-    .title("Media Files")
-    .inner_size(688.0, 600.0) // Set window size
-    .resizable(true) // Make the window resizable
-    .initialization_script(&format!("window.initialData = {};", media_files_json))
-    .build()
-    .map_err(|e| e.to_string())?;
-
-    // Store the window label to prevent sending data multiple times
-    {
-        let mut state = window_state.lock().unwrap();
-        state.sent_windows.insert(window_label);
+fn format_size(size: u64) -> String {
+    if size >= 1_073_741_824 {
+        format!("{:.2} GB", size as f64 / 1_073_741_824.0)
+    } else if size >= 1_048_576 {
+        format!("{:.2} MB", size as f64 / 1_048_576.0)
+    } else {
+        format!("{:.2} KB", size as f64 / 1_024.0)
     }
-
-    Ok(())
 }
 
 #[command]
@@ -175,33 +213,42 @@ pub async fn print_file_sizes(
         } else {
             metadata.len()
         };
-        let size_str = if size >= 1_073_741_824 {
-            format!("{:.2} GB", size as f64 / 1_073_741_824.0)
-        } else if size >= 1_048_576 {
-            format!("{:.2} MB", size as f64 / 1_048_576.0)
-        } else {
-            format!("{:.2} KB", size as f64 / 1_024.0)
-        };
         let name = path.file_name().unwrap().to_string_lossy().to_string();
-        file_info_list.push(FileInfo {
+        let file_info = FileInfo {
             path: path.to_string_lossy().to_string(),
             is_dir: path.is_dir(),
             is_video: is_video_file(&path),
-            name: format!("{} - {}", name, size_str),
-        });
+            name,
+        };
+        file_info_list.push((file_info, size));
+    }
+
+    println!("Before sorting:");
+    for (file, size) in &file_info_list {
+        println!("{:?} - size: {}", file, size);
     }
 
     // Sort the file_info_list by size
-    file_info_list.sort_by(|a, b| {
-        let a_size = extract_size(&a.name);
-        let b_size = extract_size(&b.name);
-        b_size.cmp(&a_size)
-    });
+    file_info_list.sort_by(|a, b| b.1.cmp(&a.1));
+
+    println!("After sorting:");
+    for (file, size) in &file_info_list {
+        println!("{:?} - size: {}", file, size);
+    }
+
+    // Create a new list of FileInfo with size appended to the name
+    let sorted_file_info_list: Vec<FileInfo> = file_info_list
+        .into_iter()
+        .map(|(mut file_info, size)| {
+            file_info.name = format!("{} - {}", file_info.name, format_size(size));
+            file_info
+        })
+        .collect();
 
     // Open a new window and send the file sizes data
-    open_media_files_window(app, file_info_list.clone(), window_state).await?;
+    open_media_files_window(app, sorted_file_info_list.clone(), window_state).await?;
 
-    Ok(file_info_list)
+    Ok(sorted_file_info_list)
 }
 
 fn get_directory_size(path: &PathBuf, token: CancellationToken) -> Result<u64, String> {
@@ -223,38 +270,4 @@ fn get_directory_size(path: &PathBuf, token: CancellationToken) -> Result<u64, S
         }
     }
     Ok(total_size)
-}
-
-fn extract_size(size_str: &str) -> u64 {
-    let parts: Vec<&str> = size_str.split_whitespace().collect();
-    if parts.len() < 3 {
-        return 0;
-    }
-    let size: f64 = parts[2].parse().unwrap_or(0.0);
-    match parts[3] {
-        "GB" => (size * 1_073_741_824.0) as u64,
-        "MB" => (size * 1_048_576.0) as u64,
-        "KB" => (size * 1_024.0) as u64,
-        _ => 0,
-    }
-}
-
-#[command]
-pub async fn cancel_file_printer(
-    app_state: State<'_, Arc<AsyncMutex<AppState>>>,
-    app: AppHandle, // Add AppHandle to emit events
-) -> Result<(), String> {
-    let mut app_state = app_state.lock().await;
-    if let Some(token) = &app_state.cancellation_token {
-        token.cancel();
-        app_state.cancellation_token = None;
-
-        // Emit an event to notify the frontend about the cancellation
-        app.emit_all("cancel_file_printer", {})
-            .map_err(|e| e.to_string())?;
-
-        Ok(())
-    } else {
-        Err("No ongoing task to cancel".into())
-    }
 }
