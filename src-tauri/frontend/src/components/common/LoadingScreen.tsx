@@ -22,7 +22,7 @@ export default function LoadingScreen({ message, onClick }: LoadingScreenProps) 
                                 </div>
                                 <div className='flex flex-row w-full'>
                                     {onClick &&
-                                        <AnimatedButton text="Abbrechen" onClick={onClick} image='/styling/buttons/button-purple.jpg' />
+                                        <AnimatedButton text="Abbrechen" onClick={onClick} image='/styling/buttons/button-red.jpg' />
                                     }
                                 </div>
                             </div>
