@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { BsDeviceHddFill, BsPrinterFill } from "react-icons/bs";
+import { BsPrinterFill } from "react-icons/bs";
 import ControlsList from "./ControlsList";
+import { printFileSizes, printMediaFilesInDirectories } from "@/services/tauriService";
 
 interface ControlsListPrintProps {
     toggleListPrint: () => void;
@@ -10,11 +10,13 @@ export default function ControlsListPrint({ toggleListPrint }: ControlsListPrint
 
     function handlePrintMediaFilesInDirectories() {
         toggleListPrint();
+        printMediaFilesInDirectories();
         console.log('Drucker: Mediendateien in Verzeichnissen anzeigen');
     };
 
     function handlePrintFileSizes() {
         toggleListPrint();
+        printFileSizes();
         console.log('Drucker: Dateigrößen anzeigen');
     };
 

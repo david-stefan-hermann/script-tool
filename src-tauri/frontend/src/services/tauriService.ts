@@ -172,3 +172,12 @@ export const pullFilesFromFolders = async (): Promise<String[]> => {
     return invoke('flatten_single_file_directories');
 };
 
+// Printer: Load Files
+
+export const printMediaFilesInDirectories = async (): Promise<void> => {
+    return invoke('print_media_files_in_directories');
+};
+
+export const printFileSizes = async (): Promise<void> => {
+    return invoke('print_file_sizes');
+};
