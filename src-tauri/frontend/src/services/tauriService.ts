@@ -185,3 +185,7 @@ export const printFileSizes = async (): Promise<void> => {
 export const caancelFilePrinter = async (): Promise<void> => {
     return invoke('cancel_file_printer');
 };
+
+export const saveFileToFolder = async (folderPath: string, fileInfoList: FileInfo[]): Promise<void> => {
+    return invoke('save_file_to_folder', { folderPath, fileInfoList });
+};
