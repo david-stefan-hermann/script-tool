@@ -8,7 +8,7 @@ interface ApiOptionTooltipProps {
     image: string;
     selected: boolean;
     borderStyle?: string;
-    className?: string;
+    size?: number;
     onClick: () => void,
 }
 
@@ -17,7 +17,7 @@ const ApiOptionTooltip: React.FC<ApiOptionTooltipProps> = ({
     image,
     selected,
     borderStyle = 'fire-border',
-    className,
+    size,
     onClick
 }) => {
 
@@ -25,13 +25,13 @@ const ApiOptionTooltip: React.FC<ApiOptionTooltipProps> = ({
         <Tooltip content={title} placement="top" className='bg-white px-2 rounded border border-gray-100'>
             <div
                 className={`
-                    flex glow-on-hover cursor-pointer h-16 w-16 min-w-16 min-h-16 rounded-lg border-solid border-1
-                    ${selected && borderStyle}
-                    ${className}
-                    `}
+                    flex glow-on-hover cursor-pointer rounded-lg border-solid border-1
+                    ${selected && borderStyle}`}
                 onClick={() => onClick()}
                 style={{
                     backgroundImage: `url(${image})`,
+                    height: size + "rem",
+                    width: size + "rem",
                 }}
             >
             </div>
