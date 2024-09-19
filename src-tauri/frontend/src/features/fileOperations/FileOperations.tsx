@@ -71,6 +71,7 @@ export default function FileOperations() {
                                 title={option.title}
                                 image={option.image}
                                 selected={toolOption == option.id}
+                                size={4}
                                 onClick={() => setToolOption(option.id as ToolOption)}
                             />
                         ))}
