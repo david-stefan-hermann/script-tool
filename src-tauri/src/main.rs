@@ -20,7 +20,7 @@ use explorer::file_operations::{
     adjust_episode_numbers_preview, flatten_single_file_directories, get_current_episode_names,
     organize_videos_into_directories, search_and_replace, search_and_replace_preview,
 };
-use explorer::printer::{print_file_sizes, print_media_files_in_directories, cancel_file_printer};
+use explorer::printer::{print_file_sizes, print_media_files_in_directories, cancel_file_printer, save_file_to_folder};
 use explorer::utils::{list_drives, list_files_in_home_directory};
 use tokio::sync::Mutex as AsyncMutex;
 use tokio_util::sync::CancellationToken;
@@ -87,6 +87,7 @@ fn main() {
             fetch_tvmaze_show_details,
             print_file_sizes,
             cancel_file_printer,
+            save_file_to_folder,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
