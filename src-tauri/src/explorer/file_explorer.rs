@@ -1,5 +1,5 @@
 use dirs;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -9,8 +9,7 @@ use tauri::command;
 use tauri::AppHandle;
 use tauri::Manager;
 
-#[derive(Debug, Serialize)]
-#[derive(Clone)]
+#[derive(Debug, Serialize, Clone, Deserialize)]
 pub struct FileInfo {
     pub(crate) path: String,
     pub(crate) is_dir: bool,
