@@ -20,7 +20,7 @@ export default function LoadingScreen({ message, onClick }: LoadingScreenProps) 
                                 <div className="p-8 text-controls-100">
                                     <LoadingCircle show={true} />
                                 </div>
-                                <div className='flex flex-row w-full'>
+                                <div className='flex flex-row w-full justify-center'>
                                     {onClick &&
                                         <AnimatedButton text="Abbrechen" onClick={onClick} image='/styling/buttons/button-red.jpg' />
                                     }
