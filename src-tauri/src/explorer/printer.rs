@@ -1,8 +1,9 @@
 use crate::explorer::file_explorer::{is_video_file, FileExplorer, FileInfo};
 use crate::{AppState, WindowState};
 use sanitize_filename::sanitize;
-use std::fs;
+use std::fs::{self, File};
 use std::future::Future;
+use std::io::Write; // Bring the Write trait into scope
 use std::path::{Path, PathBuf};
 use std::pin::Pin;
 use std::sync::{Arc, Mutex};
@@ -16,6 +17,7 @@ use tokio_util::sync::CancellationToken;
 pub async fn open_media_files_window(
     app: AppHandle,
     media_files: Vec<FileInfo>,
+    file_name: String,
     window_state: State<'_, Arc<Mutex<WindowState>>>,
 ) -> Result<(), String> {
     // Create a unique label for the new window
@@ -33,7 +35,10 @@ pub async fn open_media_files_window(
     .title("Media Files")
     .inner_size(688.0, 600.0) // Set window size
     .resizable(true) // Make the window resizable
-    .initialization_script(&format!("window.initialData = {};", media_files_json))
+    .initialization_script(&format!(
+        "window.initialData = {{ filesData: {}, fileName: '{}' }};",
+        media_files_json, file_name
+    ))
     .build()
     .map_err(|e| e.to_string())?;
 
@@ -68,6 +73,23 @@ pub async fn cancel_file_printer(
     }
 }
 
+// download media files
+
+#[command]
+pub fn save_file_to_folder(
+    folder_path: String,
+    file_info_list: Vec<FileInfo>,
+) -> Result<(), String> {
+    let file_path = PathBuf::from(folder_path);
+    let mut file = File::create(&file_path).map_err(|e| e.to_string())?;
+
+    for file_info in file_info_list {
+        writeln!(file, "{}", file_info.name).map_err(|e| e.to_string())?;
+    }
+
+    Ok(())
+}
+
 // Print Media Files in Directories
 
 #[command]
@@ -100,8 +122,20 @@ pub async fn print_media_files_in_directories(
 
     get_media_files_recursive(&current_dir, &mut media_files, token.clone()).await?;
 
+    // Get the current directory name with a fallback and add the prefix "media_files_"
+    let current_dir_name = current_dir
+        .file_name()
+        .map(|name| format!("media_files_{}", name.to_string_lossy()))
+        .or_else(|| {
+            current_dir
+                .parent()
+                .and_then(|p| p.file_name())
+                .map(|name| format!("media_files_{}", name.to_string_lossy()))
+        })
+        .unwrap_or_else(|| "media_files".to_string());
+
     // Open a new window and send the media files data
-    open_media_files_window(app, media_files.clone(), window_state).await?;
+    open_media_files_window(app, media_files.clone(), current_dir_name, window_state).await?;
 
     Ok(media_files)
 }
@@ -223,18 +257,8 @@ pub async fn print_file_sizes(
         file_info_list.push((file_info, size));
     }
 
-    println!("Before sorting:");
-    for (file, size) in &file_info_list {
-        println!("{:?} - size: {}", file, size);
-    }
-
     // Sort the file_info_list by size
     file_info_list.sort_by(|a, b| b.1.cmp(&a.1));
-
-    println!("After sorting:");
-    for (file, size) in &file_info_list {
-        println!("{:?} - size: {}", file, size);
-    }
 
     // Create a new list of FileInfo with size appended to the name
     let sorted_file_info_list: Vec<FileInfo> = file_info_list
@@ -245,8 +269,26 @@ pub async fn print_file_sizes(
         })
         .collect();
 
+    // Get the current directory name with a fallback and add the prefix "media_files_"
+    let current_dir_name = current_dir
+        .file_name()
+        .map(|name| format!("file_sizes_{}", name.to_string_lossy()))
+        .or_else(|| {
+            current_dir
+                .parent()
+                .and_then(|p| p.file_name())
+                .map(|name| format!("file_sizes_{}", name.to_string_lossy()))
+        })
+        .unwrap_or_else(|| "file_sizes".to_string());
+
     // Open a new window and send the file sizes data
-    open_media_files_window(app, sorted_file_info_list.clone(), window_state).await?;
+    open_media_files_window(
+        app,
+        sorted_file_info_list.clone(),
+        current_dir_name,
+        window_state,
+    )
+    .await?;
 
     Ok(sorted_file_info_list)
 }
