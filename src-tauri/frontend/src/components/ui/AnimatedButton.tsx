@@ -6,14 +6,12 @@ interface AnimatedButtonProps {
     onClick: () => void,
     image?: string
     download?: boolean
-    fullWidth?: boolean
 }
 
-export function AnimatedButton({ text, onClick, image, download, fullWidth }: AnimatedButtonProps) {
+export function AnimatedButton({ text, onClick, image, download }: AnimatedButtonProps) {
     return (
         <a
             className="flex justify-center text-white text-center px-6 py-2 glow-on-hover glow-on-hover-darken align-middle lg:text-base text-sm border-solid border-1 overflow-hidden"
-            
             onClick={onClick}
             style={{
                 backgroundImage: "url(" + image + ")",
