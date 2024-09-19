@@ -42,34 +42,28 @@ export default function Sidebar() {
     }
 
     return (
-        <nav className="flex flex-col h-screen w-20 min-w-20">
-            <GlassCard className='h-full'>
-
-                <Image
-                    width={10}
-                    height={10}
-                    className='w-20 h-20 p-1 glass-card-border-bottom hover:cursor-pointer'
-                    src="/icon.png"
-                    alt="Logo"
-                    onClick={() => showTool("/windows/home")}
-                    unoptimized
-                />
-
-                <div className="p-3 flex flex-col gap-3 items-center">
-                    {toolOptions?.map((option, index) => (
-                        <React.Fragment key={index}>
-                            <ImageButtonSwitch
-                                title={option.title}
-                                image={option.image}
-                                selected={getActiveTool(option.link)}
-                                onClick={() => showTool(option.link)}
-                                className='h-16 w-16'
-                                borderStyle='thunder-border'
-                            />
-                        </React.Fragment>
-                    ))}
-                </div>
-            </GlassCard>
-        </nav>
+        <React.Fragment>
+            <div className='h-full'>
+                <GlassCard fullHeight className='w-auto py-4'>
+                    <div className='flex h-full justify-center glass-card-border-top glass-card-border-bottom'>
+                    <div className="px-2 py-3 flex flex-col gap-3 items-center">
+                        <h2>Apps</h2>
+                        {toolOptions?.map((option, index) => (
+                            <React.Fragment key={index}>
+                                <ImageButtonSwitch
+                                    title={option.title}
+                                    image={option.image}
+                                    selected={getActiveTool(option.link)}
+                                    onClick={() => showTool(option.link)}
+                                    size={3.5}
+                                    borderStyle='thunder-border'
+                                    />
+                            </React.Fragment>
+                        ))}
+                    </div>
+                        </div>
+                </GlassCard>
+            </div>
+        </React.Fragment>
     );
 }
