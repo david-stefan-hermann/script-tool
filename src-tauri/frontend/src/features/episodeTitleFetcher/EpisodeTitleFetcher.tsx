@@ -21,7 +21,7 @@ export default function EpisodeTitleFetcher({ seasons, setSeasons, selectedSeaso
   const [animeId, setAnimeId] = useState<number | null>(null);
   const [animeName, setAnimeName] = useState<string | null>(null);
   const [year, setYear] = useState<number | null>(null);
-  
+
   const apiSourceUrl = {
     "TVDB": { href: "https://www.thetvdb.com/", name: "TheTVDB" },
     "JIKA": { href: "https://jikan.moe/", name: "Jikan" },
@@ -60,7 +60,7 @@ export default function EpisodeTitleFetcher({ seasons, setSeasons, selectedSeaso
       } else {
         // Fetch from TVmaze
         const fetchedSeasonsDetails: SeasonedEpisodesDetails = await fetchTVMAZEShowDetails(animeId, animeName, year);
-        
+
         fetchedShowDetails = fetchedSeasonsDetails;
 
         fetchedSeasons = fetchedSeasonsDetails.episodes_by_season
@@ -93,11 +93,11 @@ export default function EpisodeTitleFetcher({ seasons, setSeasons, selectedSeaso
             </label>
             <div className="flex gap-2">
               {/* Jikan Button */}
-              <ImageButtonSwitch title="Jikan" image='/logos/jikan_logo.png' selected={apiOption == "JIKA"} onClick={() => setApiOption("JIKA")} />
+              <ImageButtonSwitch size={4} title="Jikan" image='/logos/jikan_logo.png' selected={apiOption == "JIKA"} onClick={() => setApiOption("JIKA")} />
               {/* TVDB Button */}
-              <ImageButtonSwitch title="TheTVDB" image='/logos/thetvdb_logo.jpg' selected={apiOption == "TVDB"} onClick={() => setApiOption("TVDB")} />
+              <ImageButtonSwitch size={4} title="TheTVDB" image='/logos/thetvdb_logo.jpg' selected={apiOption == "TVDB"} onClick={() => setApiOption("TVDB")} />
               {/* TVMaze Button */}
-              <ImageButtonSwitch title="TVMaze" image='/logos/tvmaze_logo.png' selected={apiOption == "TVMZ"} onClick={() => setApiOption("TVMZ")} />
+              <ImageButtonSwitch size={4} title="TVMaze" image='/logos/tvmaze_logo.png' selected={apiOption == "TVMZ"} onClick={() => setApiOption("TVMZ")} />
             </div>
           </div>
         </div>
