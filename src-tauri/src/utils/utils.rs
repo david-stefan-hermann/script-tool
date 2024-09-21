@@ -14,6 +14,12 @@ pub async fn open_episode_title_window(app: AppHandle) {
     if let Some(window) = app.get_window("episode_fetcher") {
         // Call focus_fetcher_window if the window exists
         if let Some(fetcher_window) = window.get_window("episode_fetcher") {
+            // Check if the window is minimized and maximize it if necessary
+            if fetcher_window.is_minimized().unwrap_or(false) {
+                fetcher_window
+                    .unminimize()
+                    .expect("Failed to unminimize window");
+            }
             fetcher_window.set_focus().expect("Failed to set focus");
         }
     } else {
