@@ -32,14 +32,14 @@ export default function EpisodeNumberAdjuster() {
     useEffect(() => {
         function handlePreview() {
             !adjustmentValue ? triggerRefresh() :
-            adjustEpisodeNumbersPreview(adjustmentValue)
-                .then(() => {
-                    console.log("Preview successfull: Number Adjuster");
-                })
-                .catch((err) => {
-                    console.error("Preview failed: Number Adjuster: :", err);
-                    triggerRefresh();
-                });
+                adjustEpisodeNumbersPreview(adjustmentValue)
+                    .then(() => {
+                        console.log("Preview successfull: Number Adjuster");
+                    })
+                    .catch((err) => {
+                        console.error("Preview failed: Number Adjuster: :", err);
+                        triggerRefresh();
+                    });
         };
         handlePreview()
     }, [adjustmentValue]);
@@ -55,7 +55,9 @@ export default function EpisodeNumberAdjuster() {
                     className="border rounded px-2 py-1"
                 />
                 {error && <ErrorMessage message={error}></ErrorMessage>}
-                <AnimatedButton text="Anpassen" onClick={handleAdjust} image='/styling/buttons/button-purple.jpg' />
+                <div className='flex flex-row w-full gap-2 justify-center'>
+                    <AnimatedButton text="Anpassen" onClick={handleAdjust} image='/styling/buttons/button-purple.jpg' />
+                </div>
             </div>
         </GlassCard>
     );

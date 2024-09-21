@@ -37,9 +37,10 @@ export default function FolderOrganizer() {
             <div className="flex flex-col gap-2 p-2">
 
                 {error && <ErrorMessage message={error}></ErrorMessage>}
-
-                <AnimatedButton text="In Ordner packen" onClick={() => handlePutFilesInFolders()} image='/styling/buttons/button-blue.jpg' />
-                <AnimatedButton text="aus Ordnern ziehen" onClick={() => handlePullFilesFromFolders()} image='/styling/buttons/button-purple.jpg' />
+                <div className='flex flex-row w-full gap-2 justify-center'>
+                    <AnimatedButton text="In Ordner packen" onClick={() => handlePutFilesInFolders()} image='/styling/buttons/button-blue.jpg' />
+                    <AnimatedButton text="aus Ordnern ziehen" onClick={() => handlePullFilesFromFolders()} image='/styling/buttons/button-purple.jpg' />
+                </div>
             </div>
         </GlassCard>
     );

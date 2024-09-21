@@ -59,7 +59,9 @@ export default function FileRenamer() {
                     className="border rounded px-2 py-1"
                 />
                 {error && <ErrorMessage message={error}></ErrorMessage>}
-                <AnimatedButton text="Umbenennen" onClick={handleRename} image='/styling/buttons/button-purple.jpg' />
+                <div className='flex flex-row w-full justify-center'>
+                    <AnimatedButton text="Umbenennen" onClick={handleRename} image='/styling/buttons/button-purple.jpg' />
+                </div>
             </div>
         </GlassCard>
     );

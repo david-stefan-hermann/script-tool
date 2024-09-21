@@ -160,7 +160,7 @@ export default function EpisodeTitleFetcher({ seasons, setSeasons, selectedSeaso
         {error && <ErrorMessage message={error}></ErrorMessage>}
 
         {/* Fetch Episode Titles Button */}
-        <div className='flex flex-row w-full'>
+        <div className='flex flex-row w-full justify-center'>
           <AnimatedButton text="Titel laden" onClick={fetchEpisodeTitles} image='/styling/buttons/button-purple.jpg' />
         </div>
       </div>

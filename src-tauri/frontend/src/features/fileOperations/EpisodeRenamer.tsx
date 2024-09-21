@@ -108,7 +108,7 @@ export default function EpisodeRenamer() {
                     />
                 </div>
                 {error && <ErrorMessage message={error}></ErrorMessage>}
-                <div className='flex flex-row w-full gap-2 justify-center flex-stretch'>
+                <div className='flex flex-row w-full gap-2 justify-center'>
                     <AnimatedButton text="Titel laden" onClick={openEpisodeTitleWindow} image='/styling/buttons/button-blue.jpg' />
                     <AnimatedButton text="Umbenennen" onClick={handleRename} image='/styling/buttons/button-purple.jpg' />
                 </div>

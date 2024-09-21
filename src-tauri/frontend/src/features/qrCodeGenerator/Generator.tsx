@@ -72,9 +72,11 @@ export default function Generator() {
                 />
 
                 {error && <ErrorMessage message={error}></ErrorMessage>}
-                <AnimatedButton text="Generieren" onClick={() => handleGenerateQrCode()} image='/styling/buttons/button-purple.jpg' />
+                <div className='flex flex-row w-full gap-2 justify-center'>
+                    <AnimatedButton text="Generieren" onClick={() => handleGenerateQrCode()} image='/styling/buttons/button-purple.jpg' />
+                </div>
                 {qrResponse && <InfoMessage message={`QR Code wurde erfolgreich generiert für: ${qrResponse.qr_value}`} />}
-                {qrResponse && <div className="flex flex-row gap-2">
+                {qrResponse && <div className="flex flex-row gap-2 justify-center">
                     <AnimatedButton download text="SVG" onClick={() => handleDownloadQrCode()} image='/styling/buttons/button-blue.jpg' />
                     <AnimatedButton download text="PNG" onClick={() => handleDownloadQrCode(true)} image='/styling/buttons/button-blue.jpg' />
                 </div>}
